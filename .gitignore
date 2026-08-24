@@ -1,0 +1,38 @@
+# macOS Finder metadata
+.DS_Store
+
+# Repository-owned local environments and tools
+.venv/
+.tools/
+
+# Private machine configuration and environment values
+config/config.yaml
+.env
+.env.*
+!.env.example
+
+# Python-generated state
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local runtime, candidate, lock, and log state
+.runtime/
+.candidates/
+.tmp/
+runtime-state/
+locks/
+logs/
+*.log
+
+# Locally generated launchd installation state
+launchd/generated/
