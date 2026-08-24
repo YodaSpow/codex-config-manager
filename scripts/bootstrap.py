@@ -92,6 +92,8 @@ def validate(environment: str) -> bool:
         VENV / "bin" / "codex-config-manager-status",
         VENV / "bin" / "codex-config-manager-publisher",
         VENV / "bin" / "codex-config-manager-consumer",
+        VENV / "bin" / "codex-config-manager-install",
+        VENV / "bin" / "codex-config-manager-uninstall",
     ]
     if not python.is_file() or not RECEIPT.is_file() or any(not item.is_file() for item in commands):
         return False

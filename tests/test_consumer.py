@@ -2,11 +2,14 @@ from __future__ import annotations
 
 from dataclasses import replace
 from pathlib import Path
+import subprocess
 
 import pytest
 
 from codex_config_manager.consumer import deploy_latest
 from codex_config_manager.errors import PathSafetyError, ValidationError
+from codex_config_manager.errors import GitSafetyError
+from codex_config_manager.git import consumer_fast_forward
 from codex_config_manager.managed_scope import manifests_equal, snapshot_manifest, source_manifest
 
 
@@ -68,3 +71,47 @@ def test_mac_studio_authoritative_target_is_forbidden(make_config) -> None:
     )
     with pytest.raises(PathSafetyError):
         deploy_latest(config)
+
+
+def _git(repo: Path, *arguments: str) -> str:
+    return subprocess.run(
+        ["/usr/bin/git", *arguments], cwd=repo, check=True, capture_output=True, text=True
+    ).stdout.strip()
+
+
+def test_consumer_repository_only_fast_forwards(make_config, tmp_path: Path) -> None:
+    remote = tmp_path / "remote.git"
+    seed = tmp_path / "seed"
+    subprocess.run(["/usr/bin/git", "init", "--bare", str(remote)], check=True, capture_output=True)
+    seed.mkdir()
+    _git(seed, "init", "-b", "main")
+    _git(seed, "config", "user.name", "Test")
+    _git(seed, "config", "user.email", "test@example.invalid")
+    (seed / "README.md").write_text("one")
+    _git(seed, "add", "README.md")
+    _git(seed, "commit", "-m", "one")
+    _git(seed, "remote", "add", "origin", str(remote))
+    _git(seed, "push", "-u", "origin", "main")
+    config = make_config(role="consumer", machine="MacMini")
+    config.paths.repo_root.rmdir()
+    subprocess.run(
+        ["/usr/bin/git", "clone", "--branch", "main", str(remote), str(config.paths.repo_root)],
+        check=True,
+        capture_output=True,
+    )
+    (seed / "README.md").write_text("two")
+    _git(seed, "commit", "-am", "two")
+    _git(seed, "push")
+    updated, sha = consumer_fast_forward(config)
+    assert updated
+    assert sha == _git(seed, "rev-parse", "HEAD")
+    assert consumer_fast_forward(config) == (False, sha)
+
+
+def test_consumer_repository_rejects_dirty_state(make_config, tmp_path: Path) -> None:
+    config = make_config(role="consumer", machine="MacMini")
+    repo = config.paths.repo_root
+    _git(repo, "init", "-b", "main")
+    (repo / "dirty").write_text("x")
+    with pytest.raises(GitSafetyError, match="dirty"):
+        consumer_fast_forward(config)
