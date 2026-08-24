@@ -122,7 +122,10 @@ def _allowed_path(path: str, allowed_skills: set[str]) -> bool:
 
 
 def _status_paths(repo: Path) -> list[str]:
-    output = _run(repo, ["status", "--porcelain=v1", "--no-renames", "-z"])
+    output = _run(
+        repo,
+        ["status", "--porcelain=v1", "--no-renames", "--untracked-files=all", "-z"],
+    )
     if not output:
         return []
     records = output.split("\x00")

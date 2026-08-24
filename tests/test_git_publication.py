@@ -55,6 +55,24 @@ def test_component_classification_and_order(make_config) -> None:
     assert "SKILL.md" not in message
 
 
+def test_initial_untracked_artifact_tree_is_enumerated_by_file(make_config) -> None:
+    config = make_config()
+    repo = config.paths.repo_root
+    run_git(repo, "init", "-b", "main")
+    run_git(repo, "config", "user.name", "Test")
+    run_git(repo, "config", "user.email", "test@example.invalid")
+    (repo / "README.md").write_text("# Test\n")
+    run_git(repo, "add", "README.md")
+    run_git(repo, "commit", "-m", "initial")
+    (config.paths.latest_root / "skills" / "new-skill").mkdir(parents=True)
+    (config.paths.latest_root / "skills" / "new-skill" / "SKILL.md").write_text("new")
+    (config.paths.upload_ready_root / "skills").mkdir(parents=True)
+    (config.paths.upload_ready_root / "skills" / "new-skill.zip").write_bytes(b"zip")
+    staged = stage_managed_transaction(config, ("new-skill",))
+    assert "latest/skills/new-skill/SKILL.md" in staged
+    assert "upload-ready/skills/new-skill.zip" in staged
+
+
 def test_deletion_is_staged_and_classified(make_config) -> None:
     config = make_config()
     init_repo(config.paths.repo_root)
