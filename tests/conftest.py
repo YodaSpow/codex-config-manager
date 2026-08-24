@@ -58,7 +58,7 @@ def make_config(tmp_path: Path):
                 ),
             ),
             consumer=ConsumerConfig(check_interval=300),
-            git=GitConfig(remote="origin", branch="main"),
+            git=GitConfig(remote="origin", branch="main", url=None),
         )
 
     return factory

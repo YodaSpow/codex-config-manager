@@ -61,6 +61,7 @@ class PathConfig:
 class GitConfig:
     remote: str
     branch: str
+    url: str | None
 
 
 @dataclass(frozen=True)
@@ -194,11 +195,12 @@ def load_config(
         consumer["check_interval"], field="consumer.check_interval", minimum=10, maximum=86400
     )
     git = _mapping(root["git"], "git")
-    _keys(git, label="git", required={"remote", "branch"})
+    _keys(git, label="git", required={"remote", "branch", "url"})
     remote = _text(git["remote"], "git.remote")
     branch = _text(git["branch"], "git.branch")
-    if any(character.isspace() for character in remote + branch):
-        raise ConfigurationError("git remote and branch cannot contain whitespace")
+    url = _text(git["url"], "git.url")
+    if any(character.isspace() for character in remote + branch + url):
+        raise ConfigurationError("git remote, branch, and URL cannot contain whitespace")
 
     return Config(
         contract_version=1,
@@ -224,5 +226,5 @@ def load_config(
             ),
         ),
         consumer=ConsumerConfig(check_interval=consumer_interval),
-        git=GitConfig(remote=remote, branch=branch),
+        git=GitConfig(remote=remote, branch=branch, url=url),
     )

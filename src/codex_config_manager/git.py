@@ -64,6 +64,11 @@ def repository_status(config: Config) -> dict[str, object]:
     head = _run(repo, ["rev-parse", "HEAD"])
     upstream = f"{config.git.remote}/{config.git.branch}"
     remote = _run(repo, ["remote", "get-url", config.git.remote])
+    tracking = _run(repo, ["rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"])
+    if tracking != upstream:
+        raise GitSafetyError(f"branch tracks {tracking!r}, expected {upstream!r}")
+    if config.git.url is not None and remote != config.git.url:
+        raise GitSafetyError(f"remote URL {remote!r} does not match configured repository identity")
     porcelain = _run(repo, ["status", "--porcelain=v1"])
     counts = _run(repo, ["rev-list", "--left-right", "--count", f"HEAD...{upstream}"])
     ahead, behind = (int(value) for value in counts.split())
@@ -71,6 +76,7 @@ def repository_status(config: Config) -> dict[str, object]:
         "branch": branch,
         "head": head,
         "upstream": upstream,
+        "tracking": tracking,
         "remote_url": remote,
         "dirty": bool(porcelain),
         "ahead": ahead,

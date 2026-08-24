@@ -148,7 +148,11 @@ def validate_distribution(latest: Path, target: Path) -> tuple[str, ...]:
     manifest = snapshot_manifest(latest)
     expected = {f"{name}.zip" for name in manifest.skills}
     skills_root = target / "skills"
-    actual = {item.name for item in skills_root.iterdir()} if skills_root.is_dir() else set()
+    actual = (
+        {item.name for item in skills_root.iterdir() if item.name != IGNORED_NAME}
+        if skills_root.is_dir()
+        else set()
+    )
     if actual != expected:
         raise ValidationError(f"skill artifact membership mismatch: expected={expected}, actual={actual}")
     agents_zip = target / "global-agents.zip"

@@ -68,6 +68,16 @@ def test_distribution_rejects_stale_artifact(tmp_path: Path) -> None:
         validate_distribution(latest, target)
 
 
+def test_distribution_ignores_ds_store_without_removing_it(tmp_path: Path) -> None:
+    latest = make_latest(tmp_path)
+    target = tmp_path / "upload-ready"
+    build_distribution(latest, target)
+    noise = target / "skills" / ".DS_Store"
+    noise.write_bytes(b"finder")
+    validate_distribution(latest, target)
+    assert noise.read_bytes() == b"finder"
+
+
 def test_unsafe_zip_members_rejected(tmp_path: Path) -> None:
     archive_path = tmp_path / "bad.zip"
     with zipfile.ZipFile(archive_path, "w") as archive:

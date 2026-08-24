@@ -40,6 +40,7 @@ consumer:
 git:
   remote: origin
   branch: main
+  url: git@github.com:YodaSpow/codex-config-manager.git
 """
 
 
