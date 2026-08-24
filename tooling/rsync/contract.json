@@ -1,0 +1,28 @@
+{
+  "contract_version": 1,
+  "version": "3.5.0",
+  "source_url": "https://download.samba.org/pub/rsync/src/rsync-3.5.0.tar.gz",
+  "source_sha256": "c7ffd1ef653e99540f661e47cb00b7f9cad1ee6b972399b16f93d672656e0d33",
+  "configure_flags": [
+    "--disable-debug",
+    "--disable-iconv",
+    "--disable-lz4",
+    "--disable-md2man",
+    "--disable-openssl",
+    "--disable-xxhash",
+    "--disable-zstd",
+    "--with-included-zlib"
+  ],
+  "required_arguments": [
+    "--archive",
+    "--checksum",
+    "--delete",
+    "--dry-run",
+    "--itemize-changes"
+  ],
+  "forbidden_runtime_prefixes": [
+    "/opt/homebrew",
+    "/usr/local/Cellar",
+    "/opt/homebrew/Cellar"
+  ]
+}

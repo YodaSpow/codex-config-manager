@@ -1,0 +1,45 @@
+# 🧭 Contract
+contract_version: 1
+
+# 🖥️ Machine identity
+# Derived from macOS Model Name; role remains an explicit separate choice.
+machine:
+  id: MacStudio
+
+# Valid values: "publisher", "consumer".
+role: "publisher"
+
+# 📁 Local paths
+paths:
+  codex_root: "/Users/example/.codex"
+  repo_root: "/Users/example/Scripts/codex-config-manager"
+  runtime_state_root: "/Users/example/Library/Application Support/codex-config-manager/runtime-state"
+  lock_root: "/Users/example/Library/Application Support/codex-config-manager/locks"
+  log_root: "/Users/example/Library/Logs/codex-config-manager"
+
+publisher:
+  check_interval: 1m
+  settle_period: 5m
+  publication:
+    mode: "after_settle"
+    schedule:
+      frequency: "daily"
+      local_time: "18:00"
+      timezone: "Europe/London"
+    minimum_interval: 1h
+
+# 📖 Publication guide
+# 🔄 Modes: "after_settle", "paused", "scheduled", "throttled".
+# ⏱️ Durations: whole numbers with s/m/h/d; zero invalid.
+# 📏 Limits: check 10s–1h, settle 1m–7d, throttle 1m–30d.
+# 🔗 Settle and throttle durations must be >= check_interval.
+# 🗓️ Scheduled: missed, unavailable, or unsettled at 18:00 defers to the next day.
+
+# 📥 Consumer polling remains separate from publisher settlement.
+consumer:
+  check_interval: 5m
+
+# 🌐 Git transport
+git:
+  remote: "origin"
+  branch: "main"
