@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import plistlib
+import shutil
 from pathlib import Path
 
 import pytest
@@ -9,9 +10,19 @@ from codex_config_manager.errors import GitSafetyError, ValidationError
 from codex_config_manager.launchd import install, render
 from codex_config_manager.validation import status, validate_runtime
 
+from conftest import REPO_ROOT
+
+
+def install_templates(config) -> None:
+    target = config.paths.repo_root / "launchd"
+    target.mkdir()
+    for role in ("publisher", "consumer"):
+        shutil.copy2(REPO_ROOT / "launchd" / f"{role}.plist.template", target)
+
 
 def test_publisher_plist_uses_absolute_repo_owned_command(make_config) -> None:
     config = make_config()
+    install_templates(config)
     plist = plistlib.loads(render(config))
     assert plist["Label"].endswith(".publisher")
     assert plist["ProgramArguments"][0] == str(
@@ -27,6 +38,7 @@ def test_publisher_plist_uses_absolute_repo_owned_command(make_config) -> None:
 
 def test_consumer_plist_uses_separate_interval(make_config) -> None:
     config = make_config(role="consumer", machine="MacMini")
+    install_templates(config)
     plist = plistlib.loads(render(config))
     assert plist["Label"].endswith(".consumer")
     assert plist["StartInterval"] == 300

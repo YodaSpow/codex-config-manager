@@ -35,20 +35,41 @@ def render(config: Config) -> bytes:
         config.publisher.check_interval if role == "publisher" else config.consumer.check_interval
     )
     executable = config.paths.repo_root / ".venv" / "bin" / f"codex-config-manager-{role}"
-    plist = {
-        "Label": label,
-        "ProgramArguments": [
-            str(executable),
-            "--config",
-            str(config.paths.repo_root / "config" / "config.yaml"),
-        ],
-        "WorkingDirectory": str(config.paths.repo_root),
-        "StartInterval": interval,
-        "RunAtLoad": True,
-        "ProcessType": "Background",
-        "StandardOutPath": str(config.paths.log_root / f"{role}-launchd.stdout.log"),
-        "StandardErrorPath": str(config.paths.log_root / f"{role}-launchd.stderr.log"),
+    template = config.paths.repo_root / "launchd" / f"{role}.plist.template"
+    if not template.is_file() or template.is_symlink():
+        raise ValidationError(f"tracked launchd template is missing or unsafe: {template}")
+    try:
+        plist = plistlib.loads(template.read_bytes())
+    except (OSError, plistlib.InvalidFileException) as exc:
+        raise ValidationError(f"tracked launchd template is invalid: {exc}") from exc
+    if not isinstance(plist, dict):
+        raise ValidationError("tracked launchd template root must be a dictionary")
+    expected = {
+        "Label",
+        "ProcessType",
+        "ProgramArguments",
+        "RunAtLoad",
+        "StandardErrorPath",
+        "StandardOutPath",
+        "StartInterval",
+        "WorkingDirectory",
     }
+    if set(plist) != expected:
+        raise ValidationError("tracked launchd template keys do not match the runtime contract")
+    plist.update(
+        {
+            "Label": label,
+            "ProgramArguments": [
+                str(executable),
+                "--config",
+                str(config.paths.repo_root / "config" / "config.yaml"),
+            ],
+            "WorkingDirectory": str(config.paths.repo_root),
+            "StartInterval": interval,
+            "StandardOutPath": str(config.paths.log_root / f"{role}-launchd.stdout.log"),
+            "StandardErrorPath": str(config.paths.log_root / f"{role}-launchd.stderr.log"),
+        }
+    )
     return plistlib.dumps(plist, fmt=plistlib.FMT_XML, sort_keys=True)
 
 
