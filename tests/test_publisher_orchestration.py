@@ -16,6 +16,7 @@ def test_paused_publisher_never_reaches_candidate_or_git(make_config, monkeypatc
             publication=replace(config.publisher.publication, mode="paused"),
         ),
     )
+    monkeypatch.setattr("codex_config_manager.publisher.validate_environment", lambda unused: {})
     monkeypatch.setattr("codex_config_manager.publisher.validate_rsync", lambda unused: {})
     manifest = type("Manifest", (), {"fingerprint": "fingerprint", "skills": ()})()
     monkeypatch.setattr("codex_config_manager.publisher.source_manifest", lambda unused: manifest)
@@ -37,6 +38,7 @@ def test_paused_publisher_never_reaches_candidate_or_git(make_config, monkeypatc
 
 def test_unsettled_publisher_does_not_mutate_repository(make_config, monkeypatch) -> None:
     config = make_config()
+    monkeypatch.setattr("codex_config_manager.publisher.validate_environment", lambda unused: {})
     monkeypatch.setattr("codex_config_manager.publisher.validate_rsync", lambda unused: {})
     manifest = type("Manifest", (), {"fingerprint": "fingerprint", "skills": ()})()
     monkeypatch.setattr("codex_config_manager.publisher.source_manifest", lambda unused: manifest)

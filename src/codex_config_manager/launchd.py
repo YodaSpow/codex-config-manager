@@ -77,11 +77,20 @@ def inspect(role: str) -> dict[str, object]:
 def install(config: Config) -> Path:
     if config.role == "consumer" and config.machine_id == "MacStudio":
         raise ValidationError("consumer LaunchAgent installation is forbidden on the Mac Studio")
+    if config.role == "publisher" and config.machine_id == "MacStudio":
+        consumer_state = inspect("consumer")
+        if consumer_state["loaded"] or consumer_state["plist_exists"]:
+            raise ValidationError("consumer LaunchAgent state must be absent on the Mac Studio")
     validate_environment(config.paths.repo_root)
     for directory in (config.paths.runtime_state_root, config.paths.lock_root, config.paths.log_root):
         directory.mkdir(parents=True, exist_ok=True, mode=0o700)
     destination = agent_path(config.role)
     destination.parent.mkdir(parents=True, exist_ok=True)
+    previous: bytes | None = None
+    if destination.exists():
+        if destination.is_symlink() or not destination.is_file():
+            raise ValidationError(f"refusing unexpected LaunchAgent target: {destination}")
+        previous = destination.read_bytes()
     temporary = destination.with_name(f".{destination.name}.ccm.tmp")
     temporary.write_bytes(render(config))
     os.chmod(temporary, 0o600)
@@ -91,6 +100,13 @@ def install(config: Config) -> Path:
     try:
         _launchctl(["bootstrap", domain, str(destination)])
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+        if previous is None:
+            destination.unlink(missing_ok=True)
+        else:
+            temporary.write_bytes(previous)
+            os.chmod(temporary, 0o600)
+            os.replace(temporary, destination)
+            _launchctl(["bootstrap", domain, str(destination)], check=False)
         raise ValidationError(f"launchd bootstrap failed: {exc}") from exc
     state = inspect(config.role)
     if not state["loaded"]:

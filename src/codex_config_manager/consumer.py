@@ -7,6 +7,7 @@ from pathlib import Path
 
 from .config import Config
 from .errors import PathSafetyError, ValidationError
+from .environment import validate_environment
 from .git import consumer_fast_forward
 from .locking import execution_lock
 from .logging_setup import configure_logging
@@ -71,6 +72,7 @@ def deploy_latest(config: Config) -> bool:
 def run_consumer(config: Config) -> str:
     logger = configure_logging(config.paths.log_root, "consumer")
     with execution_lock(config.paths.lock_root, "consumer"):
+        validate_environment(config.paths.repo_root)
         validate_rsync(config.paths.rsync_binary)
         updated, sha = consumer_fast_forward(config)
         changed = deploy_latest(config)

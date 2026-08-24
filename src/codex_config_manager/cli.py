@@ -54,7 +54,12 @@ def consumer_main() -> int:
 
 def install_main() -> int:
     args = _parser("Install the configured role's LaunchAgent.").parse_args()
-    return _execute(lambda: f"installed: {install(_load(args.config))}")
+    def action() -> str:
+        config = _load(args.config)
+        validate_runtime(config)
+        return f"installed: {install(config)}"
+
+    return _execute(action)
 
 
 def uninstall_main() -> int:

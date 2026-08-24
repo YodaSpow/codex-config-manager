@@ -13,6 +13,7 @@ from .artifacts import (
 )
 from .config import Config
 from .errors import GitSafetyError, ValidationError
+from .environment import validate_environment
 from .git import (
     commit_and_push,
     require_clean_base,
@@ -99,6 +100,7 @@ def run_publisher(config: Config) -> str:
     logger = configure_logging(config.paths.log_root, "publisher")
     state_store = StateStore(config.paths.runtime_state_root)
     with execution_lock(config.paths.lock_root, "publisher"):
+        validate_environment(config.paths.repo_root)
         validate_rsync(config.paths.rsync_binary)
         state, _ = state_store.load()
         pending = state.get("pending_publication")
