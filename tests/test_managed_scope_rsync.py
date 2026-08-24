@@ -133,3 +133,10 @@ def test_snapshot_rejects_system_and_symlink(tmp_path: Path) -> None:
     (latest / "skills" / "bad").symlink_to(outside)
     with pytest.raises(ValidationError):
         snapshot_manifest(latest)
+
+
+def test_control_characters_in_skill_names_are_rejected(tmp_path: Path) -> None:
+    codex = tmp_path / "codex"
+    (codex / "skills" / "bad\nname").mkdir(parents=True)
+    with pytest.raises(ValidationError, match="unsafe"):
+        source_manifest(codex)

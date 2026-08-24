@@ -99,3 +99,9 @@ def test_readme_reconciliation_is_bounded_and_dynamic() -> None:
     assert "Human text." in updated
     assert "a-skill.zip" not in updated
     assert updated.count(BEGIN_MARKER) == 1
+
+
+def test_readme_escapes_dynamic_skill_label_and_url() -> None:
+    rendered = reconcile_readme("# Project\n", has_agents=False, skills=("skill [one]",))
+    assert "Download skill \\[one\\]" in rendered
+    assert "upload-ready/skills/skill%20%5Bone%5D.zip" in rendered

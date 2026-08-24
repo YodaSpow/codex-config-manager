@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
@@ -71,7 +72,11 @@ def _file_digest(path: Path) -> tuple[str, int, bool]:
 
 
 def _validate_name(name: str, *, top_level_skill: bool = False) -> None:
-    if name in {"", ".", ".."} or "/" in name or "\x00" in name:
+    if (
+        name in {"", ".", ".."}
+        or "/" in name
+        or any(unicodedata.category(character).startswith("C") for character in name)
+    ):
         raise ValidationError(f"unsafe managed name: {name!r}")
     if top_level_skill and name.startswith("."):
         raise ValidationError(f"hidden top-level skill is unsupported: {name!r}")
@@ -130,10 +135,15 @@ def source_manifest(codex_root: Path) -> ManagedManifest:
         children = list(os.scandir(skills_root))
     except OSError as exc:
         raise ValidationError(f"cannot read authoritative skills root: {exc}") from exc
+    top_level_names: dict[str, str] = {}
     for child in sorted(children, key=lambda item: item.name):
         if child.name in {SYSTEM_SKILL, IGNORED_NAME}:
             continue
         _validate_name(child.name, top_level_skill=True)
+        previous = top_level_names.get(child.name.casefold())
+        if previous is not None and previous != child.name:
+            raise ValidationError(f"case-colliding top-level skills: {previous!r}, {child.name!r}")
+        top_level_names[child.name.casefold()] = child.name
         path = Path(child.path)
         if path.is_symlink() or not path.is_dir():
             raise ValidationError(f"top-level user skill must be a directory: {child.name}")
@@ -158,12 +168,17 @@ def snapshot_manifest(root: Path) -> ManagedManifest:
     skills = root / "skills"
     if not skills.is_dir() or skills.is_symlink():
         raise ValidationError("snapshot skills/ must exist as a directory")
+    top_level_names: dict[str, str] = {}
     for child in sorted(os.scandir(skills), key=lambda item: item.name):
         if child.name == IGNORED_NAME:
             continue
         if child.name == SYSTEM_SKILL:
             raise ValidationError("snapshot contains forbidden skills/.system")
         _validate_name(child.name, top_level_skill=True)
+        previous = top_level_names.get(child.name.casefold())
+        if previous is not None and previous != child.name:
+            raise ValidationError(f"case-colliding snapshot skills: {previous!r}, {child.name!r}")
+        top_level_names[child.name.casefold()] = child.name
         path = Path(child.path)
         if path.is_symlink() or not path.is_dir():
             raise ValidationError(f"snapshot skill must be a directory: {child.name}")

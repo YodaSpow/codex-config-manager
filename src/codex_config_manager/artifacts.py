@@ -6,6 +6,7 @@ import hashlib
 import os
 import zipfile
 from pathlib import Path, PurePosixPath
+from urllib.parse import quote
 
 from .errors import ValidationError
 from .managed_scope import IGNORED_NAME, snapshot_manifest
@@ -183,7 +184,10 @@ def render_download_section(has_agents: bool, skills: tuple[str, ...]) -> str:
             ]
         )
     lines.extend(["## Skills", "", "Each download contains one complete user-managed skill.", ""])
-    lines.extend(f"- [Download {name}](upload-ready/skills/{name}.zip)" for name in skills)
+    for name in skills:
+        label = name.replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
+        target = quote(f"upload-ready/skills/{name}.zip", safe="/-._~")
+        lines.append(f"- [Download {label}]({target})")
     lines.extend([END_MARKER, ""])
     return "\n".join(lines)
 
