@@ -1,0 +1,4 @@
+interface:
+  display_name: "Chat Handoff (Mode H)"
+  short_description: "Bridge a project safely into a fresh chat."
+  default_prompt: "Use $chat-handoff to create a complete handoff prompt for a fresh chat."

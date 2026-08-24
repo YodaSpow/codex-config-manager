@@ -1,0 +1,4 @@
+interface:
+  display_name: "Operational Modes (0, A, B, C, P)"
+  short_description: "Set the right operating posture for work"
+  default_prompt: "Use $operational-modes to select and apply the right operating posture for this task."

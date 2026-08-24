@@ -1,0 +1,4 @@
+interface:
+  display_name: "Semantic Compression (Mode T)"
+  short_description: "Compress without losing meaning"
+  default_prompt: "Use Mode T to compress this source without losing decisions, constraints, or dependencies."
