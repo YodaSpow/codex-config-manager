@@ -1,20 +1,20 @@
 # Doc 3 — Mode C Implementation Plan — Mac Studio Bootstrap and Mac mini Handoff
 
-**Status:** Final pre-implementation execution plan; implementation is not yet authorised or started  
+**Status:** Executed through Gates 0–14 on the Mac Studio; retained as the controlling historical plan. Phase 15 remains deferred. See [Doc 10](10-implementation-architecture-and-operations.md), [Doc 11](11-validation-evidence-mac-studio.md), and [Doc 12](12-mac-mini-phase-15-handoff.md).
 **Scope:** Complete Mac Studio repository bootstrap, Python implementation, environment construction, publisher validation, consumer simulation, permanent documentation and bounded Mac mini handoff  
 **Prepared:** 21 August 2026  
 **Reconciled:** 24 August 2026 with Docs 5–8 covering publication history, settled controls, portable distribution and root-level `latest/`  
 **Protected pre-reconciliation baseline:** [Doc 3 snapshot — 21 August 2026](history/03-mode-c-implementation-plan-pre-doc-05-reconciliation-2026-08-21.md), SHA-256 `182e470f0e79d29ff91bc9e14efd5681bf82f4836236db390c3a46241b2ed4ee`  
 **Protected pre-Doc-8 baseline:** [Doc 3 snapshot — 24 August 2026](history/03-mode-c-implementation-plan-pre-doc-08-reconciliation-2026-08-24.md), SHA-256 `2f89be10a976c2fb5686bec9ce756c2608aa7bf0105a21d53e6590952c01c55f`  
-**Implementation authority:** This document defines what a future Mode C must do. It does not itself authorise Mode C, Git mutation, dependency installation, rsync construction, launchd installation, GitHub publication or Codex-state mutation.
+**Implementation record:** The later operator-authorised Mode C goal executed this plan through Gate 14. [Doc 10](10-implementation-architecture-and-operations.md) records the resulting system, [Doc 11](11-validation-evidence-mac-studio.md) records evidence, and [Doc 12](12-mac-mini-phase-15-handoff.md) retains the deferred boundary.
 
 ## Status
 
-- ✅ The architecture, managed scope, source-of-truth direction, deletion semantics, Python direction, environment ownership, GitHub transport, deterministic managed-state publication history and machine-role boundaries are settled.
-- ✅ The pre-implementation Mac Studio repository, managed-source, Python, rsync and Git/GitHub state has been inspected read-only.
-- ✅ Every remaining unknown has been classified below as a Mode C implementation discovery, implementation choice, proof gate or explicitly deferred Mac mini validation item.
-- ▶ The next action, only after explicit operator authorisation, is to execute this plan in Mode C in its stated order.
-- ⛔ No application code, Git repository, dependency environment, repository-owned rsync, private candidate, `latest/` payload, portable artifact or launchd service is created by this document.
+- ✅ The architecture and implementation plan below were executed through Mac Studio Gate 14 under the later Doc 9 goal authority.
+- ✅ Application code, reproducible environments, repository-owned rsync, `latest/`, portable artifacts, Git publication and the publisher LaunchAgent are operational and evidenced in Docs 10–11.
+- ✅ The consumer is implemented and proven through isolated Mac Studio simulation.
+- ⏸ Phase 15 real Mac mini installation and live consumer evidence remain deliberately deferred to Doc 12.
+- ℹ Future-tense requirements below are retained as the historical gate specification against which the implementation was validated; they are not current implementation status.
 
 ## Purpose
 

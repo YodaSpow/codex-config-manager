@@ -1,6 +1,6 @@
 # Doc 5 — Implementation Discovery — Deterministic Managed-State Publication History
 
-**Status:** Operator-approved publication-history contract; not yet implemented  
+**Status:** Implemented and validated through the initial real managed-state publication. See [Doc 10](10-implementation-architecture-and-operations.md) and [Doc 11](11-validation-evidence-mac-studio.md).
 **Scope:** Headless GitHub visibility, managed-state commit semantics and deliberate project releases  
 **Relationship to existing documents:** Publication-history authority reconciled into Docs 3, 7 and 8. Doc 8 replaces the historical tracked staging path with root-level `latest/`; Doc 7 adds exact derived artifact and bounded README paths without changing canonical semantic components.
 

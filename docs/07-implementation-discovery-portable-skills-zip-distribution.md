@@ -1,6 +1,6 @@
 # Doc 7 — Implementation Discovery — Portable Global Guidance and Per-Skill ZIP Distribution
 
-**Status:** Operator-approved distribution contract; ChatGPT one-skill ZIP wrapper proven through the real web uploader; repository integration remains unimplemented  
+**Status:** Implemented and validated; current global and per-skill artifacts are published. See [Doc 10](10-implementation-architecture-and-operations.md) and [Doc 11](11-validation-evidence-mac-studio.md).
 **Scope:** Derived `global-agents.zip`, dynamically generated per-skill ZIPs, bounded README download reconciliation, deterministic packaging, Git publication and human transfer  
 **Relationship to existing documents:** This record defines a derived public download surface alongside canonical unpacked `latest/`. It does not change the Mac Studio or Mac mini authority model or authorise implementation. Docs 3, 5, 6 and 8 now reconcile its publication junctions.  
 **Related documents:** [Doc 1 — Managed-Skill Ingestion Exclusions](01-implementation-discovery-managed-skill-ingestion-exclusions.md) · [Doc 3 — Mode C Implementation Plan](03-mode-c-implementation-plan.md) · [Doc 5 — Deterministic Managed-State Publication History](05-implementation-discovery-deterministic-managed-state-publication-history.md) · [Doc 6 — Settled-State Publication Controls](06-implementation-discovery-settled-state-publication-controls.md) · [Doc 8 — Root-Level Latest Managed Snapshot](08-architecture-reconciliation-root-level-latest-managed-snapshot.md)

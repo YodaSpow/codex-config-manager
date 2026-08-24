@@ -109,6 +109,8 @@ def _walk(root: Path, *, prefix: PurePosixPath) -> list[ManifestEntry]:
                         continue
                     _validate_name(child.name)
                     children.append((Path(child.path), logical / child.name))
+            if not children:
+                raise ValidationError(f"empty managed directories are unsupported by Git: {logical_text}")
             stack.extend(sorted(children, key=lambda pair: pair[1].as_posix(), reverse=True))
         elif physical.is_file():
             digest, size, executable = _file_digest(physical)
@@ -166,23 +168,24 @@ def snapshot_manifest(root: Path) -> ManagedManifest:
         digest, size, executable = _file_digest(agents)
         entries.append(ManifestEntry("AGENTS.md", "file", digest, size, executable))
     skills = root / "skills"
-    if not skills.is_dir() or skills.is_symlink():
-        raise ValidationError("snapshot skills/ must exist as a directory")
-    top_level_names: dict[str, str] = {}
-    for child in sorted(os.scandir(skills), key=lambda item: item.name):
-        if child.name == IGNORED_NAME:
-            continue
-        if child.name == SYSTEM_SKILL:
-            raise ValidationError("snapshot contains forbidden skills/.system")
-        _validate_name(child.name, top_level_skill=True)
-        previous = top_level_names.get(child.name.casefold())
-        if previous is not None and previous != child.name:
-            raise ValidationError(f"case-colliding snapshot skills: {previous!r}, {child.name!r}")
-        top_level_names[child.name.casefold()] = child.name
-        path = Path(child.path)
-        if path.is_symlink() or not path.is_dir():
-            raise ValidationError(f"snapshot skill must be a directory: {child.name}")
-        entries.extend(_walk(path, prefix=PurePosixPath("skills") / child.name))
+    if skills.exists() and (not skills.is_dir() or skills.is_symlink()):
+        raise ValidationError("snapshot skills must be a directory when present")
+    if skills.is_dir():
+        top_level_names: dict[str, str] = {}
+        for child in sorted(os.scandir(skills), key=lambda item: item.name):
+            if child.name == IGNORED_NAME:
+                continue
+            if child.name == SYSTEM_SKILL:
+                raise ValidationError("snapshot contains forbidden skills/.system")
+            _validate_name(child.name, top_level_skill=True)
+            previous = top_level_names.get(child.name.casefold())
+            if previous is not None and previous != child.name:
+                raise ValidationError(f"case-colliding snapshot skills: {previous!r}, {child.name!r}")
+            top_level_names[child.name.casefold()] = child.name
+            path = Path(child.path)
+            if path.is_symlink() or not path.is_dir():
+                raise ValidationError(f"snapshot skill must be a directory: {child.name}")
+            entries.extend(_walk(path, prefix=PurePosixPath("skills") / child.name))
     entries.append(ManifestEntry("skills", "directory"))
     return ManagedManifest(tuple(sorted(entries)))
 

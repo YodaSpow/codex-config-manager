@@ -1,6 +1,6 @@
 # Doc 8 — Architecture Reconciliation — Root-Level Latest Managed Snapshot
 
-**Status:** Operator-approved architecture decision and Mode C implementation plan; active documentation reconciliation completed and validated; repository implementation remains unbuilt and unauthorised  
+**Status:** Architecture implemented and validated through root-level `latest/`; retained as the reconciliation record. See [Doc 10](10-implementation-architecture-and-operations.md) and [Doc 11](11-validation-evidence-mac-studio.md).
 **Decision date:** 24 August 2026  
 **Scope:** Replace the planned tracked `source/staging/` path with root-level `latest/`, preserve the Mac Studio authority direction, define private candidate handling, derive `upload-ready/` from `latest/`, and reconcile active documentation  
 **Historical boundary:** The two documents under `docs/bootstrap/` remain unchanged historical inputs. This document and the reconciled active Docs 1–7 govern the implementation path.  

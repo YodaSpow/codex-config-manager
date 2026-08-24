@@ -34,6 +34,7 @@ def test_isolated_consumer_initial_update_noop_and_deletion(make_config) -> None
     assert (config.paths.codex_root / "skills" / ".system" / "preserve").read_text() == "system"
     assert (config.paths.codex_root / "skills" / ".DS_Store").read_text() == "finder"
     (config.paths.latest_root / "skills" / "future-skill" / "nested" / "x").unlink()
+    (config.paths.latest_root / "skills" / "future-skill" / "nested").rmdir()
     assert deploy_latest(config)
     assert not (config.paths.codex_root / "skills" / "future-skill" / "nested" / "x").exists()
 
@@ -49,6 +50,20 @@ def test_consumer_propagates_skill_and_agents_deletion(make_config) -> None:
     assert deploy_latest(config)
     assert not (config.paths.codex_root / "skills" / "future-skill").exists()
     assert not (config.paths.codex_root / "AGENTS.md").exists()
+
+
+def test_consumer_handles_git_clone_with_no_tracked_skills_directory(make_config) -> None:
+    config = make_config(role="consumer", machine="MacMini")
+    config.paths.latest_root.mkdir(parents=True)
+    existing = config.paths.codex_root / "skills" / "old-skill"
+    existing.mkdir()
+    (existing / "SKILL.md").write_text("old")
+    system = config.paths.codex_root / "skills" / ".system"
+    system.mkdir()
+    (system / "preserve").write_text("system")
+    assert deploy_latest(config)
+    assert not existing.exists()
+    assert (system / "preserve").read_text() == "system"
 
 
 def test_invalid_latest_stops_before_live_mutation(make_config) -> None:

@@ -1,6 +1,6 @@
 # Doc 6 — Implementation Discovery — Settled-State Publication Controls
 
-**Status:** Operator-approved timing and publication-control direction; reconciled into Docs 3 and 8; not implemented  
+**Status:** All four modes implemented and tested; `after_settle` is active on the Mac Studio. See [Doc 10](10-implementation-architecture-and-operations.md) and [Doc 11](11-validation-evidence-mac-studio.md).
 **Scope:** Mac Studio publisher observation, settling, publication eligibility, pause/schedule/throttle controls and human-readable durations  
 **Relationship to existing documents:** This record refines the publisher timing and configuration contract and defines the eligibility layer before private candidate construction, root-level `latest/` promotion and Doc 5 managed-state publication.  
 **Related documents:** [Doc 3 — Mode C Implementation Plan](03-mode-c-implementation-plan.md) · [Doc 5 — Deterministic Managed-State Publication History](05-implementation-discovery-deterministic-managed-state-publication-history.md) · [Doc 8 — Root-Level Latest Managed Snapshot](08-architecture-reconciliation-root-level-latest-managed-snapshot.md)

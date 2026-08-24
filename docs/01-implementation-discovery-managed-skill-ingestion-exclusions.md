@@ -1,6 +1,6 @@
 # Doc 1 — Implementation Discovery — Managed Skill Ingestion Exclusions
 
-**Status:** Verified implementation rule; not yet implemented  
+**Status:** Implemented and validated; retained as the discovery record for the exclusion contract. See [Doc 10](10-implementation-architecture-and-operations.md).
 **Scope:** Managed-skill ingestion and transport boundaries  
 **Relationship to bootstrap documents:** This record refines the managed-skills contract. It does not replace or modify either bootstrap document.  
 **Architecture reconciliation:** [Doc 8 — Root-Level Latest Managed Snapshot](08-architecture-reconciliation-root-level-latest-managed-snapshot.md) replaces the historical planned staging path with root-level `latest/`.

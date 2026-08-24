@@ -1,6 +1,6 @@
 # Doc 2 — Implementation Discovery — Python Runtime and Environment Ownership
 
-**Status:** Operator-approved implementation direction and environment contract; not yet implemented  
+**Status:** Implemented and validated on the Mac Studio; retained as the environment discovery record. See [Doc 10](10-implementation-architecture-and-operations.md) and [Doc 11](11-validation-evidence-mac-studio.md).
 **Scope:** Python application shape, dependency ownership, repository-local execution environment, rsync runtime isolation, launchd resolution, validation and rebuild boundaries  
 **Relationship to bootstrap documents:** This record refines the physical implementation proposed by the bootstrap architecture and repository blueprint. It preserves their architectural contracts and does not modify or replace either bootstrap document.  
 **Related discovery:** [Doc 1 — Implementation Discovery — Managed Skill Ingestion Exclusions](01-implementation-discovery-managed-skill-ingestion-exclusions.md) · [Doc 8 — Root-Level Latest Managed Snapshot](08-architecture-reconciliation-root-level-latest-managed-snapshot.md)

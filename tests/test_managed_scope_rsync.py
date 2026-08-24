@@ -140,3 +140,18 @@ def test_control_characters_in_skill_names_are_rejected(tmp_path: Path) -> None:
     (codex / "skills" / "bad\nname").mkdir(parents=True)
     with pytest.raises(ValidationError, match="unsafe"):
         source_manifest(codex)
+
+
+def test_empty_skill_directories_are_rejected(tmp_path: Path) -> None:
+    codex = tmp_path / "codex"
+    (codex / "skills" / "empty-skill").mkdir(parents=True)
+    with pytest.raises(ValidationError, match="empty managed"):
+        source_manifest(codex)
+
+
+def test_snapshot_without_skills_directory_represents_empty_set(tmp_path: Path) -> None:
+    latest = tmp_path / "latest"
+    latest.mkdir()
+    manifest = snapshot_manifest(latest)
+    assert manifest.skills == ()
+    assert {entry.path for entry in manifest.entries} == {"skills"}

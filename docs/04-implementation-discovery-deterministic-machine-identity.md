@@ -1,6 +1,6 @@
 # Doc 4 — Implementation Discovery — Deterministic Model-Derived Machine Identity
 
-**Status:** Operator-approved identity contract; verified on the Mac Studio and Mac mini; not yet implemented  
+**Status:** Implemented and validated on the Mac Studio; native identity was previously verified on both machines. See [Doc 10](10-implementation-architecture-and-operations.md).
 **Scope:** Human-readable machine identity, `config.yaml` ownership and role-aware preflight  
 **Relationship to existing documents:** This record refines the machine-ID portion of Doc 3 Phase 5. It does not change explicit role selection or infer publisher/consumer authority from hardware.  
 **Related plan:** [Doc 3 — Mode C Implementation Plan — Mac Studio Bootstrap and Mac mini Handoff](03-mode-c-implementation-plan.md)

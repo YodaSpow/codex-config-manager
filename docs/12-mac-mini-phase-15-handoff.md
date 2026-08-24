@@ -1,0 +1,183 @@
+# Doc 12 — Mac mini Phase 15 Handoff
+
+**Status:** Ready for a separate future goal on the real Mac mini
+**Authority:** This document is a handoff, not authorization to operate on the Mac mini
+**Prerequisite:** Mac Studio Gates 0–14 are complete; `origin/main` contains the reusable implementation and current `latest/`
+**Canonical operations:** [Doc 10 — Implementation Architecture and Operations](10-implementation-architecture-and-operations.md)
+
+## Objective
+
+On the real Mac mini, establish the repository-owned environment, create truthful consumer configuration, validate the pulled snapshot, deploy only the bounded managed targets, install only the consumer LaunchAgent, and contribute permitted evidence/refinements back to this repository.
+
+Completion of this later goal proves the full Mac Studio → GitHub → Mac mini system. It must not redefine the already validated authority, scope, `latest/`, publisher or exclusion contracts.
+
+## Locked boundaries
+
+The Mac mini work must preserve:
+
+- Mac Studio `~/.codex` as the authoring authority;
+- GitHub `origin/main` as the canonical shared published history;
+- `latest/` as the only unpacked consumer payload;
+- dynamic immediate user-skill discovery;
+- complete exclusion/preservation of `skills/.system/**`;
+- global `.DS_Store` ignore/preservation;
+- bounded managed deletion for `AGENTS.md` and user skills only;
+- explicit consumer role and model-derived `MacMini` identity;
+- safe fast-forward-only repository updates;
+- exact repository-owned `.venv` and `.tools/rsync` runtime paths;
+- publisher absence on the Mac mini;
+- no force push, automatic tag or automatic GitHub Release.
+
+Do not copy SSH credentials, private Mac Studio configuration, runtime receipts, logs or LaunchAgent files between machines. Reconstruct machine-local state from tracked contracts.
+
+## Required discovery before mutation
+
+Run a bounded Mode A pass on the real Mac mini and record:
+
+1. native Model Name and derived identity (`MacMini` expected);
+2. intended repository root and its non-overlap with the Mac mini Codex root;
+3. readable Mac mini `~/.codex`, `AGENTS.md`, `skills/`, `.system` presence and unrelated sentinel surfaces without traversing `.system`;
+4. current Python candidate, version and architecture;
+5. SSH access to `git@github.com:YodaSpow/codex-config-manager.git` from the user and launchd domains;
+6. existing clone/branch/upstream state, or the safe destination for a new clone;
+7. existing publisher/consumer LaunchAgent state;
+8. any filesystem, permission or path fact that differs from the Mac Studio evidence.
+
+Stop if the intended Codex root is unreadable, overlaps the repository, contains unsupported managed entries, or the machine/config identity cannot agree.
+
+## Repository and environment setup
+
+Clone or safe-fast-forward the existing repository over SSH. Do not create unrelated history and do not force.
+
+Build the repository-owned development environment with a compatible external Python:
+
+```bash
+cd "/Users/spowart/Scripts/codex-config-manager" \
+&& /absolute/path/to/python3 scripts/bootstrap.py --environment development \
+&& echo "✅ Command ran successfully"
+```
+
+Build `.tools/rsync` from the tracked source contract:
+
+```bash
+cd "/Users/spowart/Scripts/codex-config-manager" \
+&& /absolute/path/to/python3 tooling/rsync/build.py \
+&& echo "✅ Command ran successfully"
+```
+
+Validate the executable hash, version, architecture, required options and complete linkage. Runtime linkage must remain limited to permitted macOS libraries or repository-contained `.tools/rsync/lib`; no Homebrew rsync runtime is allowed.
+
+## Consumer configuration
+
+Create ignored `config/config.yaml` from the public example and set truthful Mac mini values:
+
+```yaml
+contract_version: 1
+
+machine:
+  id: MacMini
+
+role: "consumer"
+```
+
+Set absolute Mac mini paths for:
+
+- `paths.codex_root`;
+- `paths.repo_root`;
+- runtime state, locks and logs.
+
+Keep the tracked Git identity exactly aligned with this repository. Publisher settings remain in the union schema but do not authorize publisher behaviour under consumer role. Keep `consumer.check_interval: 5m` initially.
+
+Validate before any live deployment:
+
+```bash
+cd "/Users/spowart/Scripts/codex-config-manager" \
+&& .venv/bin/codex-config-manager-validate --config config/config.yaml \
+&& echo "✅ Command ran successfully"
+```
+
+## Controlled live consumer validation
+
+Before the first live consumer run, capture evidence for:
+
+- current Git SHA;
+- validated `latest/` fingerprint and skill membership;
+- live Mac mini managed fingerprint;
+- `.system` sentinel identity without using it as managed input;
+- `.DS_Store` observations without mutation;
+- unrelated `.codex` sentinel identity.
+
+Run one foreground consumer invocation:
+
+```bash
+cd "/Users/spowart/Scripts/codex-config-manager" \
+&& .venv/bin/codex-config-manager-consumer --config config/config.yaml \
+&& echo "✅ Command ran successfully"
+```
+
+Prove:
+
+1. only `AGENTS.md` and dynamic user-skill targets changed;
+2. live managed content equals validated `latest/`;
+3. `.system/**`, `.DS_Store` and unrelated sentinels are unchanged;
+4. a second run is a no-op;
+5. consumer runtime created no commit and did not invoke publisher code;
+6. checkout HEAD equals the pulled published SHA.
+
+Any real deletion proof must use a separately authorized, bounded managed change originating on the Mac Studio and flowing through normal publication. Never sacrifice existing operator content for a test.
+
+## Launchd activation
+
+Only after foreground deployment and exclusion proofs pass:
+
+```bash
+cd "/Users/spowart/Scripts/codex-config-manager" \
+&& .venv/bin/codex-config-manager-install --config config/config.yaml \
+&& echo "✅ Command ran successfully"
+```
+
+Validate:
+
+- label `com.yodaspow.codex-config-manager.consumer`;
+- exact `.venv/bin/codex-config-manager-consumer` program path;
+- 300-second interval;
+- correct repository working directory and log paths;
+- loaded `gui/<uid>` state;
+- headless no-op output;
+- launchd-domain SSH authentication;
+- publisher plist/service absent on the Mac mini;
+- single-instance behavior and conservative failure logging.
+
+Exercise uninstall and reinstall, proving that uninstall preserves live Codex state, repository state, `latest/`, config, environment, rsync, runtime state and logs.
+
+## Evidence to contribute back
+
+Create a normal development commit containing only public evidence and permitted consumer refinements. Do not commit private config, machine credentials, logs containing private details or runtime receipts.
+
+Record:
+
+- Mac mini model identifier, macOS, Python and architecture;
+- rsync build receipt summary and linkage;
+- clean test results on the Mac mini;
+- first foreground consumer result and no-op proof;
+- before/after exclusion and unrelated-sentinel proof;
+- installed consumer LaunchAgent evidence;
+- full pulled publication SHA;
+- any evidence-driven Mac mini-specific correction;
+- final full-system readiness conclusion.
+
+Only after that evidence is pushed may project documentation say the complete two-machine system is operational.
+
+## Stop conditions
+
+Stop without deployment or redesign if:
+
+- Git history is dirty, ahead, diverged or cannot safely fast-forward;
+- machine identity or role mismatches;
+- `latest/` is invalid or contains excluded/unexpected state;
+- exact rsync/environment validation fails;
+- consumer target overlaps the repository or another unsafe root;
+- `.system`, `.DS_Store` or unrelated content cannot be proven preserved;
+- launchd would install the publisher lane;
+- credentials or private machine data would need publication;
+- an alternative would materially change authority or architecture.

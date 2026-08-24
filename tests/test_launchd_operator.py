@@ -5,9 +5,9 @@ from pathlib import Path
 
 import pytest
 
-from codex_config_manager.errors import ValidationError
+from codex_config_manager.errors import GitSafetyError, ValidationError
 from codex_config_manager.launchd import install, render
-from codex_config_manager.validation import status
+from codex_config_manager.validation import status, validate_runtime
 
 
 def test_publisher_plist_uses_absolute_repo_owned_command(make_config) -> None:
@@ -56,3 +56,15 @@ def test_status_does_not_create_runtime_directories(make_config, monkeypatch) ->
     assert result["environment_valid"] is True
     assert not config.paths.runtime_state_root.exists()
     assert not config.paths.log_root.exists()
+
+
+def test_validation_rejects_dirty_repository_before_source_checks(make_config, monkeypatch) -> None:
+    config = make_config()
+    monkeypatch.setattr("codex_config_manager.validation.validate_environment", lambda unused: {})
+    monkeypatch.setattr("codex_config_manager.validation.validate_rsync", lambda unused: {})
+    monkeypatch.setattr(
+        "codex_config_manager.validation.repository_status",
+        lambda unused: {"dirty": True, "ahead": 0, "behind": 0},
+    )
+    with pytest.raises(GitSafetyError, match="worktree"):
+        validate_runtime(config)

@@ -1,19 +1,18 @@
 # Doc 9 — Mode C Goal — Mac Studio Rollout and Mac mini Handoff
 
-**Status:** Operator-approved goal package; seven pre-implementation decisions settled; Mode C has not started
+**Status:** Goal executed through Doc 3 Gates 0–14; Phase 15 remains deferred. See [Doc 10](10-implementation-architecture-and-operations.md), [Doc 11](11-validation-evidence-mac-studio.md), and [Doc 12](12-mac-mini-phase-15-handoff.md).
 **Scope:** Complete the Mac Studio implementation through Doc 3 Gates 0–14, including a production publisher, a complete consumer implementation proven only through isolated Mac Studio simulation, permanent documentation and a bounded Mac mini handoff
 **Deferred:** Doc 3 Phase 15 real Mac mini installation, live consumer validation and full Mac Studio → GitHub → Mac mini proof
-**Goal authority:** This document makes the intended future goal self-contained. Creating this document does not itself start Mode C, install dependencies or launchd state, modify Codex managed content, create commits, or publish to GitHub.
+**Goal record:** This package supplied the authority boundary for the completed Mac Studio rollout. It remains the preserved goal input; Docs 10–12 record outcome, evidence and deferred work.
 
 ## Status
 
 - ✅ Docs 1–8 retain their established architecture, discovery and implementation-plan roles.
-- ✅ The Git bootstrap has succeeded: local `main` tracks `origin/main` at commit `6f8c66a3de5d042c9616c22a97434c26e038815c` through the existing SSH remote, without force-pushing.
-- ✅ All four Doc 6 publication modes are required in the first implementation: `after_settle`, `paused`, `scheduled` and `throttled`.
-- ✅ The seven bounded publication-control decisions are settled below.
-- ▶ The next separately authorised action is to create and execute one Mode C goal grounded in this document and Doc 3.
-- ⛔ No application code, environment, rsync runtime, configuration, managed snapshot, distribution artifact or launchd service has been implemented by this Mode B document.
-- ⛔ Real Mac mini work remains outside this goal.
+- ✅ This package subsequently authorized and governed the completed Mac Studio Mode C rollout through Gate 14.
+- ✅ All four Doc 6 publication modes are implemented; `after_settle` is the active default.
+- ✅ Application code, environment, rsync, configuration, managed snapshot, distribution artifacts, Git publication and the publisher LaunchAgent are implemented and validated in Docs 10–11.
+- ⏸ Real Mac mini work remains outside this completed goal and is handed off in Doc 12.
+- ℹ The objective and future-tense execution language below are preserved as the approved goal input, not current implementation status.
 
 ## Goal objective
 

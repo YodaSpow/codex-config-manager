@@ -8,6 +8,7 @@ from pathlib import Path
 from .artifacts import validate_distribution
 from .config import Config
 from .environment import validate_environment
+from .errors import GitSafetyError
 from .git import repository_status
 from .launchd import inspect
 from .managed_scope import snapshot_manifest, source_manifest
@@ -18,6 +19,10 @@ def validate_runtime(config: Config) -> dict[str, object]:
     receipt = validate_environment(config.paths.repo_root)
     rsync_receipt = validate_rsync(config.paths.rsync_binary)
     git = repository_status(config)
+    if git["dirty"]:
+        raise GitSafetyError("repository contains worktree or index changes")
+    if git["ahead"]:
+        raise GitSafetyError("repository is ahead or diverged from configured upstream")
     result: dict[str, object] = {
         "machine_id": config.machine_id,
         "role": config.role,
