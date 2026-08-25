@@ -13,10 +13,10 @@
 - ✅ ChatGPT web has accepted a ZIP containing exactly one wrapped skill directory and created the corresponding skill under **Created by me**.
 - ✅ Each top-level `latest/skills/` user-skill directory maps dynamically to one stable ZIP with the same basename under `upload-ready/skills/`.
 - ✅ The global `AGENTS.md` remains canonically named `AGENTS.md` and is separately packaged as `upload-ready/global-agents.zip`.
-- ✅ The root README provides a view link to canonical `latest/AGENTS.md`, a download link to `global-agents.zip`, and one dynamically reconciled download entry per current skill ZIP.
+- ✅ The root README provides an ordinary view link to canonical `latest/AGENTS.md`, a direct-download link to `global-agents.zip?raw=1`, and one dynamically reconciled `?raw=1` download entry per current skill ZIP.
 - ✅ Skill additions, updates and deletions must reconcile `latest/`, ZIP artifacts and README membership as one coherent publication state.
 - ✅ `.system/**`, `.DS_Store`, macOS archive metadata and unrelated `.codex` content never enter a private candidate, `latest/` or any portable artifact.
-- ▶ The exact GitHub direct-download URL form must be tested after the remote repository identity and default branch exist; visible README labels and repository artifact paths are already locked.
+- ✅ GitHub direct download is verified through relative ZIP links with the `?raw=1` query. This preserves repository portability while bypassing the blob page and returning the ZIP through GitHub's raw-file endpoint.
 - ▶ Re-upload/update behaviour for an existing ChatGPT-created skill remains unverified and does not block the packaging layout.
 - ✅ Docs 3, 5 and 8 now reconcile `upload-ready/` and the bounded README section into the planned unattended Git allowlist.
 - ⛔ No ZIP, `upload-ready/` directory, README, code, configuration, Git state, launchd state, ChatGPT automation or Codex managed state has been created or modified by this document.
@@ -279,20 +279,20 @@ The global `AGENTS.md` contains guidance intended for the user’s global
 Codex environment.
 
 - [View the current global - AGENTS.md](latest/AGENTS.md)
-- [Download the current global - AGENTS.md](upload-ready/global-agents.zip)
+- [Download the current global - AGENTS.md](upload-ready/global-agents.zip?raw=1)
 
 ## Skills
 
 Each download contains one complete user-managed skill.
 
-- [Download chat-handoff](upload-ready/skills/chat-handoff.zip)
-- [Download operational-modes](upload-ready/skills/operational-modes.zip)
-- [Download semantic-compression](upload-ready/skills/semantic-compression.zip)
+- [Download chat-handoff](upload-ready/skills/chat-handoff.zip?raw=1)
+- [Download operational-modes](upload-ready/skills/operational-modes.zip?raw=1)
+- [Download semantic-compression](upload-ready/skills/semantic-compression.zip?raw=1)
 ```
 
 The visible global-guidance labels deliberately use `global - AGENTS.md`, while the canonical filename remains `AGENTS.md` and the artifact remains `global-agents.zip`.
 
-On GitHub, the relative `.md` link opens the normal Markdown file page, which provides rendered preview and raw/source access. The ZIP download links may require GitHub's direct raw/download URL form to produce immediate browser download rather than first opening a repository file page. Their final URL form must be tested after the remote owner, repository name and default branch are known; this does not change the locked visible labels or artifact paths.
+On GitHub, the ordinary relative `.md` link opens the normal Markdown file page, which provides rendered preview and raw/source access. Every ZIP target appends `?raw=1` to its encoded repository-relative artifact path. GitHub then redirects through its raw-file endpoint and returns the ZIP payload instead of first opening the repository blob page. The implementation must not hard-code the remote owner, repository name, default branch or `raw.githubusercontent.com`; the visible labels and artifact paths remain stable.
 
 ### Bounded README reconciliation
 

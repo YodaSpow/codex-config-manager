@@ -177,7 +177,7 @@ If push fails after commit, the exact base, tree, message, component list and co
 
 `upload-ready/global-agents.zip` contains one root-level `AGENTS.md`. Each `upload-ready/skills/<skill-name>.zip` contains one matching wrapper directory. ZIP timestamps, ordering, file permissions and compression are deterministic; unsafe paths, AppleDouble, `__MACOSX`, `.DS_Store`, duplicates, collisions and size/ratio violations fail validation.
 
-The README block between the Codex Config Manager markers is generated. Content outside those markers remains human-authored. Skill additions and deletions dynamically add and remove matching ZIPs and links.
+The README block between the Codex Config Manager markers is generated. Content outside those markers remains human-authored. The ordinary `latest/AGENTS.md` link opens GitHub's rendered Markdown view. Every global or per-skill ZIP link is repository-relative and appends `?raw=1`, causing GitHub to return the ZIP through its raw-file path instead of opening the blob page; no remote owner, repository name, branch or raw host is hard-coded. Skill additions and deletions dynamically add and remove matching ZIPs and direct-download links.
 
 ## Consumer contract
 

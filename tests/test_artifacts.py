@@ -94,14 +94,19 @@ def test_readme_reconciliation_is_bounded_and_dynamic() -> None:
     assert rendered.startswith(original.rstrip())
     assert rendered.count(BEGIN_MARKER) == 1
     assert "[View the current global - AGENTS.md](latest/AGENTS.md)" in rendered
-    assert "[Download a-skill](upload-ready/skills/a-skill.zip)" in rendered
+    assert "latest/AGENTS.md?raw=1" not in rendered
+    assert "[Download the current global - AGENTS.md](upload-ready/global-agents.zip?raw=1)" in rendered
+    assert "[Download a-skill](upload-ready/skills/a-skill.zip?raw=1)" in rendered
+    assert "[Download z-skill](upload-ready/skills/z-skill.zip?raw=1)" in rendered
+    assert reconcile_readme(rendered, has_agents=True, skills=("a-skill", "z-skill")) == rendered
     updated = reconcile_readme(rendered, has_agents=True, skills=("z-skill",))
     assert "Human text." in updated
     assert "a-skill.zip" not in updated
+    assert "[Download z-skill](upload-ready/skills/z-skill.zip?raw=1)" in updated
     assert updated.count(BEGIN_MARKER) == 1
 
 
 def test_readme_escapes_dynamic_skill_label_and_url() -> None:
     rendered = reconcile_readme("# Project\n", has_agents=False, skills=("skill [one]",))
     assert "Download skill \\[one\\]" in rendered
-    assert "upload-ready/skills/skill%20%5Bone%5D.zip" in rendered
+    assert "upload-ready/skills/skill%20%5Bone%5D.zip?raw=1" in rendered

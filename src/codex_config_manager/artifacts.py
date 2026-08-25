@@ -179,14 +179,14 @@ def render_download_section(has_agents: bool, skills: tuple[str, ...]) -> str:
                 "The global `AGENTS.md` contains guidance intended for the user’s global Codex environment.",
                 "",
                 "- [View the current global - AGENTS.md](latest/AGENTS.md)",
-                "- [Download the current global - AGENTS.md](upload-ready/global-agents.zip)",
+                "- [Download the current global - AGENTS.md](upload-ready/global-agents.zip?raw=1)",
                 "",
             ]
         )
     lines.extend(["## Skills", "", "Each download contains one complete user-managed skill.", ""])
     for name in skills:
         label = name.replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
-        target = quote(f"upload-ready/skills/{name}.zip", safe="/-._~")
+        target = quote(f"upload-ready/skills/{name}.zip", safe="/-._~") + "?raw=1"
         lines.append(f"- [Download {label}]({target})")
     lines.extend([END_MARKER, ""])
     return "\n".join(lines)
