@@ -1,6 +1,6 @@
 # Doc 13 — Mode C Corrective Goal — Derived GitHub Raw Download Links
 
-**Status:** Corrective implementation complete locally; Git publication and live README acceptance pending
+**Status:** Implemented, published and live-validated on the Mac Studio
 **Decision date:** 25 August 2026
 **Scope:** Reject the live-failing same-origin `?raw=1` README ZIP-link approach and replace it with absolute `raw.githubusercontent.com` URLs derived from validated Git repository identity and configured branch
 **Related documents:** [Doc 7 — Portable Global Guidance and Per-Skill ZIP Distribution](07-implementation-discovery-portable-skills-zip-distribution.md) · [Doc 8 — Root-Level Latest Managed Snapshot](08-architecture-reconciliation-root-level-latest-managed-snapshot.md) · [Doc 10 — Implementation Architecture and Operations](10-implementation-architecture-and-operations.md) · [Doc 11 — Mac Studio Validation Evidence](11-validation-evidence-mac-studio.md)
@@ -13,7 +13,10 @@
 - ✅ GitHub's repository Contents API exposes the corresponding absolute `raw.githubusercontent.com` URL as the file's `download_url`.
 - ✅ The repository already has a validated Git remote identity and configured branch from which the public raw URL can be derived without adding a second operator-maintained repository identity.
 - ✅ The authorised corrective goal implements the derived absolute raw-link contract through explicit validated-identity propagation, focused tests, bounded README output and current-document reconciliation.
-- ▶ Git publication and the blocking live README click acceptance remain pending.
+- ✅ Corrective commit `870e468e2f62bfd29d4f267f7f52d9a306180952` was pushed normally to `origin/main`; local and remote SHA matched after publication.
+- ✅ Live HTTP checks returned `200 application/zip` with zero redirects for the global archive and all three current skill archives.
+- ✅ Operator interaction through the rendered GitHub README proved that the global archive and every current skill archive download and unzip successfully without the rejected blob/error state.
+- ✅ The unchanged ordinary `latest/AGENTS.md` view lane remains the operator-proven rendered Markdown preview path.
 - ✅ Configuration, ZIP artifacts, launchd, consumer behavior and Codex-managed state remain unchanged.
 
 ## Purpose
@@ -378,7 +381,39 @@ git diff --check: passed
 ZIP bytes versus HEAD: identical for all four current artifacts
 ```
 
-The corrective commit identifier and live GitHub acceptance evidence will be recorded here only after normal publication and successful interaction through the rendered root README.
+### Publication and live acceptance
+
+The bounded corrective implementation was published normally:
+
+```text
+corrective commit: 870e468e2f62bfd29d4f267f7f52d9a306180952
+remote update:     1f41f3d..870e468  main -> main
+post-push state:   local HEAD == origin/main
+```
+
+Post-publication HTTP validation checked the exact links emitted by the live README:
+
+```text
+global-agents.zip:        200 application/zip, 0 redirects
+chat-handoff.zip:         200 application/zip, 0 redirects
+operational-modes.zip:    200 application/zip, 0 redirects
+semantic-compression.zip: 200 application/zip, 0 redirects
+latest/AGENTS.md view:    200 text/html, 0 redirects
+```
+
+The operator then exercised the blocking human lane from the rendered GitHub README and reported:
+
+```text
+global AGENTS.md archive: downloaded and unzipped successfully
+semantic-compression:     downloaded and unzipped successfully
+operational-modes:        downloaded and unzipped successfully
+chat-handoff:             downloaded and unzipped successfully
+overall result:           fully functional
+```
+
+No ZIP interaction entered GitHub's repository blob/error state. The global `latest/AGENTS.md` view target was unchanged by the correction; it remains the previously operator-proven rendered Markdown preview lane, with the post-publication live endpoint also returning `200 text/html`.
+
+Every completion-matrix row is therefore proven. This evidence update changes documentation only; it does not modify application code, README output, ZIP bytes, configuration, launchd, consumer behavior or Codex-managed state.
 
 ## Explicit authority boundary
 
