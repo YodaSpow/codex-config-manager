@@ -15,6 +15,8 @@ from codex_config_manager.artifacts import (
 )
 from codex_config_manager.errors import ValidationError
 
+RAW_BASE = "https://raw.githubusercontent.com/octo-org/sample-project/stable"
+
 
 def make_latest(root: Path) -> Path:
     latest = root / "latest"
@@ -90,23 +92,48 @@ def test_unsafe_zip_members_rejected(tmp_path: Path) -> None:
 
 def test_readme_reconciliation_is_bounded_and_dynamic() -> None:
     original = "# Project\n\nHuman text.\n"
-    rendered = reconcile_readme(original, has_agents=True, skills=("a-skill", "z-skill"))
+    rendered = reconcile_readme(
+        original,
+        has_agents=True,
+        skills=("a-skill", "z-skill"),
+        download_base=RAW_BASE,
+    )
     assert rendered.startswith(original.rstrip())
     assert rendered.count(BEGIN_MARKER) == 1
     assert "[View the current global - AGENTS.md](latest/AGENTS.md)" in rendered
     assert "latest/AGENTS.md?raw=1" not in rendered
-    assert "[Download the current global - AGENTS.md](upload-ready/global-agents.zip?raw=1)" in rendered
-    assert "[Download a-skill](upload-ready/skills/a-skill.zip?raw=1)" in rendered
-    assert "[Download z-skill](upload-ready/skills/z-skill.zip?raw=1)" in rendered
-    assert reconcile_readme(rendered, has_agents=True, skills=("a-skill", "z-skill")) == rendered
-    updated = reconcile_readme(rendered, has_agents=True, skills=("z-skill",))
+    assert f"[Download the current global - AGENTS.md]({RAW_BASE}/upload-ready/global-agents.zip)" in rendered
+    assert f"[Download a-skill]({RAW_BASE}/upload-ready/skills/a-skill.zip)" in rendered
+    assert f"[Download z-skill]({RAW_BASE}/upload-ready/skills/z-skill.zip)" in rendered
+    assert "/blob/" not in rendered
+    assert "?raw=1" not in rendered
+    assert (
+        reconcile_readme(
+            rendered,
+            has_agents=True,
+            skills=("a-skill", "z-skill"),
+            download_base=RAW_BASE,
+        )
+        == rendered
+    )
+    updated = reconcile_readme(
+        rendered,
+        has_agents=True,
+        skills=("z-skill",),
+        download_base=RAW_BASE,
+    )
     assert "Human text." in updated
     assert "a-skill.zip" not in updated
-    assert "[Download z-skill](upload-ready/skills/z-skill.zip?raw=1)" in updated
+    assert f"[Download z-skill]({RAW_BASE}/upload-ready/skills/z-skill.zip)" in updated
     assert updated.count(BEGIN_MARKER) == 1
 
 
 def test_readme_escapes_dynamic_skill_label_and_url() -> None:
-    rendered = reconcile_readme("# Project\n", has_agents=False, skills=("skill [one]",))
+    rendered = reconcile_readme(
+        "# Project\n",
+        has_agents=False,
+        skills=("skill [one]",),
+        download_base=RAW_BASE,
+    )
     assert "Download skill \\[one\\]" in rendered
-    assert "upload-ready/skills/skill%20%5Bone%5D.zip?raw=1" in rendered
+    assert f"{RAW_BASE}/upload-ready/skills/skill%20%5Bone%5D.zip" in rendered

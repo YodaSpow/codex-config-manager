@@ -179,10 +179,10 @@ The root README surface becomes:
 
 ```markdown
 - [View the current global - AGENTS.md](latest/AGENTS.md)
-- [Download the current global - AGENTS.md](upload-ready/global-agents.zip?raw=1)
+- [Download the current global - AGENTS.md](https://raw.githubusercontent.com/<derived-owner>/<derived-repository>/<configured-branch>/upload-ready/global-agents.zip)
 ```
 
-Skill download entries continue to mirror the dynamic immediate child-directory set under `latest/skills/`; each encoded relative ZIP target appends `?raw=1` for direct GitHub download. The ordinary `latest/AGENTS.md` view link remains unchanged.
+Skill download entries continue to mirror the dynamic immediate child-directory set under `latest/skills/`; each encoded artifact path is appended to the same absolute GitHub raw base derived from the validated remote identity and configured branch. The ordinary `latest/AGENTS.md` view link remains unchanged.
 
 ## Git publication boundary
 

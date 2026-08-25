@@ -2,15 +2,18 @@
 
 from __future__ import annotations
 
+import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+from urllib.parse import quote, urlsplit
 
 from .config import Config
 from .errors import GitSafetyError
 from .state import StateStore
 
 GIT = "/usr/bin/git"
+GITHUB_COMPONENT = re.compile(r"[A-Za-z0-9._-]+")
 
 
 @dataclass(frozen=True)
@@ -27,6 +30,54 @@ class PublicationCommit:
     sha: str
     components: tuple[ComponentChange, ...]
     message: str
+
+
+def _github_component(value: str, *, label: str) -> str:
+    if value in {".", ".."} or not GITHUB_COMPONENT.fullmatch(value):
+        raise GitSafetyError(f"invalid GitHub {label}: {value!r}")
+    return value
+
+
+def github_raw_base(remote_url: str, branch: str) -> str:
+    """Derive a public raw-content base from a validated GitHub transport identity."""
+    if not remote_url or any(ord(character) < 32 or ord(character) == 127 for character in remote_url):
+        raise GitSafetyError("GitHub remote URL is empty or contains control characters")
+    if not branch or any(ord(character) < 32 or ord(character) == 127 for character in branch):
+        raise GitSafetyError("GitHub branch is empty or contains control characters")
+
+    scp = re.fullmatch(r"git@github\.com:([^/]+)/([^/]+)", remote_url)
+    if scp is not None:
+        owner, repository = scp.groups()
+    else:
+        try:
+            parsed = urlsplit(remote_url)
+            port = parsed.port
+        except ValueError as exc:
+            raise GitSafetyError("GitHub remote URL is malformed") from exc
+        if parsed.scheme not in {"ssh", "https"} or parsed.hostname != "github.com":
+            raise GitSafetyError("GitHub remote URL must use canonical GitHub SSH or HTTPS transport")
+        if parsed.query or parsed.fragment or port is not None:
+            raise GitSafetyError("GitHub remote URL must not contain a port, query, or fragment")
+        if parsed.scheme == "ssh":
+            if parsed.username != "git" or parsed.password is not None:
+                raise GitSafetyError("GitHub SSH remote must use the git user without credentials")
+        elif parsed.username is not None or parsed.password is not None:
+            raise GitSafetyError("GitHub HTTPS remote must not embed credentials")
+        parts = parsed.path.split("/")
+        if len(parts) != 3 or parts[0] != "" or not parts[1] or not parts[2]:
+            raise GitSafetyError("GitHub remote URL must contain exactly owner and repository")
+        owner, repository = parts[1], parts[2]
+
+    if repository.endswith(".git"):
+        repository = repository[:-4]
+    owner = _github_component(owner, label="owner")
+    repository = _github_component(repository, label="repository")
+    branch = _github_component(branch, label="branch")
+    return "https://raw.githubusercontent.com/{}/{}/{}".format(
+        quote(owner, safe="-._~"),
+        quote(repository, safe="-._~"),
+        quote(branch, safe="-._~"),
+    )
 
 
 def _run(

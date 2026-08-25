@@ -160,7 +160,7 @@ Each invocation:
 4. computes a canonical SHA-256 manifest of managed source content and executable identity;
 5. updates one atomic, bounded local settlement receipt;
 6. stops without repository mutation when unchanged, unsettled, paused, outside schedule, or throttled;
-7. validates Git and remote history before an eligible transaction;
+7. validates Git and remote history before an eligible transaction, then strictly derives the GitHub raw-download base from that validated remote identity and configured branch;
 8. builds a private candidate with `.system` excluded at source and `.DS_Store` ignored;
 9. proves source stability and candidate equivalence;
 10. reconciles `latest/` using checksum dry-run, real rsync and a second equivalence dry-run;
@@ -177,7 +177,7 @@ If push fails after commit, the exact base, tree, message, component list and co
 
 `upload-ready/global-agents.zip` contains one root-level `AGENTS.md`. Each `upload-ready/skills/<skill-name>.zip` contains one matching wrapper directory. ZIP timestamps, ordering, file permissions and compression are deterministic; unsafe paths, AppleDouble, `__MACOSX`, `.DS_Store`, duplicates, collisions and size/ratio violations fail validation.
 
-The README block between the Codex Config Manager markers is generated. Content outside those markers remains human-authored. The ordinary `latest/AGENTS.md` link opens GitHub's rendered Markdown view. Every global or per-skill ZIP link is repository-relative and appends `?raw=1`, causing GitHub to return the ZIP through its raw-file path instead of opening the blob page; no remote owner, repository name, branch or raw host is hard-coded. Skill additions and deletions dynamically add and remove matching ZIPs and direct-download links.
+The README block between the Codex Config Manager markers is generated. Content outside those markers remains human-authored. The ordinary `latest/AGENTS.md` link opens GitHub's rendered Markdown view. Every global or per-skill ZIP link is an absolute `raw.githubusercontent.com` URL. The publisher derives owner and repository from the already validated GitHub remote, uses the configured branch, rejects ambiguous or unsafe identities before mutation, and appends only validated, encoded artifact paths. Project identity is not hard-coded. Skill additions and deletions dynamically add and remove matching ZIPs and direct-download links.
 
 ## Consumer contract
 

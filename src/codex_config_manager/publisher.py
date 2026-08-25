@@ -16,6 +16,7 @@ from .errors import GitSafetyError, ValidationError
 from .environment import validate_environment
 from .git import (
     commit_and_push,
+    github_raw_base,
     require_clean_base,
     retry_pending,
     stage_managed_transaction,
@@ -54,7 +55,13 @@ def _atomic_readme(path: Path, value: str) -> None:
     os.replace(temporary, path)
 
 
-def _apply_projection(config: Config, candidate: Path, skills: tuple[str, ...]) -> bool:
+def _apply_projection(
+    config: Config,
+    candidate: Path,
+    skills: tuple[str, ...],
+    *,
+    download_base: str,
+) -> bool:
     repo = config.paths.repo_root
     readme = repo / "README.md"
     original = readme.read_text(encoding="utf-8")
@@ -62,6 +69,7 @@ def _apply_projection(config: Config, candidate: Path, skills: tuple[str, ...]) 
         original,
         has_agents=(candidate / "AGENTS.md").is_file(),
         skills=skills,
+        download_base=download_base,
     )
     with tempfile.TemporaryDirectory(prefix="codex-config-manager-artifacts-") as directory:
         projected = Path(directory) / "upload-ready"
@@ -133,11 +141,17 @@ def run_publisher(config: Config) -> str:
         )
         if not eligibility.eligible:
             return eligibility.reason
-        require_clean_base(config)
+        git_status = require_clean_base(config)
+        download_base = github_raw_base(str(git_status["remote_url"]), config.git.branch)
         with private_candidate(config.paths.codex_root, config.paths.rsync_binary) as (candidate, candidate_manifest):
             if candidate_manifest.fingerprint != manifest.fingerprint:
                 raise ValidationError("eligible source changed before private candidate completed")
-            _apply_projection(config, candidate, candidate_manifest.skills)
+            _apply_projection(
+                config,
+                candidate,
+                candidate_manifest.skills,
+                download_base=download_base,
+            )
         staged = stage_managed_transaction(config, candidate_manifest.skills)
         if not staged:
             head = subprocess_head(config.paths.repo_root)

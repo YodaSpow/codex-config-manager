@@ -169,7 +169,12 @@ def validate_distribution(latest: Path, target: Path) -> tuple[str, ...]:
     return manifest.skills
 
 
-def render_download_section(has_agents: bool, skills: tuple[str, ...]) -> str:
+def render_download_section(
+    has_agents: bool,
+    skills: tuple[str, ...],
+    *,
+    download_base: str,
+) -> str:
     lines = [BEGIN_MARKER]
     if has_agents:
         lines.extend(
@@ -179,21 +184,29 @@ def render_download_section(has_agents: bool, skills: tuple[str, ...]) -> str:
                 "The global `AGENTS.md` contains guidance intended for the user’s global Codex environment.",
                 "",
                 "- [View the current global - AGENTS.md](latest/AGENTS.md)",
-                "- [Download the current global - AGENTS.md](upload-ready/global-agents.zip?raw=1)",
+                "- [Download the current global - AGENTS.md]"
+                f"({download_base}/upload-ready/global-agents.zip)",
                 "",
             ]
         )
     lines.extend(["## Skills", "", "Each download contains one complete user-managed skill.", ""])
     for name in skills:
         label = name.replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]")
-        target = quote(f"upload-ready/skills/{name}.zip", safe="/-._~") + "?raw=1"
+        target = quote(f"upload-ready/skills/{name}.zip", safe="/-._~")
+        target = f"{download_base}/{target}"
         lines.append(f"- [Download {label}]({target})")
     lines.extend([END_MARKER, ""])
     return "\n".join(lines)
 
 
-def reconcile_readme(original: str, *, has_agents: bool, skills: tuple[str, ...]) -> str:
-    section = render_download_section(has_agents, skills)
+def reconcile_readme(
+    original: str,
+    *,
+    has_agents: bool,
+    skills: tuple[str, ...],
+    download_base: str,
+) -> str:
+    section = render_download_section(has_agents, skills, download_base=download_base)
     begin_count = original.count(BEGIN_MARKER)
     end_count = original.count(END_MARKER)
     if begin_count != end_count or begin_count > 1:
