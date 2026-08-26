@@ -11,6 +11,7 @@
 - ✅ The portable distribution boundary is `upload-ready/`; it is derived from successfully settled and validated `latest/` and is never an independent source of truth.
 - ✅ The aggregate `NIC-codex-skills.zip` proposal is rejected. There is no ZIP-of-ZIPs and no single aggregate skills archive.
 - ✅ ChatGPT web has accepted a ZIP containing exactly one wrapped skill directory and created the corresponding skill under **Created by me**.
+- ✅ A workplace ChatGPT environment and a Windows PC have now validated the published packages: web import accepted the GitHub artifacts, and manual placement of the complete wrapped skill directories under the PC's corresponding `.codex/skills/` location made all current skills functional.
 - ✅ Each top-level `latest/skills/` user-skill directory maps dynamically to one stable ZIP with the same basename under `upload-ready/skills/`.
 - ✅ The global `AGENTS.md` remains canonically named `AGENTS.md` and is separately packaged as `upload-ready/global-agents.zip`.
 - ✅ The root README provides an ordinary view link to canonical `latest/AGENTS.md`, an absolute derived raw-download link to `global-agents.zip`, and one dynamically reconciled absolute raw-download entry per current skill ZIP.
@@ -126,6 +127,37 @@ semantic-compression.zip
 This proves the required packaging form for the tested ChatGPT web surface: one ZIP represents one skill, and that ZIP contains the named skill directory as its single top-level wrapper. It also proves acceptance of recursively packaged supporting content in the tested skill.
 
 The test does not yet prove whether re-uploading a later archive updates, duplicates or rejects an existing **Created by me** skill. The UI also showed a separately **Installed** copy of Semantic Compression, so the upload created a distinct user-owned entry rather than replacing that installed copy.
+
+### Operator cross-environment validation — 26 August 2026
+
+The operator subsequently tested the published GitHub artifacts in a separate workplace environment. This was a real human-transfer test across account, browser and operating-system boundaries rather than an automated repository check.
+
+The operator reported the following outcome:
+
+```text
+work ChatGPT web: published skills imported successfully from GitHub
+web skill input:  a per-skill ZIP or its package SKILL.md could be selected
+Windows PC:       no native skills panel was available
+local fallback:   complete skill folders were placed in the corresponding .codex/skills/ location
+runtime result:   all current skills were fully functional
+```
+
+This validates the practical value of the locked wrapper layout:
+
+```text
+<skill-name>.zip
+└── <skill-name>/
+    ├── SKILL.md
+    └── <recursive supporting content>
+```
+
+The same canonical package therefore supports three human-controlled receiving paths without another artifact format:
+
+- upload the per-skill ZIP where the ChatGPT web surface accepts ZIP skills;
+- retain or navigate to `SKILL.md` where direct Markdown selection is available;
+- place the complete unzipped `<skill-name>/` directory beneath the receiving Codex `skills/` directory where no native skills-import panel exists.
+
+The wrapper directory remains essential in the filesystem lane because it preserves skill identity and keeps `SKILL.md` plus recursive supporting content within one bounded skill package. This evidence validates portability of the artifact layout; it does not authorise Codex Config Manager to automate or manage the separate workplace environment.
 
 ### Supporting official evidence
 
@@ -562,6 +594,7 @@ Before implementation, a separately authorised protected Mode B pass should:
 - ✅ Global guidance is represented as `global-agents.zip` containing the unchanged canonical `AGENTS.md` at archive root.
 - ✅ README global labels, canonical view path, portable download path and dynamic skill list behaviour are locked.
 - ✅ Canonical authority, exclusions, deterministic packaging, atomic publication, bounded deletion, Git semantics and Mac mini separation are captured.
-- ▶ Docs 3 and 5 require protected reconciliation before implementation; Doc 6 remains upstream eligibility authority.
-- ▶ Direct GitHub ZIP download behaviour must be validated after the remote exists.
-- ⛔ No repository implementation, ZIP artifact, README, configuration, Git state, launchd state, ChatGPT automation or Codex managed state has been created or modified.
+- ✅ Docs 3, 5 and 6 were reconciled into the implemented publisher contract now recorded by Docs 10 and 11.
+- ✅ Direct GitHub ZIP download and rendered-README interaction are live-validated and recorded by Doc 13.
+- ✅ The separate workplace ChatGPT and Windows PC tests prove that the same per-skill package supports web import, direct `SKILL.md` selection and manual local skill-directory placement.
+- ▶ Real Mac mini rollout remains the deferred Phase 15 boundary recorded by Doc 12.
