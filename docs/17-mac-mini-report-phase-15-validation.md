@@ -1,6 +1,6 @@
 # Doc 17 — Mac mini Report — Phase 15 validation
 
-**Status:** Open — Mac mini validation complete; awaiting Mac Studio reconciliation
+**Status:** Closed — Mac Studio reconciliation validated
 **Machine lane:** Real Mac mini consumer
 **Governing handoff:** [Doc 12 — Mac mini Phase 15 Handoff](12-mac-mini-phase-15-handoff.md)
 **Activation runbook:** [Doc 15 — Operator Runbook — Mac mini Phase 15 Activation](15-operator-runbook-mac-mini-phase-15-activation.md)
@@ -16,9 +16,9 @@ configuration, foreground deployment, exclusion preservation, no-op behavior,
 consumer LaunchAgent, launchd-domain repository access, automatic polling,
 single-instance behavior and uninstall/reinstall contract all passed.
 
-The Mac mini consumer is operational. The complete two-machine system remains
-open pending the required Mac Studio reconciliation and a response commit that
-references this report.
+The Mac mini consumer is operational. Mac Studio response commit
+`ff981089c726d75e2ac57e81ed6d459129d669f3` completed the required publisher
+reconciliation and resolved the remaining cross-machine closeout condition.
 
 ## Platform and repository evidence
 
@@ -139,15 +139,13 @@ rsync evidence. Publisher state remained absent.
 ## Corrections and blockers
 
 No consumer implementation correction or governing-document proposal was
-required during this rollout.
-
-The remaining case condition is the cross-machine closeout required by Docs 12,
-15 and 16. It is not a Mac mini runtime blocker.
+required during this rollout. The remaining cross-machine closeout condition
+was resolved by the validated Mac Studio response recorded below.
 
 ## Requested Mac Studio response
 
-The Mac Studio should safely fast-forward a clean checkout to the commit
-containing this report, then verify:
+Before closure, this report requested that the Mac Studio safely fast-forward a
+clean checkout to the commit containing this report, then verify:
 
 1. this Mac mini evidence is present on `origin/main`;
 2. the Mac Studio publisher remains the only active Mac Studio role;
@@ -155,8 +153,27 @@ containing this report, then verify:
 4. the shared history is clean and aligned; and
 5. no Mac mini report content is edited or closed by the Mac Studio.
 
-The Mac Studio should publish any response through its owned documentation,
-implementation or a normal Git commit that references Doc 17. After the Mac
-mini safely receives and validates that response, the Mac mini will either
-close this report and record the response commit SHA or keep the case open with
-continuing evidence.
+The requested response was to be published through Mac Studio-owned
+documentation, implementation or a normal Git commit that referenced Doc 17,
+without editing or closing this report.
+
+## Mac Studio response and closure
+
+The Mac mini received and validated Mac Studio response commit
+`ff981089c726d75e2ac57e81ed6d459129d669f3`.
+
+```text
+response parent: 20248413728567d3eade8eb3ccfdf92c08d13838
+response commit: ff981089c726d75e2ac57e81ed6d459129d669f3
+Doc 17 changed by response: no
+Mac Studio publisher reconciliation: passed
+```
+
+The response directly follows the commit that published this report,
+explicitly references Doc 17 and records successful Mac Studio publisher
+reconciliation. It did not edit or close Doc 17. After the clean fast-forward,
+the Mac mini consumer remained healthy, the publisher remained absent and
+local `HEAD`, `origin/main` and remote `main` agreed at the response commit.
+
+The Mac Studio response therefore resolved the remaining cross-machine
+closeout condition. This Phase 15 case is closed.
