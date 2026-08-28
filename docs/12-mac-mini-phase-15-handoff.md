@@ -1,9 +1,10 @@
 # Doc 12 — Mac mini Phase 15 Handoff
 
-**Status:** Ready for a separate future goal on the real Mac mini
+**Status:** Ready after the Mac mini SSH prerequisite and final Mac Studio freshness reconciliation
 **Authority:** This document is a handoff, not authorization to operate on the Mac mini
 **Prerequisite:** Mac Studio Gates 0–14 are complete; `origin/main` contains the reusable implementation and current `latest/`
 **Canonical operations:** [Doc 10 — Implementation Architecture and Operations](10-implementation-architecture-and-operations.md)
+**SSH bootstrap:** [Doc 14 — GitHub SSH Machine Bootstrap](14-operator-guide-github-ssh-machine-bootstrap.md)
 
 ## Objective
 
@@ -30,6 +31,42 @@ The Mac mini work must preserve:
 
 Do not copy SSH credentials, private Mac Studio configuration, runtime receipts, logs or LaunchAgent files between machines. Reconstruct machine-local state from tracked contracts.
 
+## Pre-handoff freshness reconciliation on the Mac Studio
+
+Immediately before the Mac mini work begins, run a read-only Mode A reconciliation on the Mac Studio. Confirm:
+
+1. the checkout is clean, on `main`, tracks `origin/main`, and local/remote SHA agree;
+2. Docs 10, 12 and 14 still match the current code, public config, tests, repository topology and Git transport contract;
+3. later documentation has not changed the consumer scope, exclusion rules, evidence requirements or extension boundary;
+4. `latest/` is the current validated publisher output;
+5. every remaining task genuinely requires the real Mac mini;
+6. no private Mac Studio material has entered the handoff.
+
+If that pass finds material drift, reconcile this handoff through Mode B before starting the Mac mini goal. Do not ask the Mac mini to infer which competing instruction is current.
+
+## Mac mini SSH prerequisite before the goal
+
+The Mac Studio SSH setup does not transfer to the Mac mini. Before the Phase 15 goal starts, use Doc 14 on the Mac mini to create or deliberately select a machine-local key and prove:
+
+```text
+ssh -T git@github.com                                  expected GitHub account identified
+git ls-remote over SSH with BatchMode=yes              exact repository readable non-interactively
+repository destination                                 safe and separate from ~/.codex
+private key origin                                     created or selected on the Mac mini, never copied
+```
+
+Do not record the private key, passphrase, full public key or credential-bearing diagnostic output. Failure of either connection test leaves Phase 15 not ready; it is not permission to switch transport, weaken validation or copy the Mac Studio key.
+
+This prerequisite proves the interactive user environment and non-interactive repository read path. The later Phase 15 goal must still prove SSH from the actual launchd user domain after the consumer runtime context exists.
+
+## Goal and local-project execution model
+
+Run Phase 15 as one persistent goal on the real Mac mini, governed by this document. Use a local Codex project rooted at the Mac mini's own repository clone because environment construction, filesystem validation, live `.codex` deployment and launchd operation occur on that machine.
+
+Do not combine a Mac Studio folder and Mac mini folder as competing source roots, and do not treat source-folder priority or a remote project as cross-machine synchronization. GitHub `origin/main` is the shared history; each machine has its own local checkout and machine-local state.
+
+The goal remains active through bounded discovery, environment construction, foreground deployment, tactical correction, retesting, launchd validation, evidence capture and permitted contribution. It may correct a Mac mini-specific command, path, local config value or implementation defect when the correction preserves this specification. It must stop for an architecture decision before changing authority, managed scope, exclusion/deletion policy, `latest/`, publisher behavior, repository topology or public configuration architecture.
+
 ## Required discovery before mutation
 
 Run a bounded Mode A pass on the real Mac mini and record:
@@ -38,7 +75,7 @@ Run a bounded Mode A pass on the real Mac mini and record:
 2. intended repository root and its non-overlap with the Mac mini Codex root;
 3. readable Mac mini `~/.codex`, `AGENTS.md`, `skills/`, `.system` presence and unrelated sentinel surfaces without traversing `.system`;
 4. current Python candidate, version and architecture;
-5. SSH access to `git@github.com:YodaSpow/codex-config-manager.git` from the user and launchd domains;
+5. the already established Doc 14 user-domain SSH evidence and, when its real runtime context exists, SSH access from the launchd domain;
 6. existing clone/branch/upstream state, or the safe destination for a new clone;
 7. existing publisher/consumer LaunchAgent state;
 8. any filesystem, permission or path fact that differs from the Mac Studio evidence.
@@ -154,6 +191,8 @@ Exercise uninstall and reinstall, proving that uninstall preserves live Codex st
 
 Create a normal development commit containing only public evidence and permitted consumer refinements. Do not commit private config, machine credentials, logs containing private details or runtime receipts.
 
+Capture the public evidence as a Mode B **Mac mini Phase 15 validation receipt**. The consumer runtime itself never commits or republishes; this is a human-controlled development contribution made by the bounded Phase 15 goal.
+
 Record:
 
 - Mac mini model identifier, macOS, Python and architecture;
@@ -180,4 +219,5 @@ Stop without deployment or redesign if:
 - `.system`, `.DS_Store` or unrelated content cannot be proven preserved;
 - launchd would install the publisher lane;
 - credentials or private machine data would need publication;
+- the Doc 14 SSH prerequisite is absent, identifies the wrong account, or cannot read the exact repository with `BatchMode=yes`;
 - an alternative would materially change authority or architecture.
