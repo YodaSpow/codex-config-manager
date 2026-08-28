@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.4 · **Updated:** 8 August 2026
+**Version:** 1.5 · **Updated:** 28 August 2026
 
 ## Purpose
 
@@ -126,6 +126,7 @@ python -c "from pathlib import Path; p=Path('<path>'); print(p.resolve()); print
 
 - An active goal authorises progress toward its intended outcome through the best safe, authorised, in-scope route. Resolve ordinary delivery detail and obstacles through informed judgement.
 - Ground a goal directly in its prompt when that supplies sufficient context. Where it spans multiple tasks, citations, milestones, or implementation decisions, a Mode B goal package may consolidate them into one execution brief or define a safer, clearer split.
+- When presenting a goal for the operator to review or paste, preserve its complete canonical wording and format it as a readable multiline block. Use paragraph breaks and lists where they improve legibility without changing meaning, authority, scope, or sequencing. Do not compress a substantial goal into one dense line or paragraph merely for delivery.
 - If an intended route is unavailable, adapt where another route still achieves the outcome; record material limitations or follow-up rather than treating the whole goal as blocked.
 - Escalate only when no safe, authorised, viable route remains, or when an alternative would materially change the intended outcome, authority, scope, safety, or viability.
 
