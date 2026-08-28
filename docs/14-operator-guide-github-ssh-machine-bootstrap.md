@@ -41,7 +41,20 @@ The examples use an SSH authentication key attached to the operator's GitHub acc
 | macOS | `~/.ssh/` | `~/.ssh/id_ed25519_github_MACHINE` | `~/.ssh/id_ed25519_github_MACHINE.pub` |
 | Windows | `%USERPROFILE%\.ssh\` | `%USERPROFILE%\.ssh\id_ed25519_github_MACHINE` | `%USERPROFILE%\.ssh\id_ed25519_github_MACHINE.pub` |
 
+> **Example-only values:** The key filenames above, `MACHINE`,
+> `YOUR_GITHUB_EMAIL`, `OWNER/REPOSITORY` and generic destination paths in this
+> guide are examples or placeholders. They are not the operator's actual SSH
+> key, public-key value, passphrase or local configuration. Replace placeholders
+> deliberately when running a command, and never paste secret key material into
+> this document. The Codex Config Manager SSH URL shown below is the real public
+> repository address; it is not a credential.
+
 `MACHINE` is a placeholder. Replace it with a short machine label before running a generation command. For example, a Mac mini could use `id_ed25519_github_mac_mini`. The filename is not an identity authority; it is an operator aid.
+
+> **Windows command surface:** The verified operator lane for the Windows PC is
+> PowerShell using Windows system OpenSSH. All Windows commands in this guide
+> target that surface; do not paste them into Command Prompt. Git Bash is not the
+> selected Windows path for this project.
 
 ## Prerequisites
 
@@ -65,7 +78,7 @@ The Mac Studio already has a separately proven SSH path. That fact does not auth
 
 GitHub recommends checking for existing keys before generating another one.
 
-On macOS Terminal or Git Bash:
+On macOS Terminal:
 
 ```bash
 if [ -d "$HOME/.ssh" ]; then /bin/ls -la "$HOME/.ssh"; else /usr/bin/printf 'No existing ~/.ssh directory\n'; fi \
@@ -85,7 +98,7 @@ Look for matching private/public pairs such as `id_ed25519` and `id_ed25519.pub`
 
 Replace `YOUR_GITHUB_EMAIL` and `MACHINE` first. GitHub recommends Ed25519 on current systems and a secure passphrase for additional protection.
 
-On macOS Terminal or Git Bash:
+On macOS Terminal:
 
 ```bash
 /bin/mkdir -p "$HOME/.ssh" \
@@ -189,7 +202,7 @@ The public key may identify the machine descriptively, but the document and repo
 
 On first contact, SSH may ask whether the GitHub host is trusted. Compare the displayed fingerprint with GitHub's current published fingerprints before accepting it. Do not accept an unexpected fingerprint merely to make the command continue.
 
-Run on macOS Terminal, Windows PowerShell or Git Bash:
+Run on macOS Terminal or Windows PowerShell:
 
 ```text
 ssh -T git@github.com
