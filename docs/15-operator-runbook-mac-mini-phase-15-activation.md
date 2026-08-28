@@ -119,6 +119,55 @@ cd "/Users/spowart/Scripts" \
 
 The destination must be an ordinary empty directory and must remain separate from `~/.codex`. Do not run `git init`, create a local README or add another initial commit. If the path is missing, non-empty, already a Git checkout or contains anything unexpected—including Finder metadata—stop and let the Mac mini discovery determine a safe resolution. Do not automatically delete or overwrite its contents.
 
+### Verified Finder-metadata pre-clone limbo
+
+The first real Mac mini activation proved that Finder can recreate `.DS_Store`
+after the operator has emptied or removed the intended directory but before the
+Stage 5 clone begins. The safe Stage 3 guard then stops repeatedly even though
+no meaningful operator content remains.
+
+The Mac mini agent reported the repeatable stop as:
+
+```text
+Stage 5 stopped safely before cloning.
+The intended destination exists again and contains:
+.DS_Store
+It is not a Git working tree and has no .git directory, but Doc 15 requires the destination to be absent or completely empty. No clone was attempted.
+Please manually remove the recreated .DS_Store and the empty destination directory again, then confirm. Closing any Finder window displaying that folder may prevent Finder from immediately recreating .DS_Store.
+```
+
+This is a bounded pre-clone recovery branch, not authority to weaken the normal
+empty-destination rule. Use it only when a fresh inspection proves all of the
+following:
+
+- the intended path is not a Git working tree and contains no `.git` entry;
+- its only entry is `.DS_Store`;
+- no detached `docs/`, operator file or other content remains;
+- SSH identity and exact-repository `BatchMode=yes` access have passed;
+- the destination remains separate from `~/.codex`.
+
+Do not repeatedly delete or manage `.DS_Store`. Instead:
+
+1. close any Finder window displaying the intended directory;
+2. create a unique system temporary directory with `mktemp -d` and validate its
+   resolved path;
+3. clone the exact SSH repository into a child of that temporary directory;
+4. validate the candidate's remote, `main` branch, `origin/main` upstream, clean
+   status and agreement with the freshly observed remote HEAD;
+5. use the macOS system copy surface to merge the complete validated candidate,
+   including its `.git` directory, into the intended directory without deleting
+   or replacing the existing `.DS_Store`;
+6. validate the intended path as the clean canonical checkout with the exact
+   remote, branch, upstream and HEAD;
+7. remove only the exact temporary directory created by this recovery, prove it
+   is absent, and stop at the same post-Stage-5 boundary as an ordinary clone.
+
+The recovery must not create independent Git history, use `git init`, retain a
+permanent sibling checkout or backup, touch `~/.codex`, build the environment,
+create consumer configuration, install launchd or begin the Phase 15 goal. Any
+entry other than `.DS_Store` remains a human decision gate and is not eligible
+for this recovery.
+
 ## Stage 4 — Establish the Mac mini SSH identity
 
 Doc 14 is authoritative if any wording here and the SSH guide differ. The following is the Mac mini-specific route through that guide.
@@ -251,7 +300,10 @@ This prompt authorises only the bounded pre-clone setup it describes. It is not 
 
 ## Stage 5 — Clone the established repository history
 
-Only after the SSH account and exact-repository gates pass, clone `origin/main`. For the reported existing empty directory:
+Only after the SSH account and exact-repository gates pass, clone `origin/main`.
+Use the Finder-metadata recovery branch above only for its exact proven
+`.DS_Store`-only limbo; otherwise use the ordinary clone path. For the reported
+existing empty directory:
 
 ```bash
 cd "/Users/spowart/Scripts" \
