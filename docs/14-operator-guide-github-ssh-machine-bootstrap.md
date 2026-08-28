@@ -237,6 +237,32 @@ Remove-Item Env:GIT_SSH_COMMAND
 
 Write access should not be tested by creating noise, force-pushing, or rewriting history. Prove permitted write access only through a legitimate bounded development commit when its governing task reaches that stage.
 
+## New repositories — establish the remote history before local work
+
+An empty GitHub repository can be public, but it has no commit or `main` branch. GitHub Pages cannot use `main` as a branch-based publishing source until that branch exists. For a new remote-first repository that may use GitHub Pages, initialize it in GitHub with a `README.md`. This creates the first commit and default branch; a top-level README can also serve as a GitHub Pages entry file until or unless the site supplies `index.md` or `index.html`.
+
+The safe remote-first sequence is:
+
+```text
+create GitHub repository with README
+        ↓
+initial commit and main branch exist on GitHub
+        ↓
+authenticate the local machine and prove repository access
+        ↓
+clone the initialized repository
+        ↓
+edit the resulting local checkout
+        ↓
+commit and push normally
+```
+
+In Git terminology, cloning is the correct first local operation here: `git clone` downloads the established remote history and checks out its default branch. There is no separate “checkout instead of clone” step for a destination that does not yet contain the repository.
+
+Do not independently initialize another local repository, create a separate first commit and then push it as though the README-initialized GitHub repository were empty. Those two roots have different histories and may require an avoidable merge or history rewrite. Clone the seeded remote first so the local work begins from the GitHub README commit.
+
+This remote-first rule must not be mixed with GitHub's different **existing-local-project import** workflow. When substantial local history already exists and is the intended starting authority, GitHub instead recommends creating an empty remote without a README, license or `.gitignore`, then connecting and pushing that existing history. Decide which history is authoritative before repository creation; do not combine both initialization patterns accidentally.
+
 ## Step 7 — Clone into a deliberate local path
 
 Choose a destination that does not exist or contain unrelated files. Do not clone the repository into the live `.codex` directory.
@@ -323,6 +349,10 @@ This record contains results and identifiers only. It must not include the priva
 - [GitHub — Testing your SSH connection](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection)
 - [GitHub — GitHub's SSH key fingerprints](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints)
 - [GitHub — Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
+- [GitHub — Creating a new repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-new-repository)
+- [GitHub — Configuring a publishing source for GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+- [GitHub — Creating a GitHub Pages site](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
+- [GitHub — Adding locally hosted code to GitHub](https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github)
 
 ## Documentation-only validation — 28 August 2026
 
