@@ -5,6 +5,7 @@
 **Prerequisite:** Mac Studio Gates 0–14 are complete; `origin/main` contains the reusable implementation and current `latest/`
 **Canonical operations:** [Doc 10 — Implementation Architecture and Operations](10-implementation-architecture-and-operations.md)
 **SSH bootstrap:** [Doc 14 — GitHub SSH Machine Bootstrap](14-operator-guide-github-ssh-machine-bootstrap.md)
+**Repository workflow:** Root [`AGENTS.md`](../AGENTS.md) and [Doc 16 — Agent Workflow and Publication Guardrails](16-repository-agent-workflow-and-publication-guardrails.md)
 
 ## Objective
 
@@ -36,7 +37,7 @@ Do not copy SSH credentials, private Mac Studio configuration, runtime receipts,
 Immediately before the Mac mini work begins, run a read-only Mode A reconciliation on the Mac Studio. Confirm:
 
 1. the checkout is clean, on `main`, tracks `origin/main`, and local/remote SHA agree;
-2. Docs 10, 12 and 14 still match the current code, public config, tests, repository topology and Git transport contract;
+2. root `AGENTS.md` and Docs 10, 12, 14, 15 and 16 still match the current code, public config, tests, repository topology, Git transport and repository-workflow contracts;
 3. later documentation has not changed the consumer scope, exclusion rules, evidence requirements or extension boundary;
 4. `latest/` is the current validated publisher output;
 5. every remaining task genuinely requires the real Mac mini;
@@ -63,6 +64,8 @@ This prerequisite proves the interactive user environment and non-interactive re
 
 Run Phase 15 as one persistent goal on the real Mac mini, governed by this document. Use a local Codex project rooted at the Mac mini's own repository clone because environment construction, filesystem validation, live `.codex` deployment and launchd operation occur on that machine.
 
+Root `AGENTS.md` and Doc 16 govern repository-agent workflow and Git authority during that goal. `latest/AGENTS.md` remains managed payload for deployment to `~/.codex/AGENTS.md`; it is not a repository instruction file.
+
 Do not combine a Mac Studio folder and Mac mini folder as competing source roots, and do not treat source-folder priority or a remote project as cross-machine synchronization. GitHub `origin/main` is the shared history; each machine has its own local checkout and machine-local state.
 
 The goal remains active through bounded discovery, environment construction, foreground deployment, tactical correction, retesting, launchd validation, evidence capture and permitted contribution. It may correct a Mac mini-specific command, path, local config value or implementation defect when the correction preserves this specification. It must stop for an architecture decision before changing authority, managed scope, exclusion/deletion policy, `latest/`, publisher behavior, repository topology or public configuration architecture.
@@ -79,6 +82,7 @@ Run a bounded Mode A pass on the real Mac mini and record:
 6. existing clone/branch/upstream state, or the safe destination for a new clone;
 7. existing publisher/consumer LaunchAgent state;
 8. any filesystem, permission or path fact that differs from the Mac Studio evidence.
+9. root `AGENTS.md` and Doc 16 are readable, and the agent distinguishes them from the managed payload at `latest/AGENTS.md`.
 
 Stop if the intended Codex root is unreadable, overlaps the repository, contains unsupported managed entries, or the machine/config identity cannot agree.
 

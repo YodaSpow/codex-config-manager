@@ -6,6 +6,7 @@
 **SSH contract:** [Doc 14 — GitHub SSH Machine Bootstrap](14-operator-guide-github-ssh-machine-bootstrap.md)
 **Canonical operations:** [Doc 10 — Implementation Architecture and Operations](10-implementation-architecture-and-operations.md)
 **Mac Studio evidence:** [Doc 11 — Mac Studio Validation Evidence](11-validation-evidence-mac-studio.md)
+**Repository workflow:** Root [`AGENTS.md`](../AGENTS.md) and [Doc 16 — Agent Workflow and Publication Guardrails](16-repository-agent-workflow-and-publication-guardrails.md)
 
 ## Current activation state
 
@@ -80,7 +81,8 @@ Run this immediately before moving the work to the Mac mini. In the Codex projec
 Run the read-only pre-handoff freshness reconciliation required by Doc 12.
 
 Confirm that the checkout is clean on main, local HEAD and origin/main agree,
-latest/ is current, Docs 10, 12, 14 and 15 match repository and runtime reality,
+latest/ is current, root AGENTS.md and Docs 10, 12, 14, 15 and 16 match
+repository and runtime reality,
 every remaining activation task genuinely requires the real Mac mini, and no
 private or Mac Studio-specific material is entering the handoff.
 
@@ -104,7 +106,7 @@ After cloning, use the repository-owned local copy:
 /Users/spowart/Scripts/codex-config-manager/docs/15-operator-runbook-mac-mini-phase-15-activation.md
 ```
 
-Do not manually copy this document into the reported empty repository directory. That would make the destination non-empty and create a detached handoff copy. Cloning `origin/main` brings Docs 10, 12, 14 and 15 onto the Mac mini together in one canonical history.
+Do not manually copy this document into the reported empty repository directory. That would make the destination non-empty and create a detached handoff copy. Cloning `origin/main` brings root `AGENTS.md` and Docs 10, 12, 14, 15 and 16 onto the Mac mini together in one canonical history.
 
 ## Stage 3 — Inspect the intended Mac mini destination
 
@@ -342,11 +344,15 @@ Open this exact folder as the project:
 Before starting the goal, confirm the agent can read the local copies of:
 
 ```text
+AGENTS.md
 docs/10-implementation-architecture-and-operations.md
 docs/12-mac-mini-phase-15-handoff.md
 docs/14-operator-guide-github-ssh-machine-bootstrap.md
 docs/15-operator-runbook-mac-mini-phase-15-activation.md
+docs/16-repository-agent-workflow-and-publication-guardrails.md
 ```
+
+Root `AGENTS.md` and Doc 16 govern repository-agent workflow and Git authority. The separate `latest/AGENTS.md` is managed deployment payload and must not be interpreted as repository instructions.
 
 Do not manually install Mac Studio copies of `AGENTS.md` or user skills as a substitute for Phase 15. The controlled consumer deployment is responsible for reconciling the bounded managed state and proving exclusions.
 
@@ -363,7 +369,8 @@ docs/12-mac-mini-phase-15-handoff.md.
 This goal is running on the real Mac mini from its own local clone of
 codex-config-manager. Treat Doc 12 as the governing handoff, Doc 10 as the
 canonical implementation and operating contract, Doc 14 as the completed SSH
-prerequisite, and Doc 15 as the operator activation sequence.
+prerequisite, Doc 15 as the operator activation sequence, and root AGENTS.md
+plus Doc 16 as the repository workflow and Git-authority contract.
 
 Begin with the bounded read-only Mac mini discovery required by Doc 12. Confirm
 the derived MacMini identity, repository and ~/.codex separation, existing
