@@ -3,6 +3,7 @@
 **Status:** Ready after the Mac mini SSH prerequisite and final Mac Studio freshness reconciliation
 **Authority:** This document is a handoff, not authorization to operate on the Mac mini
 **Prerequisite:** Mac Studio Gates 0–14 are complete; `origin/main` contains the reusable implementation and current `latest/`
+**Identity contract:** [Doc 4 — Deterministic Model-Derived Machine Identity](04-implementation-discovery-deterministic-machine-identity.md)
 **Canonical operations:** [Doc 10 — Implementation Architecture and Operations](10-implementation-architecture-and-operations.md)
 **SSH bootstrap:** [Doc 14 — GitHub SSH Machine Bootstrap](14-operator-guide-github-ssh-machine-bootstrap.md)
 **Repository workflow:** Root [`AGENTS.md`](../AGENTS.md) and [Doc 16 — Agent Workflow and Publication Guardrails](16-repository-agent-workflow-and-publication-guardrails.md)
@@ -28,6 +29,11 @@ The Mac mini work must preserve:
 - safe fast-forward-only repository updates;
 - exact repository-owned `.venv` and `.tools/rsync` runtime paths;
 - publisher absence on the Mac mini;
+- root `AGENTS.md` as read-only guidance on the Mac mini, with any proposed
+  correction returned to the Mac Studio rather than applied locally;
+- ordinary and governing documents as Mac Studio-owned, with the Mac mini
+  writing real evidence, blockers and proposals only to its reserved report at
+  `docs/17-mac-mini-report-phase-15-validation.md`;
 - no force push, automatic tag or automatic GitHub Release.
 
 Do not copy SSH credentials, private Mac Studio configuration, runtime receipts, logs or LaunchAgent files between machines. Reconstruct machine-local state from tracked contracts.
@@ -37,7 +43,7 @@ Do not copy SSH credentials, private Mac Studio configuration, runtime receipts,
 Immediately before the Mac mini work begins, run a read-only Mode A reconciliation on the Mac Studio. Confirm:
 
 1. the checkout is clean, on `main`, tracks `origin/main`, and local/remote SHA agree;
-2. root `AGENTS.md` and Docs 10, 12, 14, 15 and 16 still match the current code, public config, tests, repository topology, Git transport and repository-workflow contracts;
+2. root `AGENTS.md` and Docs 4, 10, 12, 14, 15 and 16 still match the current identity, code, public config, tests, repository topology, Git transport and repository-workflow contracts;
 3. later documentation has not changed the consumer scope, exclusion rules, evidence requirements or extension boundary;
 4. `latest/` is the current validated publisher output;
 5. every remaining task genuinely requires the real Mac mini;
@@ -64,7 +70,7 @@ This prerequisite proves the interactive user environment and non-interactive re
 
 Run Phase 15 as one persistent goal on the real Mac mini, governed by this document. Use a local Codex project rooted at the Mac mini's own repository clone because environment construction, filesystem validation, live `.codex` deployment and launchd operation occur on that machine.
 
-Root `AGENTS.md` and Doc 16 govern repository-agent workflow and Git authority during that goal. `latest/AGENTS.md` remains managed payload for deployment to `~/.codex/AGENTS.md`; it is not a repository instruction file.
+Root `AGENTS.md` and Doc 16 govern repository-agent workflow and Git authority during that goal. The Mac mini must not originate edits to root `AGENTS.md`; a clean safe fast-forward may receive the Mac Studio-authored version from `origin/main`. Any proposed root-instruction or ordinary/governing-document correction must be recorded in the reserved Mac mini Phase 15 report for Mac Studio review. `latest/AGENTS.md` remains managed payload for deployment to `~/.codex/AGENTS.md`; it is not a repository instruction file.
 
 Do not combine a Mac Studio folder and Mac mini folder as competing source roots, and do not treat source-folder priority or a remote project as cross-machine synchronization. GitHub `origin/main` is the shared history; each machine has its own local checkout and machine-local state.
 
@@ -193,9 +199,9 @@ Exercise uninstall and reinstall, proving that uninstall preserves live Codex st
 
 ## Evidence to contribute back
 
-Create a normal development commit containing only public evidence and permitted consumer refinements. Do not commit private config, machine credentials, logs containing private details or runtime receipts.
+Create `docs/17-mac-mini-report-phase-15-validation.md` with the title `Doc 17 — Mac mini Report — Phase 15 validation` when either every Phase 15 operation requiring a clean, not-ahead checkout has completed or a material blocker has safely stopped those operations. This is the first case file in the Mac mini's persistent report namespace: consolidate proven results, status, bounded consumer corrections and a clearly separated proposed-Mac-Studio-follow-up section without rewriting root `AGENTS.md` or ordinary/governing documents. A blocked report must identify the stop point and required response without claiming completion. Do not use it as a continuously dirty runtime notebook.
 
-Capture the public evidence as a Mode B **Mac mini Phase 15 validation receipt**. The consumer runtime itself never commits or republishes; this is a human-controlled development contribution made by the bounded Phase 15 goal.
+Apply Doc 16's public-content and Git publication gate, then create a normal development commit containing only the report and any separately authorised consumer refinements and push through the established SSH path. This bounded agent-driven delivery needs human intervention only if the gate finds sensitive content, uncertain ownership or unsafe Git state. Do not commit private config, machine credentials, key material, identifying raw logs or private runtime receipts. The consumer runtime itself never authors the report, commits or republishes.
 
 Record:
 
@@ -209,7 +215,7 @@ Record:
 - any evidence-driven Mac mini-specific correction;
 - final full-system readiness conclusion.
 
-Only after that evidence is pushed may project documentation say the complete two-machine system is operational.
+After the report reaches GitHub, the Mac Studio safely receives it, publishes any required response through its own documentation, implementation or a Git commit referencing the report, and never edits or closes the Mac mini's case file. The Mac mini then safely fast-forwards and validates that response. If it resolves the condition, the Mac mini closes its own report and records the response commit SHA; otherwise the report remains active with continuing evidence. A closed report is immutable and any later challenge, regression or recurrence requires a new numbered Mac mini report. Only after successful evidence is reconciled may the Mac Studio update governing documentation to say the complete two-machine system is operational.
 
 ## Stop conditions
 

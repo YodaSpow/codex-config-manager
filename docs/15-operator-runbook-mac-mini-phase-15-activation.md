@@ -3,6 +3,7 @@
 **Status:** Ready for operator use; Mac mini activation remains unexecuted and unproven
 **Authority:** Human-readable activation sequence; not independent authority to alter either machine
 **Governing handoff:** [Doc 12 — Mac mini Phase 15 Handoff](12-mac-mini-phase-15-handoff.md)
+**Identity contract:** [Doc 4 — Deterministic Model-Derived Machine Identity](04-implementation-discovery-deterministic-machine-identity.md)
 **SSH contract:** [Doc 14 — GitHub SSH Machine Bootstrap](14-operator-guide-github-ssh-machine-bootstrap.md)
 **Canonical operations:** [Doc 10 — Implementation Architecture and Operations](10-implementation-architecture-and-operations.md)
 **Mac Studio evidence:** [Doc 11 — Mac Studio Validation Evidence](11-validation-evidence-mac-studio.md)
@@ -81,7 +82,7 @@ Run this immediately before moving the work to the Mac mini. In the Codex projec
 Run the read-only pre-handoff freshness reconciliation required by Doc 12.
 
 Confirm that the checkout is clean on main, local HEAD and origin/main agree,
-latest/ is current, root AGENTS.md and Docs 10, 12, 14, 15 and 16 match
+latest/ is current, root AGENTS.md and Docs 4, 10, 12, 14, 15 and 16 match
 repository and runtime reality,
 every remaining activation task genuinely requires the real Mac mini, and no
 private or Mac Studio-specific material is entering the handoff.
@@ -106,7 +107,7 @@ After cloning, use the repository-owned local copy:
 /Users/spowart/Scripts/codex-config-manager/docs/15-operator-runbook-mac-mini-phase-15-activation.md
 ```
 
-Do not manually copy this document into the reported empty repository directory. That would make the destination non-empty and create a detached handoff copy. Cloning `origin/main` brings root `AGENTS.md` and Docs 10, 12, 14, 15 and 16 onto the Mac mini together in one canonical history.
+Do not manually copy this document into the reported empty repository directory. That would make the destination non-empty and create a detached handoff copy. Cloning `origin/main` brings root `AGENTS.md` and Docs 4, 10, 12, 14, 15 and 16 onto the Mac mini together in one canonical history.
 
 ## Stage 3 — Inspect the intended Mac mini destination
 
@@ -345,6 +346,7 @@ Before starting the goal, confirm the agent can read the local copies of:
 
 ```text
 AGENTS.md
+docs/04-implementation-discovery-deterministic-machine-identity.md
 docs/10-implementation-architecture-and-operations.md
 docs/12-mac-mini-phase-15-handoff.md
 docs/14-operator-guide-github-ssh-machine-bootstrap.md
@@ -391,7 +393,12 @@ The Mac Studio remains the authoring authority. GitHub origin/main remains the
 shared published history. The Mac mini is consumer-only and must never run the
 publisher, create automatic commits, force-push, rewrite history or redefine
 managed scope, deletion rules, latest/, exclusions, repository topology or
-public configuration architecture.
+public configuration architecture. Treat root AGENTS.md as read-only on the
+Mac mini for locally originated changes. A clean safe fast-forward may receive
+the Mac Studio-authored version from origin/main. If root AGENTS.md or a
+governing architecture or authority document appears to require correction,
+record the proposal in docs/17-mac-mini-report-phase-15-validation.md for Mac Studio
+review; do not edit, stage, commit or push the governing file from the Mac mini.
 
 Keep the goal active through discovery, construction, testing, foreground
 deployment, launchd validation, evidence capture and permitted publication.
@@ -423,8 +430,12 @@ Within the goal, the Mac mini agent should:
 16. prove the publisher service is absent on the Mac mini;
 17. prove launchd-domain SSH, headless polling, logs and single-instance behavior;
 18. exercise safe uninstall and reinstall without deleting live or repository state;
-19. create a public Mode B Mac mini Phase 15 validation receipt;
-20. commit and push only permitted public evidence and necessary bounded consumer refinements.
+19. after items 1–18 complete, or after a material blocker safely stops them, create or update `docs/17-mac-mini-report-phase-15-validation.md` with the title `Doc 17 — Mac mini Report — Phase 15 validation`;
+20. record truthful status, evidence, the blocker or completion conclusion, and any proposed root-instruction or ordinary/governing-document correction for Mac Studio review;
+21. apply Doc 16's public-content and Git gate, then normally commit and push only the permitted report and separately authorised bounded consumer refinements, excluding root `AGENTS.md` and ordinary/governing documents;
+22. after the Mac Studio publishes a response that references the report, safely fast-forward and validate it; keep the report active if unresolved, or close it and record the response commit SHA if resolved.
+
+Do not begin item 19 while a clean-checkout operation is still running. The tracked report is a bounded case file, not a continuous runtime notebook. A blocker report is permitted only after the consumer work has safely stopped and must not claim Phase 15 completion. The Mac mini exclusively owns the contents and status of the report it creates; the Mac Studio must never edit or close it. Once the Mac mini closes the report it is immutable, and any later challenge, regression or recurrence requires a new numbered Mac mini report.
 
 The agent must not assume the Mac Studio's proven Python path, SSH agent, keychain state, absolute support paths or launchd evidence applies to the Mac mini. Those are real-machine discovery and validation inputs.
 
@@ -436,14 +447,14 @@ The agent may pause for the operator when:
 - a GitHub account, host fingerprint or key-registration fact requires confirmation;
 - an existing Mac mini file, SSH block, LaunchAgent or managed target creates ambiguity;
 - foreground deployment is ready but its before-state evidence needs human review;
-- the final public evidence is ready for review before publication;
+- the public-content or Git gate finds uncertainty that needs human judgment;
 - a Doc 12 stop condition or architecture decision is reached.
 
 A pause at one of these gates is expected and does not mean the goal has failed. After the operator supplies the required confirmation, the same goal should continue rather than starting a competing setup path.
 
 ## Stage 9 — Phase 15 completion evidence
 
-The goal is not complete merely because files appeared beneath the Mac mini `~/.codex`. The published validation receipt must record, without secrets:
+The goal is not complete merely because files appeared beneath the Mac mini `~/.codex`. The published case file at `docs/17-mac-mini-report-phase-15-validation.md` must record, without secrets:
 
 - Mac mini model identifier, macOS version, Python version and architecture;
 - repository and pulled publication SHA;
@@ -456,13 +467,15 @@ The goal is not complete merely because files appeared beneath the Mac mini `~/.
 - launchd-domain SSH and headless consumer proof;
 - safe uninstall/reinstall outcome;
 - any evidence-driven bounded correction;
+- proposed Mac Studio follow-up for any governing-document correction that the
+  Mac mini deliberately did not apply;
 - the conclusion on complete Mac Studio → GitHub → Mac mini readiness.
 
-The consumer runtime never creates this commit. It is a human-controlled development contribution made by the authorised Phase 15 goal.
+The consumer runtime never creates this commit. It is a bounded agent-driven development contribution made by the authorised Phase 15 goal after Doc 16's publication gate.
 
 ## Stage 10 — Return to the Mac Studio and close the loop
 
-After the Mac mini evidence commit reaches `origin/main`, return to the Mac Studio Codex Config Manager project and request a read-only reconciliation:
+After the Mac mini evidence commit reaches `origin/main`, return to the Mac Studio Codex Config Manager project and request a read-only reconciliation. GitHub carries the technical evidence; the operator does not need to reproduce it manually between chats. The Mac Studio may publish a response that references the report, but it must not edit or close the Mac mini-owned report:
 
 ```text
 Verify the completed Mac mini Phase 15 contribution from the Mac Studio.
@@ -510,4 +523,4 @@ GitHub origin/main + latest/
 Mac mini ~/.codex bounded managed targets
 ```
 
-The Mac Studio remains the only authoring and publishing authority. The Mac mini automatically receives the validated global `AGENTS.md` and dynamically discovered user-managed skills, while preserving Codex-managed `.system/**`, `.DS_Store` and every unrelated local Codex surface.
+The Mac Studio remains the only managed-state authoring and unattended publishing authority. The Mac mini automatically receives the validated global `AGENTS.md` and dynamically discovered user-managed skills, while preserving Codex-managed `.system/**`, `.DS_Store` and every unrelated local Codex surface. Its separately authorised report contribution follows the agent-driven, validated development lane defined above.
