@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.5 · **Updated:** 28 August 2026
+**Version:** 1.6 · **Updated:** 29 August 2026
 
 ## Purpose
 
@@ -102,12 +102,27 @@ python -c "from pathlib import Path; p=Path('<path>'); print(p.resolve()); print
 - When claiming tests pass, include the exact command and decisive final summary line.
 - If inferring behaviour, label it as inference and cite the supporting file and line.
 
-### 📡 Runtime validation
+### 📡 API Runtime Authority Contract
 
-- Before validating live behaviour, identify the repository’s documented runtime path and authorised interfaces.
-- When a live runtime exists, prefer its real repository/runtime path and authorised interfaces over detached shell checks when they disagree.
-- A failure in a detached or unauthorised path is evidence only about that path. Do not claim the repository runtime or integration is broken until it has been validated through its documented, authorised route.
-- If no live runtime exists, use the best available repository-local validation path and record that limitation clearly where durable evidence is needed.
+> **Human context:** A detached API check can fail while the real application works; only the repository’s authorised runtime can establish live integration status.
+
+Applies when drawing conclusions about API or network-service availability, connectivity, authentication, integration behaviour, or the correctness of established integration code and configuration.
+
+- Before testing, identify the repository-owned authority path: configuration, adapter/client, authentication source, existing runtime or entrypoint, and authorised diagnostic or operator workflow. Do not duplicate a user-managed runtime.
+- Evidence authority is:
+  `real operator workflow > authorised live runtime/API diagnostic > repository-local deterministic test > detached shell probe`.
+- A detached probe is diagnostic only. Any detached `Errno 65`/`EHOSTUNREACH`, timeout, DNS, connection, TLS, `401`, `403`, or equivalent failure must be classified `INCONCLUSIVE_DETACHED_CONTEXT`. It proves only that the calling process failed; it does not prove that the API, service, integration, code, configuration, credentials, or operator workflow is broken.
+- If the authorised runtime is unavailable, use the best available repository-local validation path, record its limitation where durable evidence is needed, and classify live status `LIVE_VALIDATION_PENDING`. Repository-local or detached evidence cannot establish live failure.
+- If the authorised runtime fails, classify `POTENTIAL_RUNTIME_BLOCKER`. Report `CONFIRMED_WORKFLOW_BLOCKER` only when the real operator workflow consistently fails at that dependency with direct evidence.
+- If authorised evidence succeeds while detached evidence fails, classify `DETACHED_FALSE_NEGATIVE`; the authorised result wins and the detached blocker hypothesis must be retracted.
+- Detached failure alone must never cause blocker language, predictions of operator-workflow failure, endpoint or credential replacement, client/transport changes, service recovery, or start/restart actions.
+- Diagnostics and production operations must use the repository’s established configuration, authentication, adapter, and runtime path. `urllib`, `requests`, HTTPX, HTTPX2, FastAPI, `curl`, and comparable mechanisms may all be valid repository choices; none is authoritative by name, and one must not replace or override another merely because it behaves differently in another process.
+- The agent must discover the authorised path from the repository. It must not require the human operator to supply backend commands, client-library knowledge, or corrective instructions to prevent a false blocker.
+
+Enforcement examples:
+
+- Detached `Errno 65` plus a successful authorised runtime or operator workflow → `DETACHED_FALSE_NEGATIVE`, never a blocker.
+- An authorised API error plus consistent failure of the real operator workflow at that dependency → evidence-backed blocker investigation is permitted.
 
 ### 📚 Documentation and repository reality
 
