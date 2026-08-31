@@ -1,6 +1,6 @@
 # Read-only audit contract
 
-Read this reference completely before inspecting approved projects.
+Read this reference completely before resolving or inspecting the project landscape.
 
 ## Initiator and objective
 
@@ -10,27 +10,111 @@ The current project is the initiator and supplies the viewpoint, not authority o
 - **Inward:** Which selected projects already solve or expose part of the initiator's problem?
 - **Landscape:** Where do selected projects overlap, duplicate capability, or remain correctly separated?
 
-The question narrows the output, not the integrity of relevant discovery. Follow dependencies far enough to understand every material deliverable.
+The question narrows the final interpretation, not the integrity of the folder census or shallow discovery. Follow dependencies far enough to understand every material deliverable.
 
-## Scope resolution and confirmation
+## First checkpoint: approve the census root
 
 1. Resolve the current project, preferring version-control metadata and using conservative project markers only when needed.
-2. Suggest exactly one parent directory as the candidate group root. Do not enumerate its contents during suggestion.
-3. Show the current project and candidate root. Ask the operator to use it, replace it, or provide exact paths. This first approval authorises enumeration only.
-4. After approval, enumerate every immediate entry under each approved root without opening project contents. Support an allowlist, several approved roots, or exact projects in unrelated locations.
-5. Classify every immediate entry as `recognised project`, `unclassified directory`, `excluded non-directory`, `excluded symlink`, or `unavailable`. Recognition may use a Git directory, Git worktree file, or conservative project marker. It is not a relevance judgement.
-6. Show the complete census and propose the actual project-inspection list. An allowlist filters selection, not census visibility. The operator may promote an unclassified directory or exclude a recognised project.
-7. Obtain a second explicit confirmation before reading any selected project's contents.
+2. Suggest exactly one parent directory as the candidate project-group root. Do not enumerate its contents during suggestion.
+3. Show the initiating project and proposed root separately. Ask:
 
-Do not follow directory symlinks into other trees by default. Reject filesystem or drive roots and the user's home directory for automatic enumeration. Ask the operator to narrow any plainly over-broad mounted or workspace root.
+```text
+▶ Census approval
 
-If a selected path is missing or unreadable, record it as not inspected, explain the limitation briefly, and continue where meaningful. Never infer capability from an unread project.
+Initiating project: <path>
+Proposed project-group root: <path>
 
-During the census, inspect directory structure and permitted marker existence only. Do not open documentation, manifests, source, configuration, or other content. Do not suppress ordinary-looking or unfamiliar directories by name. Sensitive-looking non-directory names may be redacted while preserving their count and exclusion reason.
+Approving this root authorises a content-free census of its immediate children only.
+It does not authorise reading any sibling project contents.
+
+Do you approve this census root, or would you like to replace it or provide exact paths?
+```
+
+Reject filesystem or drive roots, the user's home directory, or another plainly over-broad location for automatic enumeration. Ask the operator to narrow it or provide exact project paths.
+
+## Folder-first census
+
+After root approval, enumerate every immediate entry without opening project contents. Classify by filesystem type first.
+
+### Project-folder candidates
+
+- `recognised-git-project-folder` — readable directory with a Git directory or Git worktree file;
+- `recognised-marker-project-folder` — readable directory with a conservative project marker;
+- `unclassified-project-folder-candidate` — every other readable immediate directory.
+
+Every readable immediate directory remains a project-folder candidate. Recognition is evidence about shape, not relevance or permission to omit it.
+
+### Loose root items
+
+Non-directory entries never inflate project-folder counts. Classify them separately as:
+
+- `standalone-script-or-executable`;
+- `document-or-data`;
+- `archive`;
+- `system-metadata`;
+- `sensitive-name-redacted`;
+- `other-loose-file`.
+
+Filesystem type determines folder versus file. Extensions may subtype a loose file only. Sensitive-looking loose names may be redacted while preserving count and classification. Do not open loose-item contents during the census.
+
+### Other census outcomes
+
+- `excluded-symlink` — never followed by default;
+- `unavailable` — missing, unreadable, or otherwise not safely selectable.
+
+During the census, inspect only entry type, access state, Git-marker existence, conservative project-marker existence, safe file metadata, and loose-file name/suffix where needed for classification. Do not open documentation, manifests, source, configuration, archives, scripts, or other content.
+
+## Inclusive default and narrowing
+
+Without an operator allowlist, the proposed inspection set is **all readable project-folder candidates**: recognised plus unclassified. Never silently shortlist by folder name, domain resemblance, apparent relevance, or marker strength.
+
+When the operator supplies or requests a narrower set:
+
+1. preserve the complete census;
+2. list every selected folder one per row;
+3. list every not-selected readable folder one per row;
+4. show missing or unavailable requested paths separately;
+5. reconcile `total folder candidates = selected + not selected`;
+6. state that excluded folders will not contribute deliverables, adjacent signals, contradictions, or unknowns;
+7. obtain explicit approval for that consequence.
+
+Loose root items are outside the folder audit by default. Offer a separate optional loose-tool review only where useful; approval of project folders does not authorise reading loose files.
+
+## Second checkpoint: approve folder inspection
+
+Present the census with stable, scannable sections:
+
+```text
+✅ Census complete
+
+Initiating project: <name>
+Readable project-folder candidates: <count>
+Loose root items: <count>
+Symlinks not followed: <count>
+Unavailable paths: <count>
+
+▶ Proposed folder inspection
+
+Selected folders (<count>):
+- <one folder per row>
+
+Not selected (<count>):
+- <one folder per row, or "None">
+
+⚠️ Coverage consequence
+<state the consequence whenever any readable folder is not selected>
+
+Approving this list authorises read-only content inspection of the selected folders only.
+It does not authorise inspecting loose root files, changing repositories, or operating services.
+
+Do you approve this exact folder-inspection set, or would you like to add or remove folders?
+```
+
+Keep the initiating project distinct from sibling comparison counts. Avoid totals whose meaning requires the operator to reconstruct arithmetic across sections.
 
 ## Mandatory operator signal
 
-Before inspection, say exactly:
+After the second approval and before any content inspection, say exactly:
 
 ```text
 This is a read-only cross-project audit.
@@ -44,23 +128,15 @@ Do not create, edit, rename, move, or delete files; run write-producing formatte
 
 Use only read-only search and inspection. Live API/runtime checks are excluded unless separately authorised under the project's own runtime contract. A detached probe never creates live truth.
 
+Generated shell commands must use task-specific variable names. Never assign to `PATH`, `path`, `HOME`, `home`, `CDPATH`, `IFS`, `PWD`, `OLDPWD`, `status`, `CODEX_HOME`, or other shell/environment control variables.
+
 ## Discovery breadth and exclusions
 
-Cast a wide net for deliverables relevant to the audit question:
+First perform a shallow capability census of every approved folder. Establish apparent purpose, primary guidance and documentation, manifests, implementation languages or entrypoints, visible integration surfaces, evidence-bearing tests, maturity clues, and possible relevance. Do not compress or dismiss a folder during this pass.
 
-- enduring purpose and observable outcomes;
-- required inputs and external capabilities;
-- APIs, protocols, stable identifiers, and mapping boundaries;
-- owned decisions and workflow actions;
-- maturity, tests, and attributable operational evidence;
-- deferred capability, contradictions, and material unknowns;
-- relationships with other approved projects.
+Then deepen folders whose evidence is directly relevant to the audit question. Start with applicable agent guidance, root documentation and maps, canonical architecture or contract documents, manifests, safe configuration templates, and status ledgers. Then inspect relevant source, schemas, entrypoints, adapters, configuration loaders, and tests.
 
-First perform a shallow capability census of every approved project. Establish its apparent purpose, primary documentation and manifests, implementation languages or entrypoints, visible integration surfaces, evidence-bearing tests, maturity clues, and possible relevance. Do not compress or dismiss it during this pass.
-
-Then deepen projects whose evidence is directly relevant to the audit question. Start with applicable agent guidance, root documentation and maps, canonical architecture or contract documents, manifests, safe configuration templates, and status ledgers. Then inspect relevant source, schemas, entrypoints, adapters, configuration loaders, and tests.
-
-Retain adjacent or future-facing signals from the shallow census even when they do not justify a full capability card. A currently out-of-scope project can still expose a reusable integration pattern, identifier, evidence source, workflow boundary, or future consumer. Name-based filtering is never sufficient evidence of irrelevance.
+Retain adjacent or future-facing signals from every shallow inspection even when they do not justify a full capability card. A currently out-of-scope project can expose a reusable integration pattern, identifier, evidence source, workflow boundary, or future consumer. Name-based filtering is never sufficient evidence of irrelevance.
 
 Avoid `.git` internals, dependency trees, caches, generated outputs, binary/media/data bulk, logs, secret-bearing local configuration, tokens, credentials, and unrelated external paths. Safe committed templates may establish configuration shape without exposing values.
 
@@ -103,17 +179,21 @@ Retain concise material facts about service or component, API/protocol/file inte
 
 Never expose credential values, private authenticated URLs, hostnames or addresses, signed links, internal account identifiers, user-specific absolute paths, secret filenames without need, or unrelated raw payloads. Prefer service classes, endpoint families, identifier types, protocol direction, auth categories, safe templates, environment-variable names without values, and project-relative evidence references.
 
+Reusable skill instructions, examples, fixtures, and generated artifacts must remain project-neutral. Never embed personal repository names or personal absolute paths as demonstrations.
+
 A shared-interface candidate should answer a concrete question, expose reusable evidence rather than consumer policy, preserve identity/provenance/freshness/uncertainty, support bounded permissions, avoid silent mutation, and remove genuine duplicated integration work. Do not implement or automatically document a candidate.
 
 ## Coverage accountability
 
-Maintain enough structured audit state to account for:
+Maintain enough structured state to account for:
 
-- every immediate census entry and its classification;
-- every project approved for inspection;
-- whether each approved project was inspected shallowly or deeply;
-- every operator exclusion, unavailable path, and unreadable project;
-- the evidence-based reason a project was not deepened;
+- every immediate entry and its filesystem-first classification;
+- every readable project-folder candidate;
+- every folder approved for inspection;
+- whether each approved folder was inspected shallowly or deeply;
+- every operator exclusion, unavailable path, unreadable folder, and unfollowed symlink;
+- every loose root item and whether optional review was separately authorised;
+- the evidence-based reason a folder was not deepened;
 - adjacent or future-facing signals retained from shallow inspection.
 
-The final ledger is evidence of coverage, not a claim that every project deserved equal depth.
+The final ledger proves coverage, not equal depth. Its folder counts must reconcile independently from loose-item counts.

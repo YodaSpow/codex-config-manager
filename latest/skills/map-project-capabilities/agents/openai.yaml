@@ -1,4 +1,4 @@
 interface:
   display_name: "Map Project Capabilities"
-  short_description: "Map reusable capabilities across selected projects"
-  default_prompt: "Use $map-project-capabilities to map an approved project group for the current project, confirming scope before inspection and returning a read-only capability map in chat."
+  short_description: "Map reusable capabilities across approved project folders"
+  default_prompt: "Use $map-project-capabilities to map an approved project-folder landscape for the current project, confirming the census root and exact folder-inspection set separately, keeping the audit read-only, and returning the capability map in chat."

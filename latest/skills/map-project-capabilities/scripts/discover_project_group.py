@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Resolve project groups and produce a content-free immediate-child census."""
+"""Resolve project groups and produce a content-free folder/loose-item census."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ import json
 import os
 from pathlib import Path
 import re
+import stat
 import sys
 from typing import Iterable
 
@@ -21,6 +22,54 @@ PROJECT_MARKERS = (
     "build.gradle",
     "build.gradle.kts",
 )
+
+SCRIPT_SUFFIXES = (
+    ".py",
+    ".sh",
+    ".zsh",
+    ".bash",
+    ".fish",
+    ".js",
+    ".mjs",
+    ".cjs",
+    ".ts",
+    ".rb",
+    ".pl",
+    ".ps1",
+    ".command",
+    ".user.js",
+)
+
+DOCUMENT_DATA_SUFFIXES = (
+    ".md",
+    ".markdown",
+    ".txt",
+    ".rst",
+    ".csv",
+    ".tsv",
+    ".json",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".xml",
+    ".log",
+    ".pdf",
+)
+
+ARCHIVE_SUFFIXES = (
+    ".zip",
+    ".tar",
+    ".tar.gz",
+    ".tgz",
+    ".gz",
+    ".bz2",
+    ".xz",
+    ".7z",
+    ".rar",
+    ".dmg",
+)
+
+SYSTEM_METADATA_NAMES = {".ds_store", "thumbs.db", "desktop.ini"}
 
 SENSITIVE_NAME_PATTERN = re.compile(
     r"(^\.env(?:\.|$)|token|secret|password|credential|cookie|\.pem$|\.key$)",
@@ -93,29 +142,59 @@ def validate_allowlist(allowlist: Iterable[str]) -> list[str]:
     return requested
 
 
-def project_record(path: Path, kind: str) -> dict[str, str]:
-    return {"name": path.name, "path": str(path.absolute()), "kind": kind}
+def folder_record(path: Path, classification: str) -> dict[str, str]:
+    return {
+        "name": path.name,
+        "path": str(path.absolute()),
+        "classification": classification,
+    }
 
 
 def unavailable_record(name: str, path: Path, reason: str) -> dict[str, str]:
     return {"name": name, "path": str(path.absolute()), "reason": reason}
 
 
-def excluded_file_record(path: Path, sensitive_index: int) -> dict[str, str | None]:
+def has_suffix(name: str, suffixes: Iterable[str]) -> bool:
+    lowered = name.casefold()
+    return any(lowered.endswith(suffix) for suffix in suffixes)
+
+
+def loose_item_record(path: Path, sensitive_index: int) -> dict[str, str | None]:
     if SENSITIVE_NAME_PATTERN.search(path.name):
         return {
             "name": f"[sensitive-name-redacted-{sensitive_index}]",
             "path": None,
-            "reason": "non-directory-sensitive-name-redacted",
+            "classification": "sensitive-name-redacted",
+            "reason": "loose-item-name-redacted",
         }
-    return {"name": path.name, "path": str(path.absolute()), "reason": "non-directory"}
+
+    lowered = path.name.casefold()
+    mode = path.stat().st_mode
+    is_executable = bool(mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH))
+    if lowered in SYSTEM_METADATA_NAMES:
+        classification = "system-metadata"
+    elif has_suffix(lowered, ARCHIVE_SUFFIXES):
+        classification = "archive"
+    elif has_suffix(lowered, SCRIPT_SUFFIXES) or is_executable:
+        classification = "standalone-script-or-executable"
+    elif has_suffix(lowered, DOCUMENT_DATA_SUFFIXES):
+        classification = "document-or-data"
+    else:
+        classification = "other-loose-file"
+
+    return {
+        "name": path.name,
+        "path": str(path.absolute()),
+        "classification": classification,
+        "reason": "outside-default-folder-audit",
+    }
 
 
 def enumerate_census(root: Path, allowlist: Iterable[str]) -> dict[str, object]:
     requested = validate_allowlist(allowlist)
     recognised: list[dict[str, str]] = []
     unclassified: list[dict[str, str]] = []
-    excluded_files: list[dict[str, str | None]] = []
+    loose_items: list[dict[str, str | None]] = []
     excluded_symlinks: list[dict[str, str]] = []
     unavailable: list[dict[str, str]] = []
     selectable: dict[str, dict[str, str]] = {}
@@ -134,20 +213,21 @@ def enumerate_census(root: Path, allowlist: Iterable[str]) -> dict[str, object]:
                 )
                 continue
             if not child.is_dir():
-                sensitive_index += 1
-                excluded_files.append(excluded_file_record(child, sensitive_index))
+                if SENSITIVE_NAME_PATTERN.search(child.name):
+                    sensitive_index += 1
+                loose_items.append(loose_item_record(child, sensitive_index))
                 continue
             if not os.access(child, os.R_OK | os.X_OK):
                 unavailable.append(unavailable_record(child.name, child, "directory-not-readable"))
                 continue
             if has_git_marker(child):
-                record = project_record(child, "git")
+                record = folder_record(child, "recognised-git-project-folder")
                 recognised.append(record)
             elif has_project_marker(child):
-                record = project_record(child, "project-marker")
+                record = folder_record(child, "recognised-marker-project-folder")
                 recognised.append(record)
             else:
-                record = project_record(child, "unclassified-directory")
+                record = folder_record(child, "unclassified-project-folder-candidate")
                 unclassified.append(record)
             selectable[child.name] = record
         except OSError as exc:
@@ -155,34 +235,54 @@ def enumerate_census(root: Path, allowlist: Iterable[str]) -> dict[str, object]:
 
     observed_unavailable_count = len(unavailable)
     requested_unavailable_count = 0
-    selected: list[dict[str, str]] = []
+    all_folder_candidates = [*recognised, *unclassified]
+
     if requested:
+        proposed: list[dict[str, str]] = []
         for name in requested:
             record = selectable.get(name)
             if record is None:
                 unavailable.append(unavailable_record(name, root / name, "requested-entry-not-selectable"))
                 requested_unavailable_count += 1
             else:
-                selected.append(record)
+                proposed.append(record)
+        selected_names = {record["name"] for record in proposed}
+        not_selected = [record for record in all_folder_candidates if record["name"] not in selected_names]
+        selection_basis = "explicit-allowlist"
     else:
-        selected = list(recognised)
+        proposed = list(all_folder_candidates)
+        not_selected = []
+        selection_basis = "inclusive-default-all-readable-folders"
+
+    loose_counts: dict[str, int] = {}
+    for record in loose_items:
+        classification = str(record["classification"])
+        loose_counts[classification] = loose_counts.get(classification, 0) + 1
 
     return {
         "confirmed_root": str(root),
-        "recognised_projects": recognised,
-        "unclassified_directories": unclassified,
-        "excluded_non_directories": excluded_files,
+        "recognised_project_folders": recognised,
+        "unclassified_project_folder_candidates": unclassified,
+        "loose_items": loose_items,
         "excluded_symlinks": excluded_symlinks,
         "unavailable_paths": unavailable,
-        "selected_projects": selected,
+        "proposed_folder_inspection": proposed,
+        "not_selected_folders": not_selected,
+        "selection_basis": selection_basis,
         "inspection_confirmation_required": True,
+        "loose_item_review_requires_separate_approval": bool(loose_items),
         "symlinks_followed": False,
         "census_counts": {
-            "recognised_projects": len(recognised),
-            "unclassified_directories": len(unclassified),
-            "excluded_non_directories": len(excluded_files),
+            "recognised_project_folders": len(recognised),
+            "unclassified_project_folder_candidates": len(unclassified),
+            "total_folder_candidates": len(all_folder_candidates),
+            "proposed_folder_inspection": len(proposed),
+            "not_selected_folders": len(not_selected),
+            "loose_items": len(loose_items),
+            "loose_item_classes": loose_counts,
             "excluded_symlinks": len(excluded_symlinks),
-            "unavailable_paths": observed_unavailable_count,
+            "unavailable_paths": len(unavailable),
+            "observed_unavailable_paths": observed_unavailable_count,
             "requested_unavailable_paths": requested_unavailable_count,
             "immediate_entries_observed": len(children),
         },
@@ -233,7 +333,7 @@ def command_enumerate(args: argparse.Namespace) -> None:
 
 
 def command_resolve_paths(args: argparse.Namespace) -> None:
-    projects: list[dict[str, str]] = []
+    folders: list[dict[str, str]] = []
     unavailable: list[dict[str, str]] = []
     seen: set[Path] = set()
     for raw in args.path:
@@ -250,18 +350,22 @@ def command_resolve_paths(args: argparse.Namespace) -> None:
             continue
         seen.add(path)
         if has_git_marker(path):
-            kind = "git"
+            classification = "recognised-git-project-folder"
         elif has_project_marker(path):
-            kind = "project-marker"
+            classification = "recognised-marker-project-folder"
         else:
-            kind = "unclassified-directory"
-        projects.append(project_record(path, kind))
+            classification = "unclassified-project-folder-candidate"
+        folders.append(folder_record(path, classification))
     emit(
         {
             "operation": "resolve-paths",
-            "projects": projects,
+            "folder_candidates": folders,
+            "proposed_folder_inspection": folders,
+            "not_selected_folders": [],
             "unavailable_paths": unavailable,
+            "selection_basis": "explicit-paths",
             "inspection_confirmation_required": True,
+            "loose_item_review_requires_separate_approval": False,
             "symlinks_followed": False,
         }
     )
@@ -269,7 +373,7 @@ def command_resolve_paths(args: argparse.Namespace) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Resolve bounded project scopes and census entries without reading project contents."
+        description="Resolve bounded project scopes and census folders and loose items without reading contents."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -290,14 +394,14 @@ def build_parser() -> argparse.ArgumentParser:
     validate.set_defaults(handler=command_validate_roots)
 
     enumerate_parser = subparsers.add_parser(
-        "enumerate", help="Census every immediate entry under an already confirmed safe root."
+        "enumerate", help="Census every immediate folder and loose item under a confirmed safe root."
     )
     enumerate_parser.add_argument("--root", required=True, help="Already confirmed project-group root.")
     enumerate_parser.add_argument(
         "--allow",
         action="append",
         default=[],
-        help="Immediate directory name to propose for inspection; repeat as needed. Census remains complete.",
+        help="Immediate folder name to propose; repeat as needed. Without this, all folders are proposed.",
     )
     enumerate_parser.add_argument(
         "--include-markers",
@@ -307,9 +411,9 @@ def build_parser() -> argparse.ArgumentParser:
     enumerate_parser.set_defaults(handler=command_enumerate)
 
     resolve = subparsers.add_parser(
-        "resolve-paths", help="Resolve exact approved project paths, including paths in several locations."
+        "resolve-paths", help="Resolve exact approved project-folder paths in one or several locations."
     )
-    resolve.add_argument("path", nargs="+", help="One or more exact project directories.")
+    resolve.add_argument("path", nargs="+", help="One or more exact project-folder paths.")
     resolve.set_defaults(handler=command_resolve_paths)
     return parser
 

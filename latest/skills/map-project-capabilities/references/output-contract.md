@@ -1,12 +1,12 @@
 # Capability-map output contract
 
-Read this reference only after approved project discovery and capability analysis are complete.
+Read this reference only after approved folder discovery and capability analysis are complete.
 
 ## Required sequence
 
 ```text
-1. Approved-root census and second scope confirmation
-2. Shallow capability census of every selected project
+1. Approved-root census and explicit folder-inspection confirmation
+2. Shallow capability census of every selected folder
 3. Relevance-led deep inspection
 4. Complete capability model
 5. Semantic compression
@@ -17,23 +17,53 @@ Do not compress projects independently during discovery. Cross-project dependenc
 
 For final synthesis, use Semantic Compression when available. Otherwise remove redundancy without changing meaning: preserve intent, decisions, constraints, dependencies, technical accuracy, contradictions, and uncertainty; do not redesign, resolve ambiguity silently, or invent claims. Allow a longer result when shortening would lose material substance.
 
+## Human-readable signal grammar
+
+Use stable signals only where they add meaning:
+
+- `✅` — established, approved, completed, or evidence-backed;
+- `▶` — decision, candidate set, next action, or proposed scope;
+- `⚠️` — limitation, uncertainty, contradiction, or coverage consequence;
+- `⛔` — outside scope, not authorised, not inspected, or deliberately excluded.
+
+Use these on semantic headings or compact status lines, not on every bullet. Keep names one per row when the operator may need to verify or change them. Prefer explicit labels and reconciled counts over arithmetic the reader must infer.
+
 ## Default chat result
 
-Return one progressive-disclosure map:
+Return one progressive-disclosure map in this order:
 
-1. **Audit objective** — the initiating question in one concise statement.
-2. **Scope census** — all immediate entries, their classifications, and the operator-approved inspection set.
-3. **Project capability cards** — one per directly relevant project.
-4. **Shared capability checklist** — reusable evidence or interface candidates.
-5. **Technical-enabler and maturity map** — material APIs, protocols, identities, provenance, freshness, failure semantics, and evidence state.
-6. **Project-owned boundaries** — consumer policy and workflow actions that must remain local.
-7. **Adjacent and future capability signals** — concise signals retained from shallowly inspected projects outside the direct shortlist.
-8. **Material contradictions and unknowns** — only those that could change the result.
-9. **Evidence references** — enough project-relative locations to trace material findings.
-10. **Coverage ledger** — every census entry and approved project, with inspection depth or exclusion/unavailability reason.
-11. **Optional deeper view** — offer expansion only when it would help.
+1. **✅ Audit status** — read-only completion state, initiating project, inspected-folder count, and any incomplete authority or availability.
+2. **Audit objective** — the initiating question in one concise statement.
+3. **Main conclusions** — the most decision-relevant capability findings.
+4. **⚠️ Coverage limitations** — immediately after conclusions; state exclusions, unavailable paths, shallow-only boundaries, and evidence gaps that could change interpretation.
+5. **Shared capability checklist** — reusable evidence or interface candidates.
+6. **Technical-enabler and maturity map** — material APIs, protocols, identities, provenance, freshness, failure semantics, and evidence state.
+7. **Project-owned boundaries** — consumer policy and workflow actions that must remain local.
+8. **Project capability cards** — deep evidence for directly relevant projects.
+9. **Adjacent and future capability signals** — one project per entry, retained from shallowly inspected projects outside the direct shortlist.
+10. **Material contradictions and unknowns** — only those that could change the result.
+11. **Evidence references** — enough project-relative locations to trace material findings.
+12. **Complete folder coverage ledger** — every folder candidate and its inspection or exclusion state.
+13. **Optional loose-tool signals** — only when separately authorised; never mix them into project-folder counts.
+14. **▶ Optional deeper view** — offer expansion only when it would help.
 
 Do not ask where to save the result and do not create a report by default. Persistence is a separate explicit documentation request.
+
+## Audit status block
+
+```text
+✅ Audit status
+
+Initiating project: <name>
+Approved project folders: <count>
+Deeply inspected: <count>
+Shallowly inspected: <count>
+Not inspected: <count>
+Unavailable: <count>
+Loose root review: <not authorised, authorised, or not applicable>
+```
+
+The initiating project is a viewpoint and may also appear in the approved folder set. Keep it visually distinct from the sibling-comparison count so totals remain unambiguous.
 
 ## Project capability card
 
@@ -104,7 +134,7 @@ Use project-relative references where possible. Distinguish documentation, sourc
 
 ## Adjacent and future capability signal
 
-Use a concise entry rather than a full card when shallow evidence is material but not directly relevant enough for deep inspection:
+Use a concise entry rather than a full card when shallow evidence is material but not directly relevant enough for deep inspection. Keep one project per entry so provenance and operator review remain clear:
 
 ```text
 Project: <name>
@@ -113,18 +143,41 @@ Why it may matter: <connection to the initiating horizon>
 Evidence state: <maturity and limitation>
 ```
 
-## Coverage ledger
+Never combine several project names into an opaque bundle.
 
-Account for all scope, not merely positive findings:
+## Complete folder coverage ledger
+
+Account for project folders separately from loose files:
 
 ```text
-Entry: <project or immediate-child label>
-Classification: <recognised, unclassified, non-directory, symlink, unavailable, or operator-excluded>
+Folder: <project-folder label>
+Classification: <recognised Git, recognised marker, or unclassified folder candidate>
+Selection: <selected or not selected>
 Inspection: <deep, shallow, not inspected, or unavailable>
 Reason: <brief evidence-based explanation>
 ```
 
-Every approved project must be `deep` or `shallow`. Every other census entry must carry an explicit exclusion, unavailability, or operator decision. Redact sensitive-looking non-directory names where revealing them is unnecessary.
+Every approved folder must be `deep` or `shallow`. Every other readable folder candidate must carry an explicit operator exclusion or not-selected decision. Missing or unreadable folders must be `unavailable`. Symlinks remain separately recorded as not followed.
+
+Show and verify:
+
+```text
+total readable folder candidates = selected folders + not-selected folders
+selected folders = deeply inspected folders + shallowly inspected folders
+```
+
+## Optional loose-tool ledger
+
+Include only when loose-item review was separately authorised:
+
+```text
+Loose item: <safe label or redacted label>
+Classification: <standalone script/executable, document/data, archive, system metadata, sensitive redacted, or other>
+Inspection: <shallow, not inspected, unavailable, or redacted>
+Reason: <brief scope or evidence explanation>
+```
+
+Loose items must never be counted as projects or folded into project capability-card totals.
 
 ## Final fidelity check
 
@@ -135,8 +188,10 @@ Before returning, verify that the compact map retains every material:
 - reusable-evidence versus policy/action boundary;
 - API, protocol, identity, provenance, freshness, and failure fact;
 - contradiction, uncertainty, and unavailable-project limitation;
-- project relationship that changes the initiating decision.
+- project relationship that changes the initiating decision;
 - adjacent or future-facing signal supported by shallow evidence;
-- census entry, inspection depth, exclusion, and unavailability accounted for in the coverage ledger.
+- readable folder candidate, inspection depth, operator exclusion, and unavailability;
+- loose-item state, but only when separately authorised;
+- count equation and initiator/comparison distinction.
 
 Restore anything removed only to make the answer shorter.
