@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Resolve and enumerate project groups without reading or changing projects."""
+"""Resolve project groups and produce a content-free immediate-child census."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import re
 import sys
 from typing import Iterable
 
@@ -19,6 +20,11 @@ PROJECT_MARKERS = (
     "pom.xml",
     "build.gradle",
     "build.gradle.kts",
+)
+
+SENSITIVE_NAME_PATTERN = re.compile(
+    r"(^\.env(?:\.|$)|token|secret|password|credential|cookie|\.pem$|\.key$)",
+    re.IGNORECASE,
 )
 
 
@@ -79,46 +85,108 @@ def validate_enumeration_root(raw: str | os.PathLike[str]) -> Path:
     return root
 
 
-def candidate_kind(path: Path, include_markers: bool) -> str | None:
-    if path.is_symlink() or not path.is_dir():
-        return None
-    if has_git_marker(path):
-        return "git"
-    if include_markers and has_project_marker(path):
-        return "project-marker"
-    return None
-
-
-def enumerate_projects(
-    root: Path, allowlist: Iterable[str], include_markers: bool
-) -> tuple[list[dict[str, str]], list[str]]:
+def validate_allowlist(allowlist: Iterable[str]) -> list[str]:
     requested = list(dict.fromkeys(allowlist))
     for name in requested:
         if not name or name in {".", ".."} or Path(name).name != name:
             raise DiscoveryError(f"Allowlist entries must be immediate child names: {name!r}")
+    return requested
 
-    entries: dict[str, tuple[Path, str]] = {}
+
+def project_record(path: Path, kind: str) -> dict[str, str]:
+    return {"name": path.name, "path": str(path.absolute()), "kind": kind}
+
+
+def unavailable_record(name: str, path: Path, reason: str) -> dict[str, str]:
+    return {"name": name, "path": str(path.absolute()), "reason": reason}
+
+
+def excluded_file_record(path: Path, sensitive_index: int) -> dict[str, str | None]:
+    if SENSITIVE_NAME_PATTERN.search(path.name):
+        return {
+            "name": f"[sensitive-name-redacted-{sensitive_index}]",
+            "path": None,
+            "reason": "non-directory-sensitive-name-redacted",
+        }
+    return {"name": path.name, "path": str(path.absolute()), "reason": "non-directory"}
+
+
+def enumerate_census(root: Path, allowlist: Iterable[str]) -> dict[str, object]:
+    requested = validate_allowlist(allowlist)
+    recognised: list[dict[str, str]] = []
+    unclassified: list[dict[str, str]] = []
+    excluded_files: list[dict[str, str | None]] = []
+    excluded_symlinks: list[dict[str, str]] = []
+    unavailable: list[dict[str, str]] = []
+    selectable: dict[str, dict[str, str]] = {}
+    sensitive_index = 0
+
     try:
         children = sorted(root.iterdir(), key=lambda item: item.name.casefold())
     except OSError as exc:
         raise DiscoveryError(f"Cannot enumerate root: {root}: {exc}") from exc
 
     for child in children:
-        kind = candidate_kind(child, include_markers)
-        if kind:
-            entries[child.name] = (child.resolve(strict=False), kind)
+        try:
+            if child.is_symlink():
+                excluded_symlinks.append(
+                    {"name": child.name, "path": str(child.absolute()), "reason": "symlink-not-followed"}
+                )
+                continue
+            if not child.is_dir():
+                sensitive_index += 1
+                excluded_files.append(excluded_file_record(child, sensitive_index))
+                continue
+            if not os.access(child, os.R_OK | os.X_OK):
+                unavailable.append(unavailable_record(child.name, child, "directory-not-readable"))
+                continue
+            if has_git_marker(child):
+                record = project_record(child, "git")
+                recognised.append(record)
+            elif has_project_marker(child):
+                record = project_record(child, "project-marker")
+                recognised.append(record)
+            else:
+                record = project_record(child, "unclassified-directory")
+                unclassified.append(record)
+            selectable[child.name] = record
+        except OSError as exc:
+            unavailable.append(unavailable_record(child.name, child, f"entry-unavailable: {exc.__class__.__name__}"))
 
-    unavailable: list[str] = []
-    selected_names = requested or list(entries)
-    projects: list[dict[str, str]] = []
-    for name in selected_names:
-        selected = entries.get(name)
-        if selected is None:
-            unavailable.append(str(root / name))
-            continue
-        path, kind = selected
-        projects.append({"name": name, "path": str(path), "kind": kind})
-    return projects, unavailable
+    observed_unavailable_count = len(unavailable)
+    requested_unavailable_count = 0
+    selected: list[dict[str, str]] = []
+    if requested:
+        for name in requested:
+            record = selectable.get(name)
+            if record is None:
+                unavailable.append(unavailable_record(name, root / name, "requested-entry-not-selectable"))
+                requested_unavailable_count += 1
+            else:
+                selected.append(record)
+    else:
+        selected = list(recognised)
+
+    return {
+        "confirmed_root": str(root),
+        "recognised_projects": recognised,
+        "unclassified_directories": unclassified,
+        "excluded_non_directories": excluded_files,
+        "excluded_symlinks": excluded_symlinks,
+        "unavailable_paths": unavailable,
+        "selected_projects": selected,
+        "inspection_confirmation_required": True,
+        "symlinks_followed": False,
+        "census_counts": {
+            "recognised_projects": len(recognised),
+            "unclassified_directories": len(unclassified),
+            "excluded_non_directories": len(excluded_files),
+            "excluded_symlinks": len(excluded_symlinks),
+            "unavailable_paths": observed_unavailable_count,
+            "requested_unavailable_paths": requested_unavailable_count,
+            "immediate_entries_observed": len(children),
+        },
+    }
 
 
 def emit(payload: dict[str, object]) -> None:
@@ -137,7 +205,7 @@ def command_suggest(args: argparse.Namespace) -> None:
             "suggested_group_root": str(suggested),
             "root_safety_state": state,
             "root_safety_reason": reason,
-            "candidate_projects": None,
+            "project_census": None,
             "confirmation_required_before_enumeration": True,
         }
     )
@@ -159,27 +227,24 @@ def command_validate_roots(args: argparse.Namespace) -> None:
 
 def command_enumerate(args: argparse.Namespace) -> None:
     root = validate_enumeration_root(args.root)
-    projects, unavailable = enumerate_projects(root, args.allow, args.include_markers)
-    emit(
-        {
-            "operation": "enumerate",
-            "confirmed_root": str(root),
-            "candidate_projects": projects,
-            "unavailable_paths": unavailable,
-            "symlinks_followed": False,
-        }
-    )
+    payload = enumerate_census(root, args.allow)
+    payload["operation"] = "enumerate"
+    emit(payload)
 
 
 def command_resolve_paths(args: argparse.Namespace) -> None:
     projects: list[dict[str, str]] = []
-    unavailable: list[str] = []
+    unavailable: list[dict[str, str]] = []
     seen: set[Path] = set()
     for raw in args.path:
+        unresolved = Path(raw).expanduser().absolute()
+        if unresolved.is_symlink():
+            unavailable.append(unavailable_record(unresolved.name, unresolved, "symlink-not-followed"))
+            continue
         try:
             path = existing_directory(raw)
-        except DiscoveryError:
-            unavailable.append(str(Path(raw).expanduser().resolve(strict=False)))
+        except DiscoveryError as exc:
+            unavailable.append(unavailable_record(unresolved.name, unresolved, str(exc)))
             continue
         if path in seen:
             continue
@@ -189,14 +254,22 @@ def command_resolve_paths(args: argparse.Namespace) -> None:
         elif has_project_marker(path):
             kind = "project-marker"
         else:
-            kind = "directory"
-        projects.append({"name": path.name, "path": str(path), "kind": kind})
-    emit({"operation": "resolve-paths", "projects": projects, "unavailable_paths": unavailable})
+            kind = "unclassified-directory"
+        projects.append(project_record(path, kind))
+    emit(
+        {
+            "operation": "resolve-paths",
+            "projects": projects,
+            "unavailable_paths": unavailable,
+            "inspection_confirmation_required": True,
+            "symlinks_followed": False,
+        }
+    )
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Resolve bounded project scopes without reading project contents."
+        description="Resolve bounded project scopes and census entries without reading project contents."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -217,14 +290,19 @@ def build_parser() -> argparse.ArgumentParser:
     validate.set_defaults(handler=command_validate_roots)
 
     enumerate_parser = subparsers.add_parser(
-        "enumerate", help="Enumerate immediate project children of an already confirmed safe root."
+        "enumerate", help="Census every immediate entry under an already confirmed safe root."
     )
     enumerate_parser.add_argument("--root", required=True, help="Already confirmed project-group root.")
     enumerate_parser.add_argument(
-        "--allow", action="append", default=[], help="Immediate child name to select; repeat as needed."
+        "--allow",
+        action="append",
+        default=[],
+        help="Immediate directory name to propose for inspection; repeat as needed. Census remains complete.",
     )
     enumerate_parser.add_argument(
-        "--include-markers", action="store_true", help="Include non-Git directories with conservative project markers."
+        "--include-markers",
+        action="store_true",
+        help="Compatibility flag; conservative project markers are always recognised.",
     )
     enumerate_parser.set_defaults(handler=command_enumerate)
 

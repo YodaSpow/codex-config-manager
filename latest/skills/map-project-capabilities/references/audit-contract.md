@@ -16,13 +16,17 @@ The question narrows the output, not the integrity of relevant discovery. Follow
 
 1. Resolve the current project, preferring version-control metadata and using conservative project markers only when needed.
 2. Suggest exactly one parent directory as the candidate group root. Do not enumerate its contents during suggestion.
-3. Show the current project and candidate root. Ask the operator to use it, replace it, or provide exact paths.
-4. After approval, enumerate immediate project children only. Support an allowlist, several approved roots, or exact projects in unrelated locations.
-5. Show the final selected project list before reading project contents.
+3. Show the current project and candidate root. Ask the operator to use it, replace it, or provide exact paths. This first approval authorises enumeration only.
+4. After approval, enumerate every immediate entry under each approved root without opening project contents. Support an allowlist, several approved roots, or exact projects in unrelated locations.
+5. Classify every immediate entry as `recognised project`, `unclassified directory`, `excluded non-directory`, `excluded symlink`, or `unavailable`. Recognition may use a Git directory, Git worktree file, or conservative project marker. It is not a relevance judgement.
+6. Show the complete census and propose the actual project-inspection list. An allowlist filters selection, not census visibility. The operator may promote an unclassified directory or exclude a recognised project.
+7. Obtain a second explicit confirmation before reading any selected project's contents.
 
 Do not follow directory symlinks into other trees by default. Reject filesystem or drive roots and the user's home directory for automatic enumeration. Ask the operator to narrow any plainly over-broad mounted or workspace root.
 
 If a selected path is missing or unreadable, record it as not inspected, explain the limitation briefly, and continue where meaningful. Never infer capability from an unread project.
+
+During the census, inspect directory structure and permitted marker existence only. Do not open documentation, manifests, source, configuration, or other content. Do not suppress ordinary-looking or unfamiliar directories by name. Sensitive-looking non-directory names may be redacted while preserving their count and exclusion reason.
 
 ## Mandatory operator signal
 
@@ -52,7 +56,11 @@ Cast a wide net for deliverables relevant to the audit question:
 - deferred capability, contradictions, and material unknowns;
 - relationships with other approved projects.
 
-Start with applicable agent guidance, root documentation and maps, canonical architecture or contract documents, manifests, safe configuration templates, and status ledgers. Then inspect relevant source, schemas, entrypoints, adapters, configuration loaders, and tests.
+First perform a shallow capability census of every approved project. Establish its apparent purpose, primary documentation and manifests, implementation languages or entrypoints, visible integration surfaces, evidence-bearing tests, maturity clues, and possible relevance. Do not compress or dismiss it during this pass.
+
+Then deepen projects whose evidence is directly relevant to the audit question. Start with applicable agent guidance, root documentation and maps, canonical architecture or contract documents, manifests, safe configuration templates, and status ledgers. Then inspect relevant source, schemas, entrypoints, adapters, configuration loaders, and tests.
+
+Retain adjacent or future-facing signals from the shallow census even when they do not justify a full capability card. A currently out-of-scope project can still expose a reusable integration pattern, identifier, evidence source, workflow boundary, or future consumer. Name-based filtering is never sufficient evidence of irrelevance.
 
 Avoid `.git` internals, dependency trees, caches, generated outputs, binary/media/data bulk, logs, secret-bearing local configuration, tokens, credentials, and unrelated external paths. Safe committed templates may establish configuration shape without exposing values.
 
@@ -96,3 +104,16 @@ Retain concise material facts about service or component, API/protocol/file inte
 Never expose credential values, private authenticated URLs, hostnames or addresses, signed links, internal account identifiers, user-specific absolute paths, secret filenames without need, or unrelated raw payloads. Prefer service classes, endpoint families, identifier types, protocol direction, auth categories, safe templates, environment-variable names without values, and project-relative evidence references.
 
 A shared-interface candidate should answer a concrete question, expose reusable evidence rather than consumer policy, preserve identity/provenance/freshness/uncertainty, support bounded permissions, avoid silent mutation, and remove genuine duplicated integration work. Do not implement or automatically document a candidate.
+
+## Coverage accountability
+
+Maintain enough structured audit state to account for:
+
+- every immediate census entry and its classification;
+- every project approved for inspection;
+- whether each approved project was inspected shallowly or deeply;
+- every operator exclusion, unavailable path, and unreadable project;
+- the evidence-based reason a project was not deepened;
+- adjacent or future-facing signals retained from shallow inspection.
+
+The final ledger is evidence of coverage, not a claim that every project deserved equal depth.
