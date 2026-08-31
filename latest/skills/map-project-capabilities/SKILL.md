@@ -24,7 +24,8 @@ The capability map will be returned in chat.
 
 7. Perform a shallow capability census of **every approved folder**, then deepen only where evidence is directly relevant to the audit question. Do not infer irrelevance from a folder name. Build the complete capability model before compression.
 8. Read [references/output-contract.md](references/output-contract.md) completely only after discovery and analysis are complete. Synthesize the status-first map, including early coverage limitations, adjacent and future signals, and a complete folder ledger.
-9. Return the capability map in chat. Stop without writing reports or implementing discovered candidates.
+9. Return the capability map in chat. End with the singular new-document offer defined by the output contract, then stop without writing or implementing. The audit itself never creates a file.
+10. If the operator immediately accepts that singular offer in a later turn, leave the read-only audit posture and use Mode B to create one **new canonical project document** in the initiating repository. Use the completed audit as the source context; do not require the operator to restate it, merge into an existing document, or begin implementation. If the offer is no longer the active conversational choice or the document destination is materially ambiguous, briefly restate or resolve the intended target before writing.
 
 ## Non-negotiable boundaries
 
@@ -42,7 +43,7 @@ The capability map will be returned in chat.
 - Account for every folder candidate and every approved project in the final ledger, including why anything was excluded, unavailable, or not deepened. Account for loose items separately.
 - Keep reusable skill text, generated fixtures, and examples project-neutral. Do not embed personal repository names, personal absolute paths, secret-looking names, or private evidence as reusable examples.
 - In generated shell commands, never repurpose shell- or environment-special names such as `PATH`, `path`, `HOME`, `home`, `CDPATH`, `IFS`, `PWD`, `OLDPWD`, `status`, or `CODEX_HOME`; use task-specific variable names.
-- Default to chat output. A persistent report requires a separate explicit request and a documentation posture.
+- Default to chat output. Offering a documentation handoff does not authorise it. Only the operator's acceptance authorises the later Mode B creation of one new initiating-project document; Mode C always requires a separate explicit request.
 
 ## Companion skills
 

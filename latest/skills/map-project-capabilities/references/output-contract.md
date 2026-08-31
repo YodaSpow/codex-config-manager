@@ -46,8 +46,9 @@ Return one progressive-disclosure map in this order:
 12. **Complete folder coverage ledger** — every folder candidate and its inspection or exclusion state.
 13. **Optional loose-tool signals** — only when separately authorised; never mix them into project-folder counts.
 14. **▶ Optional deeper view** — offer expansion only when it would help.
+15. **▶ Available next step — capture this audit** — always end with the singular, bounded new-document handoff below.
 
-Do not ask where to save the result and do not create a report by default. Persistence is a separate explicit documentation request.
+Do not ask where to save the audit result and do not create a report during the audit. The final handoff offers a later Mode B action; it does not execute it.
 
 ## Audit status block
 
@@ -179,6 +180,56 @@ Reason: <brief scope or evidence explanation>
 
 Loose items must never be counted as projects or folded into project capability-card totals.
 
+## Final new-document handoff
+
+End the rendered capability map with this semantic shape:
+
+```text
+## ▶ Available next step — capture this audit
+
+This audit is complete and remains chat-only.
+
+If you accept its direction, I can capture the complete audit as the next new
+canonical Mode B project document. That document will preserve the material
+analysis, evidence, recommendations, limitations, boundaries, and unresolved
+decisions from this result. It will not be merged into an existing document,
+and no implementation will begin.
+
+Reply “Yes, create the new document” or say how you want the handoff changed.
+```
+
+Adapt the prose naturally where needed, but preserve every guarantee. Keep the handoff:
+
+- **singular** — one primary documentation action, not several competing next steps;
+- **context-aware** — use the completed audit rather than asking the operator to repeat it;
+- **explicitly new** — say `new canonical Mode B project document`;
+- **non-blending** — say an existing document will not be changed by default;
+- **non-implementing** — say implementation will not begin;
+- **concise** — do not repeat the capability map inside the offer;
+- **actionable** — provide one minimal affirmative reply;
+- **adjustable** — permit the operator to request another documentation treatment.
+
+An optional deeper evidence view may appear earlier, but this documentation offer is the final rendered block.
+
+### Accepted handoff document
+
+If the operator accepts the immediately preceding singular offer, the next turn is Mode B rather than part of the audit. Create one new Markdown document in the initiating project's canonical documentation location and follow its established document-numbering convention. If either is materially ambiguous, show the intended target before writing.
+
+The document is a durable semantic synthesis, not a transcript or recommendation-only summary. Preserve every material:
+
+- status, audit objective, approved scope, and coverage depth;
+- conclusion, limitation, accepted direction, and recommendation;
+- shared capability candidate and technical enabler;
+- maturity state, evidence limitation, and project-owned boundary;
+- directly relevant evidence and adjacent or future signal;
+- contradiction, unknown, and unresolved design choice;
+- sequencing decision and valid future Mode C plan or goal;
+- statement of what remains unimplemented.
+
+Documentation does not elevate maturity. Do not rerun discovery merely to recreate facts already established by the accepted audit. Do not merge, append to, rewrite, or supersede an existing document unless the operator explicitly requests that different outcome. Stop after Mode B validation; Mode C requires another explicit request.
+
+Silence, decline, a deeper-view request, or a non-accepting response creates no file. Treat an immediate `yes` or `go ahead` as acceptance only while this singular offer remains the active conversational choice; otherwise briefly restate the intended action.
+
 ## Final fidelity check
 
 Before returning, verify that the compact map retains every material:
@@ -193,5 +244,6 @@ Before returning, verify that the compact map retains every material:
 - readable folder candidate, inspection depth, operator exclusion, and unavailability;
 - loose-item state, but only when separately authorised;
 - count equation and initiator/comparison distinction.
+- final handoff clarity: new document, complete audit context, no merge, and no implementation.
 
 Restore anything removed only to make the answer shorter.

@@ -122,6 +122,32 @@ No repository files will be changed.
 The capability map will be returned in chat.
 ```
 
+## Post-audit documentation authority
+
+The read-only audit may end by offering one later documentation action. The offer itself creates no file and does not change the audit posture.
+
+The singular default offer is to capture the completed audit as the next **new canonical Mode B project document** in the initiating repository. It must state that:
+
+- the current audit remains chat-only;
+- the complete material audit will supply the document context;
+- the operator does not need to restate the findings;
+- an existing document will not be merged, appended to, rewritten, or superseded by default;
+- implementation will not begin.
+
+When that offer is the most recent and only active action, an immediate `yes`, `go ahead`, `create the new document`, or equivalent affirmative response authorises only this transition:
+
+```text
+completed read-only audit
+→ operator accepts the singular offer
+→ Mode B
+→ one new canonical document in the initiating project
+→ stop without implementation
+```
+
+Acceptance permits the active AI to locate the initiating project's established documentation directory, infer its next document identity from current conventions, and create one new Markdown document. If the location or identity is materially ambiguous, show the intended target before writing. A distant, context-free, or multiply ambiguous affirmative response is not sufficient; briefly restate the intended action first.
+
+Silence, decline, a request for deeper evidence, or any other non-acceptance creates no file. Documentation acceptance never authorises Mode C, application changes, cross-project writes, or changes to an existing document unless the operator explicitly requests that different treatment.
+
 ## Prohibited actions
 
 Do not create, edit, rename, move, or delete files; run write-producing formatters or generators; install or upgrade dependencies; alter environments, configuration, or secrets; start, stop, restart, or reload services; run migrations; mutate databases or APIs; send messages; publish artifacts; change remotes; initialise or modify Git state; repair audited projects; or create persistent reports.
