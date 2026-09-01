@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.6 · **Updated:** 29 August 2026
+**Version:** 1.7 · **Updated:** 1 September 2026
 
 ## Purpose
 
@@ -101,6 +101,12 @@ python -c "from pathlib import Path; p=Path('<path>'); print(p.resolve()); print
 - If claiming a shell script was created, also show `ls -la <path>` and `sed -n '1,120p' <path>`.
 - When claiming tests pass, include the exact command and decisive final summary line.
 - If inferring behaviour, label it as inference and cite the supporting file and line.
+
+### 🗃️ Repository-status reporting
+
+- Report Git state accurately, but do not treat ordinary local files that Git has not yet recorded as errors, blockers, or evidence of invalid work unless another fact establishes that.
+- When files exist locally but have not been added to Git history, explain that plainly before using the technical term `untracked`.
+- `untracked` is a local Git state, not a GitHub state. Distinguish it from ignored files, staged changes, committed history, and remote publication when that distinction materially matters.
 
 ### 📡 API Runtime Authority Contract
 
