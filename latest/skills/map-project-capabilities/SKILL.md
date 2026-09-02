@@ -5,6 +5,8 @@ description: Map what selected projects genuinely deliver and require, then iden
 
 # Map Project Capabilities
 
+**Version:** 1.0 · **Updated:** 31 August 2026
+
 Map an operator-approved project landscape from the viewpoint of the project where the skill was invoked. Establish observable deliverables and requirements, then distinguish reusable evidence from project-owned policy and workflow actions.
 
 ## Required workflow

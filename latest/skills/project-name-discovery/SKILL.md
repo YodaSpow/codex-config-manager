@@ -5,6 +5,8 @@ description: Discover durable, memorable names for software projects, repositori
 
 # Project Name Discovery
 
+**Version:** 1.0 · **Updated:** 29 August 2026
+
 ## Purpose
 
 Discover durable, memorable project names by distilling a project's essential responsibility and exploring multiple naming abstractions rather than generating literal or generic names.
