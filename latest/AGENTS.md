@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.7 · **Updated:** 1 September 2026
+**Version:** 1.9 · **Updated:** 2 September 2026
 
 ## Purpose
 
@@ -59,6 +59,12 @@ Supplied material must be made shorter or denser without losing meaning, decisio
 ## ⚙️ Global skill infrastructure
 
 Non-project Codex skills live in `/Users/spowart/.codex/skills`. `/Users/spowart/.codex/validation-env` is the dedicated global skill-validation environment; it includes `PyYAML` for the Codex skill validator. Use it to validate a created or updated global skill. This is global Codex infrastructure, not repository guidance.
+
+### Skill release metadata
+
+- User-maintained skills show this release line immediately below their main title: `**Version:** <version> · **Updated:** <D Month YYYY>`.
+  - Example: `**Version:** 1.0 · **Updated:** 29 August 2026`.
+- Increment the version and update the date when a skill’s capability or behaviour changes.
 
 ---
 
@@ -336,6 +342,8 @@ cd "/some/path" \
 ## 🌐 Browser UI Cache-Buster Contract
 
 This is a conditional global guardrail: apply it whenever browser-facing CSS, JavaScript, or visual UI work is in scope. UI changes must be visible through ordinary browser refresh or navigation, not hidden behind cache.
+
+This contract does not require a skill to store its `build-id` in `SKILL.md` or permanent skill metadata. Where a skill renders browser UI, its renderer supplies the shared `build-id` to that UI.
 
 Use one shared UTC ISO-8601 `build-id` derived from the changed UI source or equivalent build input. Pass it into every HTML page and replace a shared `__UI_BUILD_VERSION__`-style placeholder before serving the page.
 
