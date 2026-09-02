@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.9 · **Updated:** 2 September 2026
+**Version:** 1.10 · **Updated:** 2 September 2026
 
 ## Purpose
 
@@ -77,6 +77,7 @@ Non-project Codex skills live in `/Users/spowart/.codex/skills`. `/Users/spowart
 > **History:** Preserved global guidance editions are stored in `/Users/spowart/.codex/AGENTS-history/`.
 
 - Never alter this file unless the user has explicitly approved the exact proposed patch in the current conversation.
+- Before approval, show the proposed patch under **Proposed diff — complete affected section** and its rendered form under **Rendered preview — complete affected section**.
 - Before an approved edit, preserve a complete, verbatim, dated copy in the global guidance history.
 - In the active file, bump the `Version` and update the `Updated` date as part of the same approved edit.
 - After the edit, show the preserved copy, the exact diff against the active file, and proof that both files exist.
