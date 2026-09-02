@@ -1,0 +1,6 @@
+interface:
+  display_name: "Scratchboard"
+  short_description: "Maintain a repo-local working board"
+  default_prompt: "Use $scratchboard to capture this project working context in today’s board."
+policy:
+  allow_implicit_invocation: true

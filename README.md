@@ -27,5 +27,6 @@ Each download contains one complete user-managed skill.
 - [Download map-project-capabilities](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/map-project-capabilities.zip)
 - [Download operational-modes](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/operational-modes.zip)
 - [Download project-name-discovery](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/project-name-discovery.zip)
+- [Download scratchboard](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/scratchboard.zip)
 - [Download semantic-compression](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/semantic-compression.zip)
 <!-- END CODEX CONFIG MANAGER DOWNLOADS -->
