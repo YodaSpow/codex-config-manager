@@ -5,7 +5,7 @@ description: Set and apply the appropriate operating posture for a task through 
 
 # Operational Modes (0/A/B/C/P)
 
-**Version:** 1.0 · **Updated:** 6 August 2026
+**Version:** 1.1 · **Updated:** 3 September 2026
 
 ## Purpose
 
@@ -111,6 +111,9 @@ Ground a decision or next step in the actual repository, documentation, configur
 
 - Read supplied material and relevant repository content.
 - Inspect code, documentation, configuration, tests, and existing conventions.
+- When evaluating whether a repository currently provides a capability, trace the relevant evidence through the layers that materially apply: documented contract, registered route or entrypoint, implementation source, tests, Git history, and published or authorised runtime surface.
+- Treat documentation as evidence of the published or intended contract, not as the sole authority for current implementation. Check registered source routes and their implementations for newer, undocumented, or documentation-lagging capabilities when that distinction could change the finding.
+- Classify material source-versus-contract differences explicitly, using evidence states such as `DOCUMENTED_CONTRACT`, `SOURCE_PROVEN_DOCUMENTATION_LAGGING`, and `LIVE_VALIDATION_PENDING`; do not promote source evidence into a live-runtime claim.
 - Use read-only discovery tools such as `rg`, `find`, `ls`, `cat`, `sed -n`, `head`, `tail`, and `python -c` for printing only.
 - Report the current state, observations, gaps, risks, evidence, and important unknowns.
 - Use the Decision Framework when there are materially different options, turning the evidence into recommendations for discussion.
