@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.10 · **Updated:** 2 September 2026
+**Version:** 1.11 · **Updated:** 4 September 2026
 
 ## Purpose
 
@@ -70,17 +70,21 @@ Non-project Codex skills live in `/Users/spowart/.codex/skills`. `/Users/spowart
 
 ## ⚖️ Global guardrails
 
-### 🛡️ Global `AGENTS.md` Change Control
+### 🛡️ Global `AGENTS.md` and Skill Change Control
 
-*Applies only to the global Codex guidance file: `/Users/spowart/.codex/AGENTS.md`. It does not govern repository-level `AGENTS.md` files.*
+*Applies to `/Users/spowart/.codex/AGENTS.md` and changes to existing user-maintained global skills. New skill creation follows the normal skill-creation workflow. It does not govern repository-level `AGENTS.md` files or system-maintained skills.*
 
 > **History:** Preserved global guidance editions are stored in `/Users/spowart/.codex/AGENTS-history/`.
 
-- Never alter this file unless the user has explicitly approved the exact proposed patch in the current conversation.
-- Before approval, show the proposed patch under **Proposed diff — complete affected section** and its rendered form under **Rendered preview — complete affected section**.
-- Before an approved edit, preserve a complete, verbatim, dated copy in the global guidance history.
-- In the active file, bump the `Version` and update the `Updated` date as part of the same approved edit.
-- After the edit, show the preserved copy, the exact diff against the active file, and proof that both files exist.
+- Never alter a protected file unless the user has explicitly approved the exact proposed patch in the current conversation.
+- Before approval, show one unified `diff` code block containing the complete affected section.
+- Use standard unified-diff syntax so current lines prefixed with `-` render in red, proposed lines prefixed with `+` render in green, and unchanged context lines render in white with their leading context space.
+- Generate the comparison from the exact source lines. Do not manually word-wrap, reflow, split, or otherwise reformat lines for presentation.
+- For a focused skill change, show the complete affected semantic section in situ. Show the complete `SKILL.md` only for a structural rewrite.
+- A request to capture, document, draft, or propose a change is review-only unless the user explicitly authorises its application. If a voice-originated instruction is materially ambiguous, default to review.
+- Before an approved edit, preserve a complete, verbatim, dated copy of `AGENTS.md` in its designated history folder. For a skill, confirm its current state is recoverable from the established skills repository, or preserve a fallback copy when it is not.
+- Update the `Version` and `Updated` values inside the active file as part of the approved edit. Never version these files by renaming them.
+- After the edit, show the recovery evidence, exact applied diff, and proof that the active file exists. For a skill change, also show the skill-validation result.
 - Treat these as mandatory AI change-control steps and present their evidence in a form the user can review.
 - When asked to capture or remember something, first establish whether it belongs in global guidance, project documentation, a skill, or an operator note.
 
