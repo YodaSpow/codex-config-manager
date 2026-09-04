@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.11 · **Updated:** 4 September 2026
+**Version:** 1.12 · **Updated:** 4 September 2026
 
 ## Purpose
 
@@ -59,6 +59,8 @@ Supplied material must be made shorter or denser without losing meaning, decisio
 ## ⚙️ Global skill infrastructure
 
 Non-project Codex skills live in `/Users/spowart/.codex/skills`. `/Users/spowart/.codex/validation-env` is the dedicated global skill-validation environment; it includes `PyYAML` for the Codex skill validator. Use it to validate a created or updated global skill. This is global Codex infrastructure, not repository guidance.
+
+User-maintained global skills are backed up at `https://github.com/YodaSpow/codex-config-manager/tree/main/latest/skills`. If a skill is reported damaged, inspect its snapshot and commit history there before proposing a repair; the backup may lag behind local state.
 
 ### Skill release metadata
 
