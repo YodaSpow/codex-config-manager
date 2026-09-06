@@ -5,7 +5,7 @@ description: Discover durable, memorable names for software projects, repositori
 
 # Project Name Discovery
 
-**Version:** 1.0 · **Updated:** 29 August 2026
+**Version:** 1.1 · **Updated:** 6 September 2026
 
 ## Purpose
 
@@ -157,6 +157,30 @@ Examples:
 - recall
 - multipass
 
+### Seamless Identity Field
+
+Use this lane when reaction evidence shows that semantically accurate candidates still feel like labels rather than durable identities.
+
+Seek established words that:
+
+- feel indivisible in ordinary use, even when their etymology contains multiple parts,
+- project personality, visual presence, and cultural weight before explanation,
+- stand naturally as a project or repository name,
+- evoke a concrete object, state, place, or concept,
+- and can survive implementation changes.
+
+Do not require every candidate to describe the entire project during discovery. A structural, completion, collection, or orientation concept may expose the right identity while covering only one dimension. Treat those candidates as building blocks and test them against the complete brief later.
+
+Distinguish:
+
+- **semantic accuracy** — the explanation fits the project,
+- **identity projection** — the word itself feels like a name,
+- **semantic seam** — the construction feels visibly assembled or forced.
+
+Established compounds may succeed when ordinary usage has fused them into one identity. Do not reject compounds mechanically; use the user's spoken and visual reaction to determine whether the join remains distracting.
+
+When this lane becomes relevant, read [references/seamless-identity-field.md](references/seamless-identity-field.md) before generating the field.
+
 ### Other Lanes
 
 If another naming abstraction becomes relevant, add it rather than forcing candidates into the existing categories.
@@ -242,6 +266,12 @@ Does the token spontaneously evoke its source, function, or cultural meaning?
 ### Personal Recognition
 
 Does it land for the user specifically?
+
+### Identity Projection
+
+Does the candidate feel like a complete project identity before its justification is explained?
+
+A candidate may be semantically accurate yet still feel like a label, instruction, or assembled phrase. Treat the user's spoken and visual reaction as evidence rather than explaining personality into a word that does not naturally carry it.
 
 ### Visual Identity
 
@@ -335,7 +365,7 @@ A full run should generally contain:
    The conceptual actions implied by the project.
 
 3. **Discovery field**  
-   A broad candidate set with source, token, and explanation.
+   A broad candidate set with source, token, and explanation, including a seamless identity field when reaction evidence calls for it.
 
 4. **Reaction interpretation**  
    What the user's responses reveal about the naming criteria.
