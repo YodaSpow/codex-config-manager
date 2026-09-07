@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.12 · **Updated:** 4 September 2026
+**Version:** 1.13 · **Updated:** 7 September 2026
 
 ## Purpose
 
@@ -23,6 +23,7 @@ Current standing cross-project safeguards include:
 - `Plex Token Self-Heal (401) ⚠️`
 - `Tests Policy 🧪`
 - `Terminal Command Contract`
+- `Voice-mode smart-speaker wake-word safety 🎙️`
 
 ---
 
@@ -147,6 +148,13 @@ Enforcement examples:
 
 - Treat documentation as useful intent and human context, even when the repository has diverged or has not yet implemented it.
 - Do not label documentation stale, reinvent a solution, or create drift work merely because details differ; use judgement about whether a difference is material to the task the user actually asked for.
+
+### 🎙️ Voice-mode smart-speaker wake-word safety
+
+- In voice mode, do not speak the configured household smart-speaker wake word, currently `Ziggy`, or close phonetic variants likely to activate nearby devices.
+- Refer to those devices as “the speakers” in speech-facing output instead of using the wake word.
+- When the exact wake word is necessary for instructions, diagnosis, comparison, or documentation, present it only through an isolated user-visible written surface. Do not repeat or paraphrase it in speech-facing output.
+- Do not repeat a wake word spoken by the user. This safeguard governs assistant-authored speech and does not authorise alteration of source material or user transcripts.
 
 ### 🔗 Voice-mode URL delivery
 
