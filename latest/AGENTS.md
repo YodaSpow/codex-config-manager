@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.13 · **Updated:** 7 September 2026
+**Version:** 1.14 · **Updated:** 9 September 2026
 
 ## Purpose
 
@@ -197,6 +197,7 @@ Enforcement examples:
 ## 📁 Local Project Convention
 
 - Assume macOS on Apple Silicon unless the user or project says otherwise.
+- Ensure the repository-root `.gitignore` contains `.DS_Store`; this excludes that macOS metadata filename throughout the repository tree. Do not remove or untrack an existing tracked instance without explicit authorisation.
 - The conventional local project root is `/Users/spowart/Scripts/<repo-name>`.
 - For a prospective project, once a repository name is agreed, use its resulting path in planning and handoff material as the intended root. Do not claim the directory exists, or create it, unless authorised.
 - Prefer lowercase, hyphen-separated repository names, for example `repo-name-apple`. This is a default convention, not a hard requirement.
