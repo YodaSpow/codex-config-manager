@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.19 · **Updated:** 12 September 2026
+**Version:** 1.20 · **Updated:** 12 September 2026
 
 ## Purpose
 
@@ -83,7 +83,7 @@ User-maintained global skills are backed up at `https://github.com/YodaSpow/code
 - Before approval, show one unified `diff` code block containing the complete affected section.
 - Use standard unified-diff syntax so current lines prefixed with `-` render in red, proposed lines prefixed with `+` render in green, and unchanged context lines render in white with their leading context space.
 - Generate the comparison from the exact source lines. Do not manually word-wrap, reflow, split, or otherwise reformat lines for presentation.
-- When a block-swap replacement makes individual changes hard to audit, also show a labelled fragmented comparison of each semantic change; mark it as a review aid, while the complete unified diff remains the approval patch.
+- When a block-swap replacement makes individual changes hard to audit, also show a labelled fragmented comparison: place a descriptive heading above each small `diff` code block, with one semantic change per block. Mark it as a review aid; the complete unified diff remains the approval patch.
 - For a focused skill change, show the complete affected semantic section in situ. Show the complete `SKILL.md` only for a structural rewrite.
 - A request to capture, document, draft, or propose a change is review-only unless the user explicitly authorises its application. If a voice-originated instruction is materially ambiguous, default to review.
 - Before an approved edit, preserve a complete, verbatim, dated copy of `AGENTS.md` in its designated history folder. For a skill, confirm its current state is recoverable from the established skills repository, or preserve a fallback copy when it is not.
