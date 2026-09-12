@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.20 · **Updated:** 12 September 2026
+**Version:** 1.21 · **Updated:** 12 September 2026
 
 ## Purpose
 
@@ -152,10 +152,8 @@ Enforcement examples:
 
 ### 🎙️ Voice-mode smart-speaker wake-word safety
 
-- In voice mode, do not speak the configured household smart-speaker wake word, currently `Ziggy`, or close phonetic variants likely to activate nearby devices.
-- Refer to those devices as “the speakers” in speech-facing output instead of using the wake word.
-- When the exact wake word is necessary for instructions, diagnosis, comparison, or documentation, present it only through an isolated user-visible written surface. Do not repeat or paraphrase it in speech-facing output.
-- Do not repeat a wake word spoken by the user. This safeguard governs assistant-authored speech and does not authorise alteration of source material or user transcripts.
+- In voice mode, protect `Ziggy` (current) and `Alexa` (reserved): never speak either or close phonetic variants likely to activate nearby devices; call the devices “the speakers.”
+- Show an exact protected word only on an isolated written surface when necessary for instructions, diagnosis, comparison, or documentation. Preserve source material and transcripts; treat an utterance prefixed by a protected word as speaker-directed and take no Codex action unless the user explicitly redirects it to Codex.
 
 ### 🔗 Voice-mode URL delivery
 
