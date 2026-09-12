@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lens (Mode L)"
+  short_description: "Read-only identity, fit, and placement audit"
+  default_prompt: "Use $lens to audit this subject’s identity, necessity, scope, and placement without making changes."
+
+policy:
+  allow_implicit_invocation: false
