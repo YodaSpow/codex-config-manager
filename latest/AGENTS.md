@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.16 · **Updated:** 12 September 2026
+**Version:** 1.17 · **Updated:** 12 September 2026
 
 ## Purpose
 
@@ -391,6 +391,7 @@ const response = await fetch(`/api/path?v=${buildId}`, {
 
 Before documenting or activating a goal—or planning or starting any other Mode C work—whose completion requires Browser Use (ChatGPT's native browser capability), first prove a working browser route. If local `file://` navigation is unavailable, serve the artifact through a bounded localhost preview under this contract. If neither route works, surface that before implementation; never leave a known-inaccessible browser check as the completion gate.
 Treat that preview by purpose: stop proof-only use after validation; for operator review, keep it live via a lightweight page heartbeat, with disclosed idle and maximum timeouts for self-termination independent of the originating task.
+For that operator-review use, inherit and maintain the project's established Browser Use preview origin (host and port): updates reuse its current path; explicitly requested versions use distinct paths on that origin.
 
 **Diagnostic only:** On supported macOS browsers, `⌘ + Shift + R` can distinguish client cache from a serving or runtime issue; it is not completion evidence or a substitute for correct cache-busting.
 
