@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.14 · **Updated:** 9 September 2026
+**Version:** 1.15 · **Updated:** 12 September 2026
 
 ## Purpose
 
@@ -386,6 +386,10 @@ const response = await fetch(`/api/path?v=${buildId}`, {
 ```
 
 **Runtime proof:** A saved source file or changed build ID is insufficient. After source updates and relevant offline tests pass, refresh or reload the documented runtime where required, then prove the current source/build is served and visible through ordinary browser refresh or navigation.
+
+### Browser Use completion-route safeguard
+
+Before documenting or activating a goal—or planning or starting any other Mode C work—whose completion requires Browser Use (ChatGPT's native browser capability), first prove a working browser route. If local `file://` navigation is unavailable, serve the artifact through a bounded localhost preview under this contract. If neither route works, surface that before implementation; never leave a known-inaccessible browser check as the completion gate.
 
 **Diagnostic only:** On supported macOS browsers, `⌘ + Shift + R` can distinguish client cache from a serving or runtime issue; it is not completion evidence or a substitute for correct cache-busting.
 
