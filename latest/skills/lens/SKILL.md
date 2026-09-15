@@ -1,11 +1,11 @@
 ---
 name: lens
-description: Apply a bounded, read-only second-opinion audit to one identified subject only when the user explicitly invokes Mode L or $lens. Assess identity, fit, necessity, placement, proportionality, expression, and authority without editing, blocking, or expanding scope.
+description: Apply a bounded, read-only second-opinion audit to one identified subject when the user explicitly invokes Mode L or $lens, or when Heartbeat submits a repository-level AGENTS.md context-routing package. Assess identity, fit, necessity, placement, proportionality, expression, and authority without editing, blocking, or expanding scope.
 ---
 
 # Lens (Mode L)
 
-**Version:** 1.0 · **Updated:** 12 September 2026
+**Version:** 1.1 · **Updated:** 15 September 2026
 
 ## Purpose
 
@@ -19,11 +19,20 @@ Lens is not an ambient critic, automatic reviewer, independent AI, permanent wat
 
 `Lens` is the skill’s identity, not an invocation phrase.
 
-Run only when the user explicitly invokes `Mode L` or `$lens`.
+Run only when:
 
-Do not infer invocation from intent, subject matter, use of the word “lens”, or resemblance to an audit task.
+1. the user explicitly invokes `Mode L` or `$lens`; or
+2. the active Heartbeat skill submits one complete repository-level `AGENTS.md` context-routing package for its mandatory admission audit.
 
-Explicit invocation opens a bounded Mode L consultation for the subject indicated by the user’s wording and immediate context.
+The Heartbeat handshake is the sole automatic exception to explicit user invocation. It applies only to the active repository’s agent-guidance package. It never authorises review or modification of global `AGENTS.md`, global skill policy, or unrelated Heartbeat work.
+
+Do not otherwise infer invocation from intent, subject matter, use of the word “lens”, or resemblance to an audit task.
+
+Explicit user invocation opens a bounded Mode L consultation for the subject indicated by the user’s wording and immediate context.
+
+A Heartbeat handshake opens the same bounded consultation with one composite subject: the proposed repository `AGENTS.md` routing outcome. The package may contain the current repository guidance, exact proposed additions and removals, mandatory baseline, conditional task routes, authority evidence, and material reclassified as historical or on-demand. Those components remain evidence within one audit subject rather than separate Lens consultations.
+
+Evaluate the package from the supplied guidance and raw project evidence. Do not accept Heartbeat’s preferred conclusion, rationale, or wording as an assumption. Challenge whether the package solves the right problem and assess its overall shape, omissions, excess context, placement, proportionality, expression, and remaining human authority.
 
 Resolve the audit subject from that wording and context.
 
@@ -33,7 +42,7 @@ Genuine ambiguity permits a focused clarification exchange limited to establishi
 
 Treat clear user intent to discontinue the current Mode L consultation as closure. Stop without producing the audit and return Mode L to dormancy.
 
-Delivering the audit also closes the consultation and returns Mode L to dormancy. A new consultation requires a new explicit invocation.
+Delivering the audit also closes the consultation and returns Mode L to dormancy. A new consultation requires a new explicit user invocation or a new qualifying Heartbeat package.
 
 ## Audit lenses
 
