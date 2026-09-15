@@ -1,0 +1,4 @@
+interface:
+  display_name: "Heartbeat"
+  short_description: "Keep project context current and efficiently routed"
+  default_prompt: "Use $heartbeat to audit this repository’s project context and produce a compact current-state reading map."
