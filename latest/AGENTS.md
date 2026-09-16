@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.22 · **Updated:** 12 September 2026
+**Version:** 1.23 · **Updated:** 16 September 2026
 
 ## Purpose
 
@@ -91,6 +91,12 @@ User-maintained global skills are backed up at `https://github.com/YodaSpow/code
 - After the edit, show the recovery evidence, exact applied diff, and proof that the active file exists. For a skill change, also show the skill-validation result.
 - Treat these as mandatory AI change-control steps and present their evidence in a form the user can review.
 - When asked to capture or remember something, first establish whether it belongs in global guidance, project documentation, a skill, or an operator note.
+
+#### Permanent skill deletion
+
+- This is the sole exception to the edit process above and applies only to installed user-maintained global skills, never global `AGENTS.md`, system-maintained skills, or plugin-supplied skills.
+- Resolve the exact target read-only, state its full user-facing and canonical names plus any mode or invocation aliases, and clarify ambiguity. Then ask as a standalone question: `Permanently delete <full skill name and aliases> with no recovery?`
+- Only an explicit affirmative answer in the next user turn authorises deletion. Then delete only that skill without a diff, fallback, version change, validation, or further confirmation. Prove its installed folder is absent; if deletion fails, report what remains without claiming success.
 
 ### 🧭 Scope, authority, and intended outcome
 

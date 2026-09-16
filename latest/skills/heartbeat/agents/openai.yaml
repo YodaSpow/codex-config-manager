@@ -1,0 +1,4 @@
+interface:
+  display_name: "Heartbeat"
+  short_description: "Reconcile repository context for fresh agents"
+  default_prompt: "Use $heartbeat to reconcile this repository’s AGENTS.md with current authority, routes, and recurring hazards."
