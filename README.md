@@ -24,7 +24,6 @@ The global `AGENTS.md` contains guidance intended for the user’s global Codex 
 Each download contains one complete user-managed skill.
 
 - [Download chat-handoff](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/chat-handoff.zip)
-- [Download heartbeat](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/heartbeat.zip)
 - [Download lens](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/lens.zip)
 - [Download map-project-capabilities](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/map-project-capabilities.zip)
 - [Download operational-modes](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/operational-modes.zip)
