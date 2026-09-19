@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.25 · **Updated:** 19 September 2026
+**Version:** 1.26 · **Updated:** 19 September 2026
 
 ## Purpose
 
@@ -82,6 +82,12 @@ Supplied material must be made shorter or denser without losing meaning, decisio
 Non-project Codex skills live in `/Users/spowart/.codex/skills`. `/Users/spowart/.codex/validation-env` is the dedicated global skill-validation environment; it includes `PyYAML` for the Codex skill validator. Use it to validate a created or updated global skill. This is global Codex infrastructure, not repository guidance.
 
 User-maintained global skills are backed up at `https://github.com/YodaSpow/codex-config-manager/tree/main/latest/skills`. If a skill is reported damaged, inspect its snapshot and commit history there before proposing a repair; the backup may lag behind local state.
+
+### Skill staging contract
+
+- Build a new user-maintained global skill in `<repo>/skills-staging/<skill-name>/`; when no project repository is active, use `/Users/spowart/.codex/skills-staging/<skill-name>/`. These are non-live workbenches, not skill-discovery locations or canonical installed state.
+- Revise and validate the complete staged package there. Before installation, show what will be installed and obtain explicit approval; then copy, never move, it into `/Users/spowart/.codex/skills/`, validate the installed copy, and prove it matches staging. Only the installed copy becomes authoritative and protected.
+- After successful installation, staging has no parity obligation and may be retained, archived, or discarded only as the operator directs. Existing installed-skill changes may use staging as a proposal workspace but still require the protected exact-diff workflow.
 
 ### Skill release metadata
 
