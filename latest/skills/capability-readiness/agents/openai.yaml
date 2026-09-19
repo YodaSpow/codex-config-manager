@@ -1,0 +1,4 @@
+interface:
+  display_name: "Capability Readiness"
+  short_description: "Prove project foundations before dependent goals"
+  default_prompt: "Use $capability-readiness to identify and prove the unverified foundations this project or goal depends on."
