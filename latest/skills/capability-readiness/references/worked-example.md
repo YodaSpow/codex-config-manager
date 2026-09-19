@@ -107,8 +107,9 @@ was proved and what remains for downstream work.
 Before readiness:
 
 ```markdown
-Goal viability: gated. The catalogue API is an intended dependency with no
-repository-owned connectivity evidence.
+Import milestone viability: readiness incomplete. The catalogue API is an
+intended dependency with no repository-owned connectivity evidence. Other
+goal work that does not use the API may continue.
 ```
 
 After readiness:
@@ -122,8 +123,17 @@ itself remains untested and in scope for that goal.
 If the operator has not yet supplied the key:
 
 ```markdown
-Goal viability: human-gated. Configuration and checker fixtures are ready;
-baseline connectivity awaits the API key in the prepared local secret field.
+Import milestone viability: awaiting operator input. Configuration and checker
+fixtures are ready; baseline connectivity awaits the API key in the prepared
+local secret field. A clickable link to that file has been provided.
+```
+
+If the operator deliberately postpones the key:
+
+```markdown
+Import milestone viability: deferred by decision. Re-enter Capability
+Readiness before the first import milestone; preserve the prepared fixtures and
+continue only work that does not depend on authenticated catalogue access.
 ```
 
 The readiness state should be visible wherever the project already records

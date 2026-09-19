@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.24 · **Updated:** 19 September 2026
+**Version:** 1.25 · **Updated:** 19 September 2026
 
 ## Purpose
 
@@ -54,6 +54,16 @@ Governs the task’s posture, conventions, and handoff behaviour. A named mode m
 A docs-first, multi-phase project needs an at-a-glance view of phase status, execution authority, completion evidence, and next gates. Do not impose it on every repository.
 
 **Outcome:** A concise phase-completion index links durable project phases to disposable numbered goal attempts or other approved execution packages without replacing the project’s detailed live heartbeat.
+
+
+### Skill: Capability Readiness
+
+**Activate with:** `Capability Readiness` or `$capability-readiness`.
+
+**Required when relevant:**
+During project inception, goal design, or later lifecycle work, identify external or operational capabilities that dependent work assumes. Reuse repository-owned proof for established foundations; apply Capability Readiness to unproven or deferred foundations before the first dependent milestone, without blocking unrelated work.
+
+**Outcome:** Authoritative references, safe configuration and secret fixtures, a project-owned baseline connectivity check, and sanitized evidence establish proven readiness or an explicit dependency-scoped state without pulling future feature work forward.
 
 
 ### Skill: Semantic Compression (Mode T)

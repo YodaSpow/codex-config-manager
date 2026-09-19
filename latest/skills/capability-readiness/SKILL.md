@@ -1,11 +1,11 @@
 ---
 name: capability-readiness
-description: Establish and prove the foundational capabilities a new project or proposed goal assumes before dependent execution begins. Use during project inception, architecture or goal planning, or when future work depends on unproven APIs, services, credentials, runtimes, storage, or network routes. Also use on demand to discover and commission likely foundations before a goal exists. Do not use for mature capabilities already proven by current repository evidence, full feature testing, ordinary implementation, or runtime monitoring.
+description: Establish and prove the foundational capabilities a project or proposed goal assumes before dependent execution begins. Use during project inception, architecture or goal planning, when future work depends on unproven APIs, services, credentials, runtimes, storage, or network routes, or when a deferred foundation becomes timely later in the project lifecycle. Also use on demand to discover and commission likely foundations before a goal exists. Do not use for mature capabilities already proven by current repository evidence, full feature testing, ordinary implementation, or runtime monitoring.
 ---
 
 # Capability Readiness
 
-**Version:** 1.0 · **Updated:** 19 September 2026
+**Version:** 1.1 · **Updated:** 19 September 2026
 
 Prevent planned work from silently treating intended infrastructure as working
 infrastructure. Pull forward the enabling foundations that later work will
@@ -23,21 +23,25 @@ Apply this skill without requiring its exact name when either condition is met:
 - a new or infancy-stage project is selecting external capabilities; or
 - a proposed goal assumes an API, service, account, credential, runtime,
   storage surface, network route, or other technical enabler that current
-  repository evidence has not already proven.
+  repository evidence has not already proven; or
+- a previously deferred foundation becomes necessary for upcoming work.
 
 Do not impose readiness work merely because a project uses technology. Reuse
 current proof for mature foundations. The gate concerns consequential external
 or operational assumptions whose absence would prevent later work from even
 starting.
 
-This skill has two entry routes:
+This skill remains available at three points in the project lifecycle:
 
-1. **Goal-led readiness** — inspect the proposed goal, identify its unproven
-   enabling assumptions, and make their readiness explicit before dependent
-   execution is treated as viable.
-2. **Discovery-led readiness** — before a goal exists, use read-only discovery
+1. **Inception discovery** — before a goal exists, use read-only discovery
    to identify likely foundations, authoritative references, configuration
    requirements, human gates, and the smallest useful connectivity proofs.
+2. **Goal preflight** — inspect the proposed goal, identify its unproven
+   enabling assumptions, and make their readiness explicit before dependent
+   execution is treated as viable.
+3. **Lifecycle re-entry** — resume the same readiness workflow when a
+   deliberately deferred dependency becomes timely. Reuse established
+   fixtures and evidence instead of rebuilding them.
 
 Readiness does not itself authorise repository changes, secret provision,
 external mutations, service starts, installs, or infrastructure changes. Use
@@ -110,17 +114,39 @@ counterpart. Keep them structurally aligned. If the repository already has a
 different canonical configuration contract, preserve it instead of forcing
 YAML.
 
+Determine from authoritative provider guidance and the intended project use
+whether authentication is **required**, **preferred**, or **not needed**. Do
+not invent credential ceremony. When authenticated use is preferred because
+the intended workload needs its quotas, control, or reliability, treat the key
+as part of that workload's readiness even if a limited anonymous route exists.
+
+Keep these two human states distinct:
+
+- **Awaiting operator input** — the protected destination and checker are ready
+  and the operator can supply the credential now.
+- **Deferred by decision** — the operator has intentionally postponed the
+  credential or approval until a named future dependency gate.
+
+Neither state means unavailable or failed. A deferred item must re-enter the
+readiness workflow before the first milestone that depends on it.
+
 Before asking the operator to supply a secret:
 
 1. create or verify the intended real configuration or secret location;
 2. prove version control excludes secret-bearing material;
 3. place only a placeholder in the committed example;
 4. tell the operator exactly which prepared local field or file needs the
-   value; and
-5. never request that the secret be pasted into chat.
+   value;
+5. provide a clickable file link in Codex, and open the prepared file when
+   useful or requested, so the operator does not have to discover a buried
+   filesystem path;
+6. never request that the secret be pasted into chat; and
+7. pause the dependent readiness check while leaving unrelated work available.
 
-After the operator confirms provision, verify presence or configuration shape
-without printing the value.
+After the operator confirms provision, resume the same readiness workflow,
+verify presence or configuration shape without printing the value, and run the
+prepared baseline check. Do not require the operator to restate earlier context
+or manually reconstruct the next step.
 
 ## Prove baseline connectivity
 
@@ -167,8 +193,13 @@ While designing a goal:
 5. move unproven foundations into an explicit prerequisite, initial milestone,
    or separate enabling goal according to their independence and human gates;
    and
-6. do not describe the dependent outcome as executable until its required
-   foundations are proven or visibly gated.
+6. gate only the work that actually depends on the unresolved foundation.
+
+Independent preparation or goal work may continue when it does not rely on
+that foundation. Do not describe a dependent milestone or final outcome as
+executable until its required foundations are proven. A missing dependency
+must never become an implied project-wide blocker merely because readiness
+identified it.
 
 Do not turn every goal into a large preparatory programme. A small missing
 fixture can be the first milestone. Use a separate readiness goal when several
@@ -181,13 +212,32 @@ baseline evidence needed to attempt that feature honestly."
 
 ## Completion and handoff
 
-Readiness is complete only when the required foundation has current evidence,
-or is explicitly recorded as human-gated or unavailable. Report:
+Use precise states and never blur an assessed dependency with a ready one:
+
+- **Discovered** — the dependency and authoritative route are known, but its
+  project fixtures or baseline evidence are not complete.
+- **Fixtures prepared** — configuration, secret destination, checker, and
+  references exist, but the baseline proof has not completed.
+- **Awaiting operator input** — the next protected human action is prepared and
+  available now.
+- **Deferred by decision** — the human action or commissioning is intentionally
+  postponed until a named future gate.
+- **Proven ready** — the required foundation has current baseline evidence
+  through the authorised project path.
+- **Unavailable or disproven** — current evidence shows that the intended route
+  cannot provide the assumed foundation and needs reconsideration.
+- **Assessment incomplete** — material discovery or evidence is still missing,
+  so no stronger classification is justified.
+
+Only **proven ready** unlocks dependent execution. Every other state leaves
+that dependency's readiness incomplete without automatically blocking
+unrelated project work. Report:
 
 - what foundation was established;
 - the authoritative reference and project-owned path;
 - the baseline proof and its limits;
 - any human-supplied prerequisite still outstanding;
+- whether the current state is awaiting action now or deferred to a named gate;
 - which proposed goals are now enabled or still gated; and
 - any source-versus-documentation discrepancy.
 
