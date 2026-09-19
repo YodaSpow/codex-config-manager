@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.23 · **Updated:** 16 September 2026
+**Version:** 1.24 · **Updated:** 19 September 2026
 
 ## Purpose
 
@@ -44,6 +44,16 @@ Governs the task’s posture, conventions, and handoff behaviour. A named mode m
 3. Mode B — documentation and writing.
 4. Mode C — implementation.
 5. Mode P — a prompt for another AI.
+
+
+### Skill: Phase Visibility
+
+**Activate with:** `Phase Visibility` or `$phase-visibility`.
+
+**Use on demand when:**  
+A docs-first, multi-phase project needs an at-a-glance view of phase status, execution authority, completion evidence, and next gates. Do not impose it on every repository.
+
+**Outcome:** A concise phase-completion index links durable project phases to disposable numbered goal attempts or other approved execution packages without replacing the project’s detailed live heartbeat.
 
 
 ### Skill: Semantic Compression (Mode T)

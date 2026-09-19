@@ -1,0 +1,4 @@
+interface:
+  display_name: "Phase Visibility"
+  short_description: "Track project phases, goals, evidence, and next gates"
+  default_prompt: "Use $phase-visibility to add or reconcile a concise phase-completion index for this project."
