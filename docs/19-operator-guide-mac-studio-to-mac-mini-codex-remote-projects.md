@@ -1,6 +1,6 @@
 # Doc 19 — Operator Guide — Mac Studio-to-Mac mini Codex Remote Projects
 
-**Status:** Discovered and documented; SSH remote-project route not yet commissioned
+**Status:** Commissioned and baseline accepted on 20 September 2026
 **Machine authority:** Mac Studio-owned operator guide
 **Repository workflow:** Root [`AGENTS.md`](../AGENTS.md) and [Doc 16 — Repository Operations — Agent Workflow and Publication Guardrails](16-repository-agent-workflow-and-publication-guardrails.md)
 **Cross-machine baseline:** [Doc 17 — Mac mini Report — Phase 15 validation](17-mac-mini-report-phase-15-validation.md)
@@ -16,13 +16,17 @@
 - ✅ The operator has identified the Codex SSH remote-project surface as a
   useful way to work from the Mac Studio against repositories that physically
   remain on the Mac mini.
-- ▶ This guide defines the smallest safe commissioning and acceptance path.
-- ⛔ The Studio-to-Mini SSH host alias, remote-project connection and remote
-  task execution have not yet been proven.
-- ⛔ The Mac mini login shell must not be treated as ready until the `codex`
-  command is shown to be available there. An earlier ordinary Terminal check
-  did not find that command on `PATH`, even though the installed application
-  supplied a usable bundled CLI through a separately discovered path.
+- ✅ The Studio now has an explicit Mac mini SSH alias backed by a dedicated
+  key, and passwordless SSH through that alias is proven.
+- ✅ The supported standalone Codex CLI is installed and authenticated on the
+  Mini, and the Mini login shell resolves `codex` on `PATH`.
+- ✅ The Studio Codex app has registered the Mac mini as a remote device and
+  attached the existing `radarr-makemkv-bridge` project folder from the Mini.
+- ✅ A fresh Mode A task resolved the intended Mini project root, discovered
+  its repository instructions and completed without changing files or system
+  state.
+- ▶ Optional skill and MCP checks remain dependency-scoped follow-up, not a
+  blocker to using the proven remote-project route.
 
 ## Purpose
 
@@ -108,8 +112,8 @@ ready**:
 6. The Codex app exposes **Settings → Connections → SSH** for the current
    account and rollout.
 
-The current readiness state is **discovered but unproven**. Items 1, 2, 4 and
-the complete remote-project acceptance sequence still require evidence.
+The current readiness state is **proven ready**. All six prerequisites and the
+baseline remote-project acceptance sequence passed on 20 September 2026.
 
 ## Commissioning sequence
 
@@ -147,7 +151,7 @@ weaken SSH security or publish another listener merely to continue.
 From the Mac Studio:
 
 ```bash
-ssh mac-mini-codex 'command -v codex && codex --version' \
+ssh mac-mini-codex "/bin/zsh -lic 'command -v codex && codex --version'" \
 && echo "✅ Mac mini login shell can launch Codex"
 ```
 
@@ -175,23 +179,49 @@ Use a non-sensitive repository whose clean state is already known. Submit this
 as the first remote task:
 
 ```text
-Operate in Mode A only. Prove that this task is executing in the selected
-remote project on the Mac mini. Report the resolved project root, current Git
-branch and concise Git status. Read the applicable repository instructions and
-report their title. Do not edit files, install anything, start services, stage,
-commit or push.
+Operate in Mode A only. Prove this task is executing in the selected remote
+project on the Mac mini. Report the resolved project root, whether it is a Git
+repository, the current Git branch and concise status if applicable, and the
+title of the applicable repository instructions. Do not edit, install, start,
+stage, commit or push anything.
 ```
 
 Acceptance requires:
 
 - the resolved root is the selected Mini project, not a Studio path;
-- Git evidence comes from that Mini checkout;
+- Git state is reported accurately, including when the selected folder is not
+  a Git repository;
 - the applicable repository instructions are discovered;
 - no file, index, runtime or remote state changes; and
 - the task completes without falling back to a copied local checkout.
 
 This proves the remote-project foundation only. It does not prove every skill,
 MCP server, credential, browser capability or project-specific runtime.
+
+### Commissioning evidence — 20 September 2026
+
+The Studio-side SSH alias resolved through the dedicated identity, ordinary
+passwordless SSH succeeded, the Mini login shell resolved the supported
+standalone Codex CLI, and `codex login status` confirmed ChatGPT authentication.
+The Codex app then registered the project as a remote project hosted by the Mac
+mini and attached the existing Mini folder rather than creating a Studio copy.
+
+The operator-supplied Mode A result was sanitized for public documentation:
+
+```text
+Mode A remote-project acceptance: PASS
+Execution host: Mac mini
+Resolved project root: ~/Scripts/radarr-makemkv-bridge
+Git repository: no
+Applicable repository instructions: AGENTS.md — VS Code + OpenAI Codex Addon Rules
+Files or system state changed: no
+```
+
+The non-Git result is accepted project reality, not a connection failure. An
+inherited historical task initially retained an unsupported older model and
+was rejected before execution. A fresh task using the current supported
+default model completed the acceptance check; this distinguished task-model
+compatibility from SSH or remote-project health.
 
 ## Optional environment acceptance
 
@@ -218,10 +248,11 @@ to infer that every remote integration is present.
 
 ## Operator outcome
 
-Once the baseline passes, the operator can open Mini-owned projects from the
-Studio and work against their real host environment without relocating them.
-The Mini remains a separate execution boundary, and normal repository,
-approval and machine-role rules continue to apply.
+The baseline has passed. The operator can now open suitably authorised
+Mini-owned projects from the Studio and work against their real host environment
+without relocating them. The Mini remains a separate execution boundary, and
+normal repository, approval and machine-role rules continue to apply.
 
-Until that proof exists, this document is a commissioning guide rather than a
-claim that remote projects are operational.
+This document is now both the commissioning guide and the durable record that
+the baseline remote-project route is operational. Optional capability checks
+remain scoped to the dependencies of each future Mini-hosted task.
