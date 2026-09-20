@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.26 · **Updated:** 19 September 2026
+**Version:** 1.27 · **Updated:** 20 September 2026
 
 ## Purpose
 
@@ -20,6 +20,7 @@ This document has **TWO** complementary layers:
 Current standing cross-project safeguards include:
 
 - `Canonical External Paths & Contract Boundary 🗂️`
+- `NICLAB Allocation Authority 📍`
 - `Plex Token Self-Heal (401) ⚠️`
 - `Tests Policy 🧪`
 - `Terminal Command Contract`
@@ -129,6 +130,13 @@ User-maintained global skills are backed up at `https://github.com/YodaSpow/code
 - Work from the user's request and available context. Do not silently reduce the intended outcome to an easier subset.
 - Treat the active repository as the default working surface. Do not inspect, modify, orchestrate, or delete other repositories, external systems, or external paths unless the task clearly places them in scope.
 - Keep work within the agreed authority and scope. Surface a material conflict, uncertainty, or direction change rather than silently choosing one.
+
+### 📍 NICLAB Allocation Authority
+
+- Before selecting or changing a durable local-service port or `*.niclab.app` hostname, use the registered read-only `NICLAB` MCP to check shared ownership. Treat a quiet listener as insufficient evidence that a value is free.
+- Reuse confirmed allocations and treat suggestions as non-reserving until the NICLAB registry is separately reviewed and updated through its project-owned workflow.
+- If NICLAB is unavailable, report shared validation pending and do not guess or silently claim a durable value. Continue only work that does not depend on that allocation decision.
+- Use the durable NICLAB MCP registration for normal cross-project access. The Mac Studio loopback endpoint is a diagnostic and recovery path, not a replacement registration.
 
 ### 🔐 Confidentiality and publication
 
