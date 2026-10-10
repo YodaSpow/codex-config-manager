@@ -82,6 +82,9 @@ def test_eligible_publisher_passes_validated_git_identity_to_projection(
         yield candidate, manifest
 
     monkeypatch.setattr("codex_config_manager.publisher.private_candidate", candidate_context)
+    monkeypatch.setattr(
+        "codex_config_manager.publisher.validate_managed_paths_trackable", lambda *args: None
+    )
     captured: dict[str, str] = {}
 
     def apply_projection(unused_config, unused_candidate, unused_skills, *, download_base):

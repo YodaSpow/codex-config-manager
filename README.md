@@ -2,7 +2,7 @@
 
 Codex Config Manager is a headless, deterministic publisher/consumer pipeline for one bounded global Codex configuration: `AGENTS.md` plus dynamically discovered user-managed skills. The Mac Studio is the authoring authority; GitHub carries the validated `latest/` snapshot; the Mac mini consumer is implemented but remains pending real-machine rollout.
 
-The Mac Studio publisher is operational. It checks once per minute, waits for five quiet minutes, then publishes through a path-scoped Git transaction. `skills/.system/**`, `.DS_Store`, and unrelated `.codex` content are never managed.
+The Mac Studio publisher is operational. It checks once per minute, waits for five quiet minutes, then publishes through a path-scoped Git transaction. `skills/.system/**`, `.DS_Store`, transient Python caches (`__pycache__/`, `*.pyc`, `*.pyo`, `.pytest_cache/`, `.mypy_cache/`, and `.ruff_cache/`), and unrelated `.codex` content are never managed.
 
 ## Documentation
 

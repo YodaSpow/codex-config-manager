@@ -21,6 +21,12 @@ def populate(codex: Path) -> None:
     (codex / "skills" / "future-skill" / "nested" / "data.txt").write_text("nested")
     (codex / "skills" / ".DS_Store").write_bytes(b"finder")
     (codex / "skills" / "future-skill" / ".DS_Store").write_bytes(b"nested finder")
+    (codex / "skills" / "future-skill" / "scripts" / "__pycache__").mkdir(parents=True)
+    (codex / "skills" / "future-skill" / "scripts" / "run.py").write_text("print('ok')\n")
+    (codex / "skills" / "future-skill" / "scripts" / "__pycache__" / "run.cpython-313.pyc").write_bytes(b"cache")
+    (codex / "skills" / "future-skill" / ".pytest_cache" / "v" / "cache").mkdir(parents=True)
+    (codex / "skills" / "future-skill" / ".pytest_cache" / "v" / "cache" / "nodeids").write_text("[]")
+    (codex / "skills" / "future-skill" / "orphan.pyo").write_bytes(b"cache")
     (codex / "AGENTS.md").write_text("global")
     (codex / "unrelated.json").write_text("unmanaged")
 
@@ -38,7 +44,11 @@ def test_source_manifest_excludes_system_dsstore_and_unrelated(tmp_path: Path) -
     manifest = source_manifest(codex)
     paths = {entry.path for entry in manifest.entries}
     assert "skills/future-skill/SKILL.md" in paths
-    assert not any(".system" in path or ".DS_Store" in path or "unrelated" in path for path in paths)
+    assert not any(
+        marker in path
+        for path in paths
+        for marker in (".system", ".DS_Store", "__pycache__", ".pytest_cache", ".pyc", ".pyo", "unrelated")
+    )
     assert manifest.skills == ("future-skill",)
 
 
@@ -52,6 +62,8 @@ def test_candidate_and_latest_are_equivalent_and_dynamic(tmp_path: Path) -> None
         assert manifests_equal(candidate_manifest, snapshot_manifest(latest))
     assert not (latest / "skills" / ".system").exists()
     assert not any(path.name == ".DS_Store" for path in latest.rglob(".DS_Store"))
+    assert not any(path.name == "__pycache__" for path in latest.rglob("__pycache__"))
+    assert not any(path.suffix in {".pyc", ".pyo"} for path in latest.rglob("*"))
     with private_candidate(codex, RSYNC) as (candidate, _):
         assert not reconcile_latest(candidate, latest, RSYNC)
 
@@ -117,6 +129,8 @@ def test_system_exclusion_is_not_delete_excluded(tmp_path: Path) -> None:
     (target / ".system" / "preserved").write_text("target")
     command = arguments(RSYNC, source, target, dry_run=False, exclude_system=True)
     assert "--delete-excluded" not in command
+    assert "--exclude=__pycache__/" in command
+    assert "--exclude=*.pyc" in command
     sync_tree(RSYNC, source, target, dry_run=False, exclude_system=True)
     assert (target / ".system" / "preserved").read_text() == "target"
     assert not (target / ".system" / "source").exists()

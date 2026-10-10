@@ -130,10 +130,13 @@ Mac Studio managed ~/.codex
         → Mac mini
 ```
 
-Doc 1's ingestion boundary is unchanged in substance:
+Doc 1's ingestion boundary applies to the reconciled `latest/` topology:
 
 - `~/.codex/skills/.system/**` never enters the private candidate or `latest/`;
 - `.DS_Store` never enters the private candidate, `latest/`, `upload-ready/` or Git;
+- transient Python caches (`__pycache__/`, `*.pyc`, `*.pyo`,
+  `.pytest_cache/`, `.mypy_cache/` and `.ruff_cache/`) never enter those
+  surfaces or become managed changes;
 - future top-level user-skill directories remain dynamically discovered;
 - excluded live content is never cleaned, modified or deleted;
 - deletion logic never uses `--delete-excluded`.
@@ -220,7 +223,7 @@ Mode C must execute this plan only when separately authorised. Each gate is bloc
 4. Apply Doc 1 exclusions at ingestion.
 5. Detect source mutation during candidate creation and fail safely.
 
-**Gate 2:** Candidate contents are a complete, bounded representation of the settled managed source; `.system/**` and `.DS_Store` are absent without being mutated live.
+**Gate 2:** Candidate contents are a complete, bounded representation of the settled managed source; `.system/**`, `.DS_Store` and transient Python caches are absent without being mutated live. Every remaining candidate file is Git-trackable at its intended `latest/` path before repository mutation.
 
 ### Phase 3 — Validate candidate before canonical mutation
 

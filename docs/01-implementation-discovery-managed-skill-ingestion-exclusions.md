@@ -1,6 +1,6 @@
 # Doc 1 — Implementation Discovery — Managed Skill Ingestion Exclusions
 
-**Status:** Implemented and validated; retained as the discovery record for the exclusion contract. See [Doc 10](10-implementation-architecture-and-operations.md).
+**Status:** Implemented and validated; updated 10 October 2026 to exclude transient Python runtime and tool caches. See [Doc 10](10-implementation-architecture-and-operations.md).
 **Scope:** Managed-skill ingestion and transport boundaries  
 **Relationship to bootstrap documents:** This record refines the managed-skills contract. It does not replace or modify either bootstrap document.  
 **Architecture reconciliation:** [Doc 8 — Root-Level Latest Managed Snapshot](08-architecture-reconciliation-root-level-latest-managed-snapshot.md) replaces the historical planned staging path with root-level `latest/`.
@@ -34,6 +34,33 @@ The exclusion occurs at ingestion. Codex Config Manager must not copy the subtre
 
 The eventual repository-wide `.gitignore` must prevent `.DS_Store` from entering Git without attempting to clean up or mutate existing `.DS_Store` files.
 
+### Transient Python runtime and tool caches
+
+Python bytecode and cache directories are generated execution state rather than
+portable skill source. The following are excluded at every depth:
+
+```text
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+```
+
+They must never enter a managed manifest, private candidate, `latest/`, portable
+artifact, publication comparison or consumer deployment. Existing excluded
+caches on a live publisher or consumer are preserved rather than deliberately
+removed. A skill remains free to execute or import Python modules without those
+generated files becoming managed-state changes.
+
+Before repository projection begins, every remaining managed candidate file is
+checked against Git ignore rules using its intended `latest/` path. An ignored
+candidate path that is not covered by this explicit exclusion contract stops
+before `latest/`, artifacts, README or the Git index are changed. This prevents
+an artifact-only staged transaction when Git cannot represent the corresponding
+canonical file.
+
 ## Dynamic user-skill discovery
 
 User-created skill names must not be hard-coded. All current and future user-created content directly beneath `~/.codex/skills/` participates automatically and recursively, except for the exclusions above.
@@ -42,7 +69,7 @@ User-created skill names must not be hard-coded. All current and future user-cre
 ~/.codex/skills/
 ├── .system/                 EXCLUDED recursively
 ├── .DS_Store                EXCLUDED
-├── current-user-skill/      INCLUDED recursively
+├── current-user-skill/      INCLUDED recursively, excluding transient caches
 └── future-user-skill/       INCLUDED automatically and recursively
 ```
 

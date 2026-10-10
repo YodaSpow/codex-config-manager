@@ -10,6 +10,7 @@ from urllib.parse import quote, urlsplit
 
 from .config import Config
 from .errors import GitSafetyError
+from .managed_scope import ManagedManifest
 from .state import StateStore
 
 GIT = "/usr/bin/git"
@@ -137,6 +138,34 @@ def repository_status(config: Config) -> dict[str, object]:
 
 def fetch(config: Config) -> None:
     _run(config.paths.repo_root, ["fetch", "--quiet", config.git.remote, config.git.branch])
+
+
+def validate_managed_paths_trackable(config: Config, manifest: ManagedManifest) -> None:
+    paths = [
+        f"latest/{entry.path}"
+        for entry in manifest.entries
+        if entry.kind == "file"
+    ]
+    if not paths:
+        return
+    try:
+        result = subprocess.run(
+            [GIT, "check-ignore", "--no-index", "-z", "--stdin"],
+            cwd=config.paths.repo_root,
+            input="\0".join(paths) + "\0",
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise GitSafetyError(f"managed-path Git-ignore validation failed: {exc}") from exc
+    if result.returncode not in {0, 1}:
+        raise GitSafetyError(
+            f"managed-path Git-ignore validation failed: {result.stderr.strip()}"
+        )
+    ignored = [path for path in result.stdout.split("\0") if path]
+    if ignored:
+        raise GitSafetyError(f"managed candidate contains Git-ignored paths: {ignored}")
 
 
 def require_clean_base(config: Config) -> dict[str, object]:

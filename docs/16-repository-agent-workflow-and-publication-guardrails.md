@@ -268,7 +268,7 @@ The Mac Studio publisher observes only the bounded live managed source:
 
 ```text
 ~/.codex/AGENTS.md
-~/.codex/skills/**              excluding skills/.system/** and .DS_Store
+~/.codex/skills/**              excluding skills/.system/**, .DS_Store and transient Python caches
 ```
 
 It checks for changes at the configured interval and requires the complete

@@ -12,7 +12,9 @@ from codex_config_manager.git import (
     render_message,
     retry_pending,
     stage_managed_transaction,
+    validate_managed_paths_trackable,
 )
+from codex_config_manager.managed_scope import ManagedManifest, ManifestEntry
 from codex_config_manager.state import StateStore
 
 from conftest import run_git
@@ -100,6 +102,23 @@ def test_noop_suppresses_staging(make_config) -> None:
     config = make_config()
     init_repo(config.paths.repo_root)
     assert stage_managed_transaction(config, ("old-skill",)) == []
+
+
+def test_gitignored_candidate_path_is_rejected_before_projection(make_config) -> None:
+    config = make_config()
+    init_repo(config.paths.repo_root)
+    (config.paths.repo_root / ".gitignore").write_text("*.secret\n")
+    run_git(config.paths.repo_root, "add", ".gitignore")
+    run_git(config.paths.repo_root, "commit", "-m", "ignore secrets")
+    manifest = ManagedManifest(
+        (
+            ManifestEntry("skills/new-skill", "directory"),
+            ManifestEntry("skills/new-skill/value.secret", "file", "0" * 64, 1, False),
+        )
+    )
+    with pytest.raises(GitSafetyError, match="Git-ignored"):
+        validate_managed_paths_trackable(config, manifest)
+    assert not run_git(config.paths.repo_root, "status", "--porcelain=v1")
 
 
 def test_long_component_set_has_fixed_fallback() -> None:

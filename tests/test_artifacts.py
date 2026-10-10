@@ -80,6 +80,19 @@ def test_distribution_ignores_ds_store_without_removing_it(tmp_path: Path) -> No
     assert noise.read_bytes() == b"finder"
 
 
+def test_distribution_excludes_python_runtime_caches(tmp_path: Path) -> None:
+    latest = make_latest(tmp_path)
+    cache = latest / "skills" / "chat-handoff" / "scripts" / "__pycache__"
+    cache.mkdir(parents=True)
+    (cache / "helper.cpython-313.pyc").write_bytes(b"cache")
+    (latest / "skills" / "chat-handoff" / "orphan.pyo").write_bytes(b"cache")
+    target = tmp_path / "upload-ready"
+    build_distribution(latest, target)
+    validate_distribution(latest, target)
+    with zipfile.ZipFile(target / "skills" / "chat-handoff.zip") as archive:
+        assert not any("__pycache__" in name or name.endswith((".pyc", ".pyo")) for name in archive.namelist())
+
+
 def test_unsafe_zip_members_rejected(tmp_path: Path) -> None:
     archive_path = tmp_path / "bad.zip"
     with zipfile.ZipFile(archive_path, "w") as archive:

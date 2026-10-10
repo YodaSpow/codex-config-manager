@@ -42,10 +42,13 @@ The following are outside the managed universe:
 
 - `~/.codex/skills/.system/**` — excluded recursively at ingestion and preserved on consumers;
 - `.DS_Store` — ignored at every depth and never deliberately removed;
+- transient Python execution and tool caches — `__pycache__/`, `*.pyc`,
+  `*.pyo`, `.pytest_cache/`, `.mypy_cache/` and `.ruff_cache/` are excluded at
+  every depth and preserved when already present on a live endpoint;
 - every other file or directory under `~/.codex`;
 - symlinks and special filesystem entries, which cause validation failure rather than traversal or silent loss.
 
-No current skill name is allowlisted. Every normal immediate directory below `skills/` participates automatically. Control characters and hidden top-level skill names are rejected; case-colliding paths are rejected for portable Git/ZIP behaviour. Regular file bytes and executable identity are managed. Empty directories inside a skill are rejected because Git cannot represent them truthfully; a completely empty skill set is represented without requiring a placeholder file. Timestamps, xattrs and ACLs are not semantic publication identity.
+No current skill name is allowlisted. Every normal immediate directory below `skills/` participates automatically. Control characters and hidden top-level skill names are rejected; case-colliding paths are rejected for portable Git/ZIP behaviour. Regular non-transient file bytes and executable identity are managed. Empty directories inside a skill are rejected because Git cannot represent them truthfully; directories containing only excluded transient caches disappear from managed representation, and a completely empty skill set is represented without requiring a placeholder file. Timestamps, xattrs and ACLs are not semantic publication identity.
 
 ## Repository topology
 
@@ -161,7 +164,7 @@ Each invocation:
 5. updates one atomic, bounded local settlement receipt;
 6. stops without repository mutation when unchanged, unsettled, paused, outside schedule, or throttled;
 7. validates Git and remote history before an eligible transaction, then strictly derives the GitHub raw-download base from that validated remote identity and configured branch;
-8. builds a private candidate with `.system` excluded at source and `.DS_Store` ignored;
+8. builds a private candidate with `.system`, `.DS_Store` and transient Python caches excluded at source, then proves every remaining candidate file is trackable at its intended `latest/` path before repository mutation;
 9. proves source stability and candidate equivalence;
 10. reconciles `latest/` using checksum dry-run, real rsync and a second equivalence dry-run;
 11. builds and validates deterministic ZIP artifacts and the bounded README section;
@@ -175,7 +178,7 @@ If push fails after commit, the exact base, tree, message, component list and co
 
 ## Portable distribution
 
-`upload-ready/global-agents.zip` contains one root-level `AGENTS.md`. Each `upload-ready/skills/<skill-name>.zip` contains one matching wrapper directory. ZIP timestamps, ordering, file permissions and compression are deterministic; unsafe paths, AppleDouble, `__MACOSX`, `.DS_Store`, duplicates, collisions and size/ratio violations fail validation.
+`upload-ready/global-agents.zip` contains one root-level `AGENTS.md`. Each `upload-ready/skills/<skill-name>.zip` contains one matching wrapper directory. ZIP timestamps, ordering, file permissions and compression are deterministic; unsafe paths, AppleDouble, `__MACOSX`, `.DS_Store`, transient Python caches, duplicates, collisions and size/ratio violations fail validation.
 
 The README block between the Codex Config Manager markers is generated. Content outside those markers remains human-authored. The ordinary `latest/AGENTS.md` link opens GitHub's rendered Markdown view. Every global or per-skill ZIP link is an absolute `raw.githubusercontent.com` URL. The publisher derives owner and repository from the already validated GitHub remote, uses the configured branch, rejects ambiguous or unsafe identities before mutation, and appends only validated, encoded artifact paths. Project identity is not hard-coded. Skill additions and deletions dynamically add and remove matching ZIPs and direct-download links.
 
@@ -188,7 +191,7 @@ The consumer implementation is complete but has only been exercised in isolated 
 3. fetches and updates only by safe fast-forward;
 4. validates `latest/` before touching live consumer state;
 5. deploys only `AGENTS.md` and dynamic user skills with checksum dry-run, bounded deletion and equivalence proof;
-6. preserves consumer `.system/**`, `.DS_Store` and unrelated `.codex` entries;
+6. preserves consumer `.system/**`, `.DS_Store`, transient Python caches and unrelated `.codex` entries;
 7. never commits, republishes or invokes publisher orchestration.
 
 The consumer path guard refuses the Mac Studio authoritative `/Users/spowart/.codex` when the machine identity is `MacStudio`. Consumer launchd installation is also forbidden on the Mac Studio.

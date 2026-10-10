@@ -20,6 +20,7 @@ from .git import (
     require_clean_base,
     retry_pending,
     stage_managed_transaction,
+    validate_managed_paths_trackable,
 )
 from .locking import execution_lock
 from .logging_setup import configure_logging
@@ -146,6 +147,7 @@ def run_publisher(config: Config) -> str:
         with private_candidate(config.paths.codex_root, config.paths.rsync_binary) as (candidate, candidate_manifest):
             if candidate_manifest.fingerprint != manifest.fingerprint:
                 raise ValidationError("eligible source changed before private candidate completed")
+            validate_managed_paths_trackable(config, candidate_manifest)
             _apply_projection(
                 config,
                 candidate,

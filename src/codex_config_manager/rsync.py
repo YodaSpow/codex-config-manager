@@ -10,6 +10,15 @@ from pathlib import Path
 
 from .errors import RsyncError
 
+TRANSIENT_EXCLUDES = (
+    "--exclude=__pycache__/",
+    "--exclude=.pytest_cache/",
+    "--exclude=.mypy_cache/",
+    "--exclude=.ruff_cache/",
+    "--exclude=*.pyc",
+    "--exclude=*.pyo",
+)
+
 
 @dataclass(frozen=True)
 class RsyncResult:
@@ -74,6 +83,7 @@ def arguments(
         "--itemize-changes",
         "--out-format=%i|%n%L",
         "--exclude=.DS_Store",
+        *TRANSIENT_EXCLUDES,
     ]
     if exclude_system:
         command.append("--exclude=/.system/")

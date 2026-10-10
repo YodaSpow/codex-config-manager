@@ -9,7 +9,7 @@ from pathlib import Path, PurePosixPath
 from urllib.parse import quote
 
 from .errors import ValidationError
-from .managed_scope import IGNORED_NAME, snapshot_manifest
+from .managed_scope import IGNORED_NAME, is_transient_path, snapshot_manifest
 
 PACKAGING_CONTRACT_VERSION = 1
 ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
@@ -34,11 +34,12 @@ def _members(root: Path, wrapper: str | None) -> list[tuple[Path, str, bool, boo
     result: list[tuple[Path, str, bool, bool]] = []
     total = 0
     for physical in sorted(root.rglob("*"), key=lambda item: item.relative_to(root).as_posix()):
-        if physical.name == IGNORED_NAME:
+        relative_path = PurePosixPath(physical.relative_to(root).as_posix())
+        if is_transient_path(relative_path):
             continue
         if physical.is_symlink():
             raise ValidationError(f"portable artifacts do not support symlinks: {physical}")
-        relative = physical.relative_to(root).as_posix()
+        relative = relative_path.as_posix()
         archive_name = f"{wrapper}/{relative}" if wrapper else relative
         if physical.is_dir():
             result.append((physical, archive_name, True, False))
@@ -103,7 +104,10 @@ def _safe_member(name: str) -> PurePosixPath:
     path = PurePosixPath(name)
     if path.is_absolute() or ".." in path.parts or any(part in {"", "."} for part in path.parts):
         raise ValidationError(f"unsafe archive member: {name!r}")
-    if any(part == "__MACOSX" or part.startswith("._") or part == IGNORED_NAME for part in path.parts):
+    if (
+        any(part == "__MACOSX" or part.startswith("._") for part in path.parts)
+        or is_transient_path(path)
+    ):
         raise ValidationError(f"excluded archive member: {name!r}")
     return path
 

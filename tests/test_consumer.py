@@ -27,12 +27,16 @@ def test_isolated_consumer_initial_update_noop_and_deletion(make_config) -> None
     (config.paths.codex_root / "skills" / ".system").mkdir()
     (config.paths.codex_root / "skills" / ".system" / "preserve").write_text("system")
     (config.paths.codex_root / "skills" / ".DS_Store").write_text("finder")
+    cache = config.paths.codex_root / "skills" / "future-skill" / "__pycache__"
+    cache.mkdir(parents=True)
+    (cache / "runtime.cpython-313.pyc").write_bytes(b"cache")
     assert deploy_latest(config)
     assert not deploy_latest(config)
     assert manifests_equal(snapshot_manifest(config.paths.latest_root), source_manifest(config.paths.codex_root))
     assert (config.paths.codex_root / "unrelated.json").read_text() == "sentinel"
     assert (config.paths.codex_root / "skills" / ".system" / "preserve").read_text() == "system"
     assert (config.paths.codex_root / "skills" / ".DS_Store").read_text() == "finder"
+    assert (cache / "runtime.cpython-313.pyc").read_bytes() == b"cache"
     (config.paths.latest_root / "skills" / "future-skill" / "nested" / "x").unlink()
     (config.paths.latest_root / "skills" / "future-skill" / "nested").rmdir()
     assert deploy_latest(config)

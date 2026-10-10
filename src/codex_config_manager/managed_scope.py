@@ -13,6 +13,10 @@ from .errors import ValidationError
 
 IGNORED_NAME = ".DS_Store"
 SYSTEM_SKILL = ".system"
+TRANSIENT_DIRECTORY_NAMES = frozenset(
+    {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+)
+TRANSIENT_FILE_SUFFIXES = (".pyc", ".pyo")
 
 
 @dataclass(frozen=True, order=True)
@@ -82,12 +86,24 @@ def _validate_name(name: str, *, top_level_skill: bool = False) -> None:
         raise ValidationError(f"hidden top-level skill is unsupported: {name!r}")
 
 
+def is_transient_name(name: str, *, directory: bool) -> bool:
+    if name == IGNORED_NAME:
+        return True
+    if directory:
+        return name in TRANSIENT_DIRECTORY_NAMES
+    return name.endswith(TRANSIENT_FILE_SUFFIXES)
+
+
+def is_transient_path(path: PurePosixPath) -> bool:
+    return any(part == IGNORED_NAME or part in TRANSIENT_DIRECTORY_NAMES for part in path.parts) or (
+        bool(path.parts) and path.name.endswith(TRANSIENT_FILE_SUFFIXES)
+    )
+
+
 def _walk(root: Path, *, prefix: PurePosixPath) -> list[ManifestEntry]:
-    entries: list[ManifestEntry] = []
     case_map: dict[str, str] = {}
-    stack: list[tuple[Path, PurePosixPath]] = [(root, prefix)]
-    while stack:
-        physical, logical = stack.pop()
+
+    def visit(physical: Path, logical: PurePosixPath) -> list[ManifestEntry]:
         logical_text = logical.as_posix()
         folded = logical_text.casefold()
         previous = case_map.get(folded)
@@ -97,27 +113,28 @@ def _walk(root: Path, *, prefix: PurePosixPath) -> list[ManifestEntry]:
         if physical.is_symlink():
             raise ValidationError(f"managed symlinks are unsupported: {logical_text}")
         if physical.is_dir():
-            entries.append(ManifestEntry(logical_text, "directory"))
-            children: list[tuple[Path, PurePosixPath]] = []
             try:
-                iterator = os.scandir(physical)
+                raw_children = list(os.scandir(physical))
             except OSError as exc:
                 raise ValidationError(f"cannot read managed directory {logical_text}: {exc}") from exc
-            with iterator:
-                for child in iterator:
-                    if child.name == IGNORED_NAME:
-                        continue
-                    _validate_name(child.name)
-                    children.append((Path(child.path), logical / child.name))
-            if not children:
+            if not raw_children:
                 raise ValidationError(f"empty managed directories are unsupported by Git: {logical_text}")
-            stack.extend(sorted(children, key=lambda pair: pair[1].as_posix(), reverse=True))
+            children: list[ManifestEntry] = []
+            for child in sorted(raw_children, key=lambda item: item.name):
+                if is_transient_name(child.name, directory=child.is_dir(follow_symlinks=False)):
+                    continue
+                _validate_name(child.name)
+                children.extend(visit(Path(child.path), logical / child.name))
+            if not children:
+                return []
+            return [ManifestEntry(logical_text, "directory"), *children]
         elif physical.is_file():
             digest, size, executable = _file_digest(physical)
-            entries.append(ManifestEntry(logical_text, "file", digest, size, executable))
+            return [ManifestEntry(logical_text, "file", digest, size, executable)]
         else:
             raise ValidationError(f"unsupported managed filesystem entry: {logical_text}")
-    return entries
+
+    return visit(root, prefix)
 
 
 def source_manifest(codex_root: Path) -> ManagedManifest:
