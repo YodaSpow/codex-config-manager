@@ -1,0 +1,4 @@
+interface:
+  display_name: "Computer Use Helper"
+  short_description: "Route work safely across control surfaces"
+  default_prompt: "Use $computer-use-helper to route this task across the correct control surfaces without turning a route-level refusal into a task-wide blocker."

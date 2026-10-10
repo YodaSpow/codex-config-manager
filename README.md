@@ -25,6 +25,7 @@ Each download contains one complete user-managed skill.
 
 - [Download capability-readiness](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/capability-readiness.zip)
 - [Download chat-handoff](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/chat-handoff.zip)
+- [Download computer-use-helper](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/computer-use-helper.zip)
 - [Download heartbeat](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/heartbeat.zip)
 - [Download lens](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/lens.zip)
 - [Download map-project-capabilities](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/map-project-capabilities.zip)
