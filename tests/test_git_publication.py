@@ -17,7 +17,7 @@ from codex_config_manager.git import (
 from codex_config_manager.managed_scope import ManagedManifest, ManifestEntry
 from codex_config_manager.state import StateStore
 
-from conftest import run_git
+from conftest import REPO_ROOT, run_git
 
 
 def init_repo(repo: Path) -> None:
@@ -138,6 +138,24 @@ def test_already_tracked_ignored_candidate_path_remains_publishable(make_config)
     )
     validate_managed_paths_trackable(config, manifest)
     assert not run_git(config.paths.repo_root, "status", "--porcelain=v1")
+
+
+def test_project_build_ignores_do_not_hide_nested_managed_distributions() -> None:
+    lines = (REPO_ROOT / ".gitignore").read_text().splitlines()
+    assert "/build/" in lines and "/dist/" in lines
+    assert "build/" not in lines and "dist/" not in lines
+    result = subprocess.run(
+        [
+            "/usr/bin/git",
+            "check-ignore",
+            "--no-index",
+            "latest/skills/example/node_modules/package/dist/index.mjs",
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 1
 
 
 def test_long_component_set_has_fixed_fallback() -> None:

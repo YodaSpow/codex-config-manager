@@ -50,6 +50,11 @@ The following are outside the managed universe:
 
 No current skill name is allowlisted. Every normal immediate directory below `skills/` participates automatically. Control characters and hidden top-level skill names are rejected; case-colliding paths are rejected for portable Git/ZIP behaviour. Regular non-transient file bytes and executable identity are managed. Empty directories inside a skill are rejected because Git cannot represent them truthfully; directories containing only excluded transient caches disappear from managed representation, and a completely empty skill set is represented without requiring a placeholder file. Timestamps, xattrs and ACLs are not semantic publication identity.
 
+Repository-local `build/` and `dist/` development exclusions are root-anchored.
+They do not suppress intentionally vendored nested distribution files inside a
+managed skill. Before repository mutation, remaining candidate files must be
+either already tracked or not Git-ignored at their intended `latest/` paths.
+
 ## Repository topology
 
 ```text

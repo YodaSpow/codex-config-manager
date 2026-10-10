@@ -61,6 +61,9 @@ exclusion contract stops before `latest/`, artifacts, README or the Git index
 are changed. Already-tracked vendored content remains representable even when a
 later broad ignore pattern also matches it. This prevents an artifact-only
 staged transaction when Git cannot represent the corresponding canonical file.
+Repository-development ignores for root `build/` and `dist/` output are anchored
+to the repository root so they cannot hide a skill's intentionally vendored
+nested distribution files from canonical `latest/`.
 
 ## Dynamic user-skill discovery
 
