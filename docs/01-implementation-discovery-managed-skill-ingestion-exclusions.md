@@ -56,10 +56,11 @@ generated files becoming managed-state changes.
 
 Before repository projection begins, every remaining managed candidate file is
 checked against Git ignore rules using its intended `latest/` path. An ignored
-candidate path that is not covered by this explicit exclusion contract stops
-before `latest/`, artifacts, README or the Git index are changed. This prevents
-an artifact-only staged transaction when Git cannot represent the corresponding
-canonical file.
+candidate path that is neither already tracked nor covered by this explicit
+exclusion contract stops before `latest/`, artifacts, README or the Git index
+are changed. Already-tracked vendored content remains representable even when a
+later broad ignore pattern also matches it. This prevents an artifact-only
+staged transaction when Git cannot represent the corresponding canonical file.
 
 ## Dynamic user-skill discovery
 

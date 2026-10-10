@@ -163,9 +163,17 @@ def validate_managed_paths_trackable(config: Config, manifest: ManagedManifest) 
         raise GitSafetyError(
             f"managed-path Git-ignore validation failed: {result.stderr.strip()}"
         )
-    ignored = [path for path in result.stdout.split("\0") if path]
-    if ignored:
-        raise GitSafetyError(f"managed candidate contains Git-ignored paths: {ignored}")
+    ignored = {path for path in result.stdout.split("\0") if path}
+    tracked = {
+        path
+        for path in _run(
+            config.paths.repo_root, ["ls-files", "-z", "--", "latest"]
+        ).split("\0")
+        if path
+    }
+    untrackable = sorted(ignored - tracked)
+    if untrackable:
+        raise GitSafetyError(f"managed candidate contains untracked Git-ignored paths: {untrackable}")
 
 
 def require_clean_base(config: Config) -> dict[str, object]:

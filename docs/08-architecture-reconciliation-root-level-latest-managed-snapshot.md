@@ -223,7 +223,7 @@ Mode C must execute this plan only when separately authorised. Each gate is bloc
 4. Apply Doc 1 exclusions at ingestion.
 5. Detect source mutation during candidate creation and fail safely.
 
-**Gate 2:** Candidate contents are a complete, bounded representation of the settled managed source; `.system/**`, `.DS_Store` and transient Python caches are absent without being mutated live. Every remaining candidate file is Git-trackable at its intended `latest/` path before repository mutation.
+**Gate 2:** Candidate contents are a complete, bounded representation of the settled managed source; `.system/**`, `.DS_Store` and transient Python caches are absent without being mutated live. Every remaining candidate file is already tracked or not Git-ignored at its intended `latest/` path before repository mutation.
 
 ### Phase 3 — Validate candidate before canonical mutation
 

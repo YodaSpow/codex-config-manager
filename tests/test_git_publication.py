@@ -121,6 +121,25 @@ def test_gitignored_candidate_path_is_rejected_before_projection(make_config) ->
     assert not run_git(config.paths.repo_root, "status", "--porcelain=v1")
 
 
+def test_already_tracked_ignored_candidate_path_remains_publishable(make_config) -> None:
+    config = make_config()
+    init_repo(config.paths.repo_root)
+    path = config.paths.latest_root / "skills" / "old-skill" / "vendor.dist"
+    path.write_text("tracked")
+    (config.paths.repo_root / ".gitignore").write_text("*.dist\n")
+    run_git(config.paths.repo_root, "add", ".gitignore")
+    run_git(config.paths.repo_root, "add", "-f", str(path.relative_to(config.paths.repo_root)))
+    run_git(config.paths.repo_root, "commit", "-m", "track vendored ignored file")
+    manifest = ManagedManifest(
+        (
+            ManifestEntry("skills/old-skill", "directory"),
+            ManifestEntry("skills/old-skill/vendor.dist", "file", "0" * 64, 7, False),
+        )
+    )
+    validate_managed_paths_trackable(config, manifest)
+    assert not run_git(config.paths.repo_root, "status", "--porcelain=v1")
+
+
 def test_long_component_set_has_fixed_fallback() -> None:
     from codex_config_manager.git import ComponentChange
 

@@ -164,7 +164,7 @@ Each invocation:
 5. updates one atomic, bounded local settlement receipt;
 6. stops without repository mutation when unchanged, unsettled, paused, outside schedule, or throttled;
 7. validates Git and remote history before an eligible transaction, then strictly derives the GitHub raw-download base from that validated remote identity and configured branch;
-8. builds a private candidate with `.system`, `.DS_Store` and transient Python caches excluded at source, then proves every remaining candidate file is trackable at its intended `latest/` path before repository mutation;
+8. builds a private candidate with `.system`, `.DS_Store` and transient Python caches excluded at source, then proves every remaining candidate file is already tracked or not Git-ignored at its intended `latest/` path before repository mutation;
 9. proves source stability and candidate equivalence;
 10. reconciles `latest/` using checksum dry-run, real rsync and a second equivalence dry-run;
 11. builds and validates deterministic ZIP artifacts and the bounded README section;
