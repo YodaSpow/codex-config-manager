@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.27 · **Updated:** 20 September 2026
+**Version:** 1.28 · **Updated:** 11 October 2026
 
 ## Purpose
 
@@ -142,6 +142,12 @@ User-maintained global skills are backed up at `https://github.com/YodaSpow/code
 
 - Protect confidential, private, identifying, credential, and otherwise non-shareable information. Do not expose it outside its approved context.
 - Keep secrets only in approved local, untracked or ignored locations. Before a secret-bearing file can be staged or committed, ensure version control excludes it. Never publish secret material to a remote or public repository.
+
+### 📦 Ignored local assets and safe ingestion
+
+- `.gitignore` is the shared boundary for local Git history, GitHub-bound commits, and Codex's Git-based turn snapshots. Fixtures, corpora, media, datasets, models, generated outputs, and other local-only working data must enter through a canonical root that is recursively ignored, covering every descendant file and folder.
+- Before any operator, agent, or tool supplies files, use and prove an existing recursively ignored intake root or, if none exists, create the `drop-zone/` directory, ignore it recursively, and verify it. For the handoff, show its full absolute path as the only content of a fenced code block, never `~` or a relative path; when Finder is available, also open that exact intake folder, with a newly created `drop-zone/` still empty.
+- `drop-zone/` is temporary intake, not an asset home. After files arrive, create or identify their proper project destination; recursively ignore and verify it first when the files remain local-only, or use the project's approved tracked-storage route when they are intentionally versioned. Move, never copy, the files into that destination and leave `drop-zone/` empty. File size is irrelevant; version-control ownership decides. Never populate an unprotected repository path or treat a later ignore rule as removing content already tracked or captured.
 
 ### 🧪 Proof requirements
 
