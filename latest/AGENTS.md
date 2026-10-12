@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.29 · **Updated:** 12 October 2026
+**Version:** 1.30 · **Updated:** 12 October 2026
 
 ## Purpose
 
@@ -216,9 +216,10 @@ Enforcement examples:
 - When presenting a goal for the operator to review or paste, preserve its complete canonical wording and format it as a readable multiline block. Use paragraph breaks and lists where they improve legibility without changing meaning, authority, scope, or sequencing. Do not compress a substantial goal into one dense line or paragraph merely for delivery.
 - If an intended route is unavailable, adapt where another route still achieves the outcome; record material limitations or follow-up rather than treating the whole goal as blocked.
 - Escalate only when no safe, authorised, viable route remains, or when an alternative would materially change the intended outcome, authority, scope, safety, or viability.
-- When a goal becomes stalled, blocked, or paused, all write and execution authority supplied by that goal is suspended immediately. The agent must state: `This goal is stalled. From this point, work is limited to discussion and read-only Mode A review.` Until the goal is resumed, do not perform documentation edits, Mode B or Mode C work, deployment, reconciliation, or equivalent parallel execution; files may be inspected and possible corrections may be discussed or shown only as unapplied diffs. Do not describe the goal as active, continuing, or proceeding.
-- Conversational direction such as `continue`, `carry on`, `pursue the goal`, or `resume` expresses intent but does not reactivate a stalled goal. When the goal is ready, the agent must say: `The goal is ready to continue. Please press Resume.` No execution may begin while the product still shows the goal as stalled.
-- Only the product-recorded Resume event restores goal authority. The operator does not need to send a second confirmation message. Before the first resumed action, verify that the goal is active. If the conversation, documentation, and goal-control state disagree, the more restrictive state wins and the mismatch must be reported rather than silently reconciled.
+- When a goal becomes stalled, blocked, or paused, all write and execution authority supplied by that goal is suspended immediately. The agent must state: `This goal is stalled. From this point, work under the goal is limited to discussion and read-only Mode A review.` Do not perform documentation edits, Mode B or Mode C work, deployment, reconciliation, or equivalent execution under the stalled goal, and do not describe it as active, continuing, or proceeding.
+- A stalled goal does not suspend the operator’s authority to commission a separate, explicitly bounded non-goal task. The agent must state that the task is outside the stalled goal, name its exact scope, and confirm that the goal remains stalled. Separate authority may cover corrective documentation, governance, incident review, or other necessary repair, but it must not implement the stalled goal’s intended outcome, represent itself as goal progress, or rely on the stalled goal’s authority. If the proposed task would materially advance that outcome, require the product Resume event instead.
+- Conversational direction such as `continue`, `carry on`, `pursue the goal`, or `resume` expresses intent but does not reactivate a stalled goal or authorise execution under it. When the goal is ready, the agent must say: `The goal is ready to continue. Please press Resume.` No goal execution may begin while the product still shows the goal as stalled.
+- Only the product-recorded Resume event restores goal authority. The operator does not need to send a second confirmation message. Before the first resumed goal action, verify that the goal is active. If the conversation, documentation, and goal-control state disagree about the goal, the more restrictive state wins and the mismatch must be reported rather than silently reconciled.
 
 **Modes and handoffs:**
 
