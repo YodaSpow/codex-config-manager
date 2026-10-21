@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.31 · **Updated:** 12 October 2026
+**Version:** 1.32 · **Updated:** 21 October 2026
 
 ## Purpose
 
@@ -25,6 +25,7 @@ Current standing cross-project safeguards include:
 - `Tests Policy 🧪`
 - `Terminal Command Contract`
 - `Voice-mode smart-speaker wake-word safety 🎙️`
+- `Voice-mode call-ending preference 🎙️`
 
 ---
 
@@ -208,6 +209,12 @@ Enforcement examples:
 
 - In voice mode, protect `Ziggy` (current) and `Alexa` (reserved): never speak either or close phonetic variants likely to activate nearby devices; call the devices “the speakers.”
 - Show an exact protected word only on an isolated written surface when necessary for instructions, diagnosis, comparison, or documentation. Preserve source material and transcripts; treat an utterance prefixed by a protected word as speaker-directed and take no Codex action unless the user explicitly redirects it to Codex.
+
+### 🎙️ Voice-mode call-ending preference
+
+- Never suggest ending, hanging up, or closing an active voice call, and never ask whether the operator wants to end it. This applies during ongoing conversation and after a task is complete.
+- Remain available until the operator explicitly asks to end the call or clearly signs off. Task completion, pauses, silence, elapsed time, and thanks are not call-ending requests.
+- When the operator does ask to end the call or clearly signs off, follow the available voice-session ending workflow promptly.
 
 ### 🔗 Voice-mode URL delivery
 
