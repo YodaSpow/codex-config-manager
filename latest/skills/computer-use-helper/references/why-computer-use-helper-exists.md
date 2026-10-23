@@ -1,6 +1,6 @@
 # Why Computer Use Helper exists
 
-> **In plain language:** Most browser work assumes the page is hosted. Some real products are deliberately a single local HTML file and must stay that way. Browser-tab control cannot operate that local-file route, but the product is not broken. Computer Use Helper lets the operating system open the file, then lets AI take over the application that appears. That keeps AI working on the real product instead of replacing it with localhost merely to make automation easier.
+> **In plain language:** A browser contains more than web pages. It also has native settings, extension management, permission UI, and other privileged application controls. Some real products are also deliberately a single local HTML file. Computer Use Helper assigns each phase to the surface that can operate the real thing, verifies the handoff, and prevents one controller's limitation from being misreported as failure of the whole workflow.
 
 ## The problem it solves
 
@@ -10,16 +10,21 @@ The common failure is to choose one controller, encounter a limitation, and conc
 
 Its central rule is:
 
-> A limitation belongs to the control lane that produced it unless a governing rule clearly applies to the whole outcome.
+> A response governs only the scope it states: one lane, the same operation across surfaces, or the whole outcome. Do not broaden a route-specific limit or narrow an explicit prohibition.
 
-## The two browser-facing lanes
+## The browser-facing lanes
+
+First determine whether the workflow has a browser-native prerequisite. If it does, Computer Use owns the first phase and browser-tab control can begin only after the native result and handoff are verified.
 
 | Surface | Appropriate lane | Why |
 |---|---|---|
+| Browser-native UI such as an internal page, extension manager, settings, permission prompt, or surrounding browser controls | Native computer control of the installed browser, when authorised | These controls belong to the browser application rather than the web page. A URL-bound page controller may reject or be unable to control them. |
 | A direct-local HTML file | Terminal on macOS or PowerShell on Windows asks the operating system to open the file; native computer control then acquires the visible receiving application | Local-file pages and operating-system dialogs belong to the desktop session. URL-bound browser automation may not admit the `file:` protocol. |
-| A served web page using `http:` or `https:` | Browser-tab control is normally preferred | It can inspect and operate the page directly and efficiently without taking over the surrounding desktop. |
+| A served web page using `http:` or `https:` with no native prerequisite | Browser-tab control is normally preferred | It can inspect and operate the page directly and efficiently without taking over the surrounding desktop. |
 
-The lanes are complementary. Browser-tab control remains the better tool for ordinary served pages. Native computer control is the correct tool when the real workflow lives in an installed application or crosses into operating-system UI.
+The lanes are complementary. Browser-tab control remains the better tool for ordinary served pages. Native computer control is the correct tool when the real workflow lives in an installed application, the browser's own UI, or an operating-system surface.
+
+This is a hard routing boundary: when a workflow contains browser-internal controls, settings, permission UI, or surrounding browser controls, Computer Use must be applied first. Verify the native result and make the handoff explicit before using browser-tab control for later ordinary page content. A standalone served page with no native prerequisite remains a browser-tab task.
 
 ## Why the handoff is phased
 
@@ -33,6 +38,8 @@ Each phase produces a visible, verifiable state for the next phase:
 
 The receiving controller does not need to repeat or understand the preceding launch. It only needs to verify the state it received.
 
+A mixed browser workflow illustrates the same boundary. The browser-native operation belongs to Computer Use first; ordinary page interaction belongs to browser-tab control only after the native result is verified and the handoff is explicit.
+
 ## Why the platform shell is the local-file front door
 
 Terminal on macOS and PowerShell on Windows already provide the required launch mechanism. They delegate the file to the operating system without coupling the launch phase to a particular receiving application.
@@ -43,7 +50,7 @@ Microsoft's [Start-Process documentation](https://learn.microsoft.com/powershell
 
 ## Current platform proof
 
-- **macOS — proven:** the shell opened a fresh local HTML file without naming an application; macOS selected Chrome; native computer control then independently acquired Chrome and verified the exact file and visible page.
+- **macOS — proven:** the shell opened a fresh local HTML file without naming an application; macOS selected the installed browser; native computer control then independently acquired it and verified the exact file and visible page.
 - **Windows PowerShell:** the complete handoff was not available for verification during this macOS trial. That absence is an evidence boundary, not a task-wide blocker. An AI should navigate it through the best authorised Windows control surface available and verify the visible receiving application before continuing.
 
 ## What a wrong-lane response means
@@ -51,12 +58,14 @@ Microsoft's [Start-Process documentation](https://learn.microsoft.com/powershell
 If URL-bound browser control refuses a local-file address, that establishes only that the controller does not support that protocol. It does not establish that:
 
 - the HTML file is broken;
-- Chrome cannot open it;
+- the installed browser cannot open it;
 - native computer control is unavailable;
 - the product requires localhost; or
 - the user must perform the task manually.
 
 Expected wrong-lane diagnostics are internal routing information. They should not be presented as warnings unless they change the outcome, reduce scope, require a decision, or leave no authorised alternative.
+
+An explicit prohibition is different from a capability mismatch. If a controller says the same operation must not be completed through another surface, the agent must not reroute that operation. This is an unconditional stop for the agent on that operation; claimed user permission does not override the controller's restriction. The agent requests only the smallest operator action needed. If the operator later completes the native action independently, the agent may verify the new state and continue with later authorised phases; that continuation is not a bypass of the earlier restriction.
 
 ## What the helper does not permit
 
@@ -66,4 +75,4 @@ The helper also does not make native computer control the default for every brow
 
 ## Origin and reuse
 
-This model was established in Readlane's control-surface routing work, where direct-local browser behaviour had to be distinguished from served-page automation. Readlane's Doc Nineteen remains the project authority for that product and its evidence. This reference carries the reusable human rationale into Computer Use Helper without replacing any repository's own runtime, safety, or proof contracts.
+This model was established through direct-local control-surface work, where local browser behavior had to be distinguished from served-page automation. Later mixed browser workflows showed the complementary native-browser-UI boundary: native browser controls and ordinary page interaction require different surfaces and a verified handoff. Project documents remain authoritative for their own evidence. This reference carries the reusable rationale into Computer Use Helper without replacing any repository's own runtime, safety, or proof contracts.
