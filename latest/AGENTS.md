@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.32 · **Updated:** 21 October 2026
+**Version:** 1.34 · **Updated:** 31 October 2026
 
 ## Purpose
 
@@ -454,8 +454,9 @@ const response = await fetch(`/api/path?v=${buildId}`, {
 ### Codex in-app browser completion-route safeguard
 
 Before documenting or activating a goal—or planning or starting any other Mode C work—whose completion requires browser inspection, interaction, or validation, first prove and use a working Codex in-app browser route. If local `file://` navigation is unavailable, serve the artifact through a bounded localhost preview for that in-app browser. If neither route works, surface that before implementation; never leave a known-inaccessible browser check as the completion gate.
-Treat that preview by purpose: stop proof-only use after validation; for operator review, keep it live via a lightweight page heartbeat and enforce self-termination after two minutes without that signal or at the one-hour limit, independent of the originating task.
+Treat that preview by purpose: stop proof-only use after validation; for operator review, keep it live for up to one hour and enforce self-termination at that one-hour limit, independent of the originating task.
 For that operator-review use, inherit and maintain the project's established Codex in-app browser preview origin (host and port): updates reuse its current path; explicitly requested versions use distinct paths on that origin.
+Open an operator-review URL through the Codex panel-opening route (`open_in_codex` with a browser target) so the app creates a persistent thread-owned tab. Do not deliver the review surface by creating an agent-owned tab through computer control; that tab may be destroyed when the control call returns. Computer control may attach to the existing thread-owned tab for inspection, but opening and controlling are separate steps. Never report the review surface as retained until the thread-owned tab is proven present.
 
 **Diagnostic only:** On supported macOS browsers, `⌘ + Shift + R` can distinguish client cache from a serving or runtime issue; it is not completion evidence or a substitute for correct cache-busting.
 
