@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.34 · **Updated:** 31 October 2026
+**Version:** 1.35 · **Updated:** 1 November 2026
 
 ## Purpose
 
@@ -265,6 +265,7 @@ Enforcement examples:
 - The conventional local project root is `/Users/spowart/Scripts/<repo-name>`.
 - For a prospective project, once a repository name is agreed, use its resulting path in planning and handoff material as the intended root. Do not claim the directory exists, or create it, unless authorised.
 - Prefer lowercase, hyphen-separated repository names, for example `repo-name-apple`. This is a default convention, not a hard requirement.
+- This lowercase, hyphen-separated naming style is also known as `kebab-case`.
 
 ---
 
