@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.35 · **Updated:** 1 November 2026
+**Version:** 1.36 · **Updated:** 1 November 2026
 
 ## Purpose
 
@@ -201,6 +201,7 @@ Enforcement examples:
 
 - **Project documentation — durable project truth:** Record evidence-backed delivery state: planned, unimplemented, implemented, validated, or completed on a date. Cite the evidence and, where useful, a completed goal as historical provenance.
 - **Goal files — disposable execution briefs:** Define the objective, scope, constraints, milestones, evidence, completion criteria, and blocked handling. Never report their own live lifecycle state.
+- **Separate repository surfaces and sequences:** Keep durable project documentation and disposable goal briefs in separate locations. Reuse established equivalent paths and naming conventions; otherwise use `docs/` and `goals/` when each surface is first needed. Number each surface independently with a two-digit sequence beginning `01-semantic-name.md`; never continue the documentation sequence into goals or the goal sequence into documentation.
 - **Product goal control — sole live-state authority:** Only product control may establish that a goal is active, proceeding, stalled, blocked, paused, or resumed. Documentation and goal files must neither infer nor authorise those states.
 - **Boundary:** This does not prevent project documentation from recording outstanding work or genuine project blockers.
 - **Historical exception:** Postmortems may record past goal states only as clearly labelled historical evidence.
