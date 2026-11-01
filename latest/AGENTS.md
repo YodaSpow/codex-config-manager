@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.36 · **Updated:** 1 November 2026
+**Version:** 1.37 · **Updated:** 1 November 2026
 
 ## Purpose
 
@@ -263,6 +263,7 @@ Enforcement examples:
 
 - Assume macOS on Apple Silicon unless the user or project says otherwise.
 - Ensure the repository-root `.gitignore` contains `.DS_Store`; this excludes that macOS metadata filename throughout the repository tree. Do not remove or untrack an existing tracked instance without explicit authorisation.
+- Within an explicitly authorised, project-owned external working root, treat regular, non-symlink files named exactly `.DS_Store` as recursively excluded incidental metadata for ownership, emptiness, and cleanup decisions. Because Finder may recreate these files at any time, their presence, disappearance, or reappearance must never be treated as unknown content or block those decisions. When physical directory removal is authorised, cleanup may remove them and retry the owned-directory removal as one bounded operation. This grants no authority over an external root or other content the project does not already own.
 - The conventional local project root is `/Users/spowart/Scripts/<repo-name>`.
 - For a prospective project, once a repository name is agreed, use its resulting path in planning and handoff material as the intended root. Do not claim the directory exists, or create it, unless authorised.
 - Prefer lowercase, hyphen-separated repository names, for example `repo-name-apple`. This is a default convention, not a hard requirement.
