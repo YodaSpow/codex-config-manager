@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.37 · **Updated:** 1 November 2026
+**Version:** 1.38 · **Updated:** 2 November 2026
 
 ## Purpose
 
@@ -458,6 +458,9 @@ const response = await fetch(`/api/path?v=${buildId}`, {
 
 Before documenting or activating a goal—or planning or starting any other Mode C work—whose completion requires browser inspection, interaction, or validation, first prove and use a working Codex in-app browser route. If local `file://` navigation is unavailable, serve the artifact through a bounded localhost preview for that in-app browser. If neither route works, surface that before implementation; never leave a known-inaccessible browser check as the completion gate.
 Treat that preview by purpose: stop proof-only use after validation; for operator review, keep it live for up to one hour and enforce self-termination at that one-hour limit, independent of the originating task.
+
+🧪 **TranSubarr exception:** For the project rooted at `/Users/spowart/Scripts/TranSubarr`, the one-hour operator-review preview limit does not apply to authenticated, supervisor-owned diagnostic publications on its established project origin. Such a publication may remain live only while its retained supervisor and bound active attempt remain valid and the diagnostic is genuinely needed; the supervisor must close it positively as soon as that condition ends. This exception does not apply to Codex-created localhost previews, agent-owned browser tabs, unrelated TranSubarr tooling or any other project, and grants no new media, service, infrastructure or execution authority.
+
 For that operator-review use, inherit and maintain the project's established Codex in-app browser preview origin (host and port): updates reuse its current path; explicitly requested versions use distinct paths on that origin.
 Open an operator-review URL through the Codex panel-opening route (`open_in_codex` with a browser target) so the app creates a persistent thread-owned tab. Do not deliver the review surface by creating an agent-owned tab through computer control; that tab may be destroyed when the control call returns. Computer control may attach to the existing thread-owned tab for inspection, but opening and controlling are separate steps. Never report the review surface as retained until the thread-owned tab is proven present.
 
