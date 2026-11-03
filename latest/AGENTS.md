@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.38 · **Updated:** 2 November 2026
+**Version:** 1.39 · **Updated:** 3 November 2026
 
 ## Purpose
 
@@ -21,6 +21,7 @@ Current standing cross-project safeguards include:
 
 - `Canonical External Paths & Contract Boundary 🗂️`
 - `NICLAB Allocation Authority 📍`
+- `NICLAB Browser Full-CDP Origin Policy 🔬`
 - `Plex Token Self-Heal (401) ⚠️`
 - `Tests Policy 🧪`
 - `Terminal Command Contract`
@@ -138,6 +139,11 @@ User-maintained global skills are backed up at `https://github.com/YodaSpow/code
 - Reuse confirmed allocations and treat suggestions as non-reserving until the NICLAB registry is separately reviewed and updated through its project-owned workflow.
 - If NICLAB is unavailable, report shared validation pending and do not guess or silently claim a durable value. Continue only work that does not depend on that allocation decision.
 - Use the durable NICLAB MCP registration for normal cross-project access. The Mac Studio loopback endpoint is a diagnostic and recovery path, not a replacement registration.
+
+### 🔬 NICLAB Browser Full-CDP Origin Policy
+
+- `~/.codex/config.toml` is authoritative: it currently denies full CDP by default, permits normal opt-in only for single-level `https://*.niclab.app` origins (not the apex or nested subdomains), limits approval to one turn, and disables permanent approval.
+- Use ordinary Browser Use first; request full CDP only for necessary DevTools evidence. Verify the effective configuration before claiming access or a block, and never broaden origin scope, approval duration, or persistence without explicit review.
 
 ### 🔐 Confidentiality and publication
 
