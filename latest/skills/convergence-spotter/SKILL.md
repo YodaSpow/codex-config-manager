@@ -5,7 +5,7 @@ description: Provide a bounded, question-led convergence review by a reviewer di
 
 # Convergence Spotter
 
-**Version:** 0.10 · **Updated:** 2 November 2026
+**Version:** 0.11 · **Updated:** 3 November 2026
 
 ## Prime directive — at a glance
 
@@ -65,6 +65,8 @@ Accept the possibility that an isolated, reversible attempt fails while producin
 ## Return the review
 
 Usually return one compact, evidence-grounded question with the reason it matters.
+
+For a question intended for the executor or another execution chat, send or relay only the clean, evidence-grounded delivery question, under the existing sending-authority boundary. Keep reviewer identity and skill mechanics in the originating review context. Do not name “Spotter”, “Convergence Spotter”, the skill or its invocation, reviewer mechanics, or the self-review boundary in the outbound message. The only exception is an explicit operator request to disclose that mechanism to the recipient. Do not instruct the executor to invoke the skill.
 
 When several dependencies need comparison, a short convergence card may state the next outcome, finite mandatory gates, optional or deferred work, supported forecast and confidence, largest uncertainty, fastest safe candidate route, and recommended question. Include only useful fields; mark unresolved items honestly. The card is an optional communication aid, not a new artifact, template obligation, or completion gate.
 
