@@ -35,4 +35,5 @@ Each download contains one complete user-managed skill.
 - [Download project-name-discovery](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/project-name-discovery.zip)
 - [Download scratchboard](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/scratchboard.zip)
 - [Download semantic-compression](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/semantic-compression.zip)
+- [Download walk-through](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/walk-through.zip)
 <!-- END CODEX CONFIG MANAGER DOWNLOADS -->
