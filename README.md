@@ -23,6 +23,7 @@ The global `AGENTS.md` contains guidance intended for the user’s global Codex 
 
 Each download contains one complete user-managed skill.
 
+- [Download benefit-lens](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/benefit-lens.zip)
 - [Download capability-readiness](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/capability-readiness.zip)
 - [Download chat-handoff](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/chat-handoff.zip)
 - [Download computer-use-helper](https://raw.githubusercontent.com/YodaSpow/codex-config-manager/main/upload-ready/skills/computer-use-helper.zip)

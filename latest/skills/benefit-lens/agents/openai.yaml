@@ -1,0 +1,6 @@
+interface:
+  display_name: "Benefit Lens"
+  short_description: "What does this bring to the table, and is it worth it?"
+  default_prompt: "Use $benefit-lens to ask what benefit this brings, compare worthwhile options and preserve evidence limits through read-only conversation."
+policy:
+  allow_implicit_invocation: true
