@@ -1,6 +1,6 @@
 # Global Codex Guardrails
 
-**Version:** 1.39 · **Updated:** 3 November 2026
+**Version:** 1.40 · **Updated:** 16 November 2026
 
 ## Purpose
 
@@ -380,16 +380,17 @@ token_refresh_sh: "/Users/spowart/Scripts/update_plex_token.sh"
 
 ## 🧪 Tests Policy
 
-The following is the default Python test policy. Other test methods are valid where a project uses another stack, but should preserve equivalent proof discipline.
+The following is the default Python test policy. Use the repository's established test runner. Other test methods are valid where a project uses another stack, but should preserve equivalent proof discipline.
 
-- Verify test tooling inside the repo venv before claiming it is missing:
+- When the established suite uses Python's standard-library `unittest`, run its documented command without probing for or installing `pytest`. If no command is documented, discover the existing suite with `python -m unittest discover -s <tests-directory> -p 'test_*.py' -v`.
+- For a `pytest`-based suite, verify test tooling inside the repo venv before claiming it is missing:
   - `source ".venv/bin/activate"`
   - `python -m pip show pytest`
   - If missing and tests are requested, install into the repo venv:
     - `python -m pip install pytest`
   - Then verify:
     - `python -m pytest --version`
-- Preferred invocation patterns:
+- Preferred `pytest` invocation patterns:
   - Targeted: `python -m pytest -q -k "<target>"`
   - File-specific only if it exists: `python -m pytest -q <path>`
 - Before running a test file by name, verify it exists:
