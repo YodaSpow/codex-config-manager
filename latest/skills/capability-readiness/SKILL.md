@@ -1,11 +1,11 @@
 ---
 name: capability-readiness
-description: Establish and prove the foundational capabilities a project or proposed goal assumes before dependent execution begins. Use during project inception, architecture or goal planning, when future work depends on unproven APIs, services, credentials, runtimes, storage, or network routes, or when a deferred foundation becomes timely later in the project lifecycle. Also use on demand to discover and commission likely foundations before a goal exists. Do not use for mature capabilities already proven by current repository evidence, full feature testing, ordinary implementation, or runtime monitoring.
+description: Establish and prove the foundational capabilities a project or proposed goal assumes before dependent execution begins. Use during inception, planning, or lifecycle re-entry for unproven APIs, services, credentials, runtimes, storage, or network routes; also use on demand before a goal exists. Surface API capabilities and the project's selected contract when an API-backed outcome depends on understanding them. Reuse mature readiness proof. Do not use for exhaustive API catalogues, full feature testing, ordinary implementation, or runtime monitoring.
 ---
 
 # Capability Readiness
 
-**Version:** 1.1 · **Updated:** 19 September 2026
+**Version:** 1.2 · **Updated:** 18 November 2026
 
 Prevent planned work from silently treating intended infrastructure as working
 infrastructure. Pull forward the enabling foundations that later work will
@@ -18,18 +18,24 @@ inside it.
 
 ## Automatic assumption gate
 
-Apply this skill without requiring its exact name when either condition is met:
+Apply this skill without requiring its exact name when any condition is met:
 
 - a new or infancy-stage project is selecting external capabilities; or
 - a proposed goal assumes an API, service, account, credential, runtime,
   storage surface, network route, or other technical enabler that current
   repository evidence has not already proven; or
-- a previously deferred foundation becomes necessary for upcoming work.
+- a previously deferred foundation becomes necessary for upcoming work; or
+- an in-scope API-backed outcome makes a gap in the provider's relevant
+  capability surface or the project's selected API contract consequential.
 
 Do not impose readiness work merely because a project uses technology. Reuse
 current proof for mature foundations. The gate concerns consequential external
 or operational assumptions whose absence would prevent later work from even
 starting.
+
+API contract discovery may be useful even when connectivity is already proven.
+Reuse that proof; a visibility gap alone does not revoke established readiness
+or require another commissioning exercise.
 
 This skill remains available at three points in the project lifecycle:
 
@@ -65,9 +71,10 @@ may be an authenticated health, status, discovery, version, or similarly
 harmless request and an expected response such as HTTP 200. Do not use a fixed
 status code when the provider's documented success contract differs.
 
-Do not pull forward business operations, mutations, complete endpoint
-coverage, schemas, pagination, performance, resilience, or feature acceptance.
-Those belong to the goal or later implementation package that needs them.
+Do not pull forward business operations, mutations, exhaustive endpoint
+testing, schema implementation, pagination, performance, resilience, or feature
+acceptance. Reading a relevant schema to identify the dependency contract is
+discovery; implementation and feature proof belong to the later work.
 
 ## Discover the real dependency contract
 
@@ -95,6 +102,27 @@ When a concrete pattern would help, read
 [`references/worked-example.md`](references/worked-example.md). Adapt it to the
 repository; do not copy its filenames, stack, or response contract
 mechanically.
+
+## API contract and capability visibility
+
+When an API contract or capability choice materially affects the proposed
+outcome, proactively make it visible rather than leaving it implicit in client
+code. Read [API contract and capability visibility](references/api-contract-and-capability-visibility.md)
+for this bounded discovery and project-owned declaration.
+
+Work in two directions: understand the provider's relevant exposed surface,
+then declare inwardly the exact contract the project relies on. Distinguish
+the service version from API/contract versions, current use from available
+options, and documented or source-backed capabilities from representative live
+proof. Identify adjacent capabilities only where they could simplify this
+outcome; discovery does not authorise their adoption or execution.
+
+Retain the selected contract in the project's established canonical
+documentation under the task's writing authority, with configuration/client
+and proof references. Prefer links to the maintained provider contract over a
+copied API manual. Read-only discovery returns the proposed declaration and
+its intended home without writing it. A harmless readiness response is not
+proof of the wider capability surface or complete contract conformance.
 
 ## Establish the readiness fixtures
 
@@ -170,6 +198,8 @@ Useful evidence records:
 
 - dependency and intended purpose;
 - authoritative reference link;
+- service and selected API contract identity/version where relevant, with
+  the canonical project declaration linked;
 - checked route or operation;
 - configuration completeness without secret values;
 - authentication and baseline response outcome;
@@ -238,8 +268,10 @@ unrelated project work. Report:
 - the baseline proof and its limits;
 - any human-supplied prerequisite still outstanding;
 - whether the current state is awaiting action now or deferred to a named gate;
-- which proposed goals are now enabled or still gated; and
-- any source-versus-documentation discrepancy.
+- which proposed goals are now enabled or still gated;
+- any source-versus-documentation discrepancy; and
+- for an eligible API, the selected canonical contract, current use, relevant
+  adjacent options and their distinct documentation/source/live evidence limits.
 
 Never convert documentation, a placeholder, a successful detached request, or
 an unverified credential claim into proof that a capability is ready.
